@@ -2039,3 +2039,2054 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Occupational Therapy MSC 9/F Activity Room Utilization Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            600: '#285285',
+                            700: '#1F4068',
+                            800: '#163050',
+                            900: '#102238',
+                        },
+                        sage: {
+                            50: '#f4f7f4',
+                            100: '#e3eae3',
+                            200: '#c7d6c7',
+                            300: '#a3bba3',
+                            500: '#739573',
+                            600: '#5a785a',
+                            700: '#486048',
+                            800: '#3a4e3a',
+                        },
+                        cream: {
+                            50: '#fdfcf7',
+                            100: '#f9f6ee',
+                            200: '#f2ecdc',
+                        },
+                        charcoal: {
+                            700: '#333933',
+                            800: '#242924',
+                            900: '#191d19',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        serif: ['Lora', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9f6ee;
+            color: #242924;
+        }
+        h1, h2, h3, .font-serif {
+            font-family: 'Lora', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f2ecdc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a3bba3;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #739573;
+        }
+    </style>
+</head>
+<body class="bg-cream-100 text-charcoal-800 min-h-screen flex flex-col antialiased selection:bg-sage-200 selection:text-sage-800">
+
+    <header class="sticky top-0 z-50 bg-cream-50/90 backdrop-blur-md border-b border-sage-200 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-xl bg-sage-600 flex items-center justify-center text-cream-50 shadow-md">
+                    <i class="fa-solid fa-leaf text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold tracking-wider uppercase text-sage-700 block">MSC 9/F Activity Room</span>
+                    <h1 class="text-lg sm:text-xl font-bold font-serif text-charcoal-900 tracking-tight">OT Utilization System</h1>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <a href="#register" class="px-4 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-sage-100/70 transition-all flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar-plus text-sage-600"></i>
+                    <span>Register Appointment</span>
+                </a>
+                <a href="#overview" class="px-4 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-sage-100/70 transition-all flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar-days text-sage-600"></i>
+                    <span>Schedule Overview</span>
+                </a>
+                <a href="#statistics" class="px-4 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-sage-100/70 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-chart-pie text-sage-600"></i>
+                    <span>Utilization Statistics</span>
+                </a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="openAdminModal()" class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-navy-700 text-cream-50 font-medium text-sm shadow-md hover:bg-navy-800 transition-all active:scale-95" title="Admin Special Activity Input">
+                    <i class="fa-solid fa-shield-halved mr-2 text-sage-300"></i> Admin
+                </button>
+                <button onclick="document.getElementById('register').scrollIntoView({ behavior: 'smooth' });" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-sage-600 text-cream-50 font-medium text-sm shadow-md hover:bg-sage-700 transition-all active:scale-95">
+                    <i class="fa-solid fa-plus mr-2"></i> Book Room
+                </button>
+                <button id="mobileMenuBtn" class="md:hidden p-2.5 rounded-xl bg-sage-100 text-charcoal-800 hover:bg-sage-200 transition-all" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-cream-50 border-b border-sage-200 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <a href="#register" onclick="toggleMobileMenu()" class="block px-3 py-2.5 rounded-lg text-base font-medium text-charcoal-800 hover:bg-sage-100">Register Appointment</a>
+            <a href="#overview" onclick="toggleMobileMenu()" class="block px-3 py-2.5 rounded-lg text-base font-medium text-charcoal-800 hover:bg-sage-100">Schedule Overview</a>
+            <a href="#statistics" onclick="toggleMobileMenu()" class="block px-3 py-2.5 rounded-lg text-base font-medium text-charcoal-800 hover:bg-sage-100">Utilization Statistics</a>
+            <button onclick="openAdminModal(); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-charcoal-800 hover:bg-sage-100 flex items-center">
+                <i class="fa-solid fa-shield-halved text-sage-600 mr-2"></i> Admin (Special Activities)
+            </button>
+        </div>
+    </header>
+
+    <section class="relative py-12 lg:py-14 overflow-hidden bg-gradient-to-b from-cream-100 via-sage-50/40 to-cream-100 border-b border-sage-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-sage-100 text-sage-800 text-xs font-semibold uppercase tracking-wider mb-4 border border-sage-200">
+                    <i class="fa-solid fa-hospital text-sage-600 mr-1.5"></i> Occupational Therapy Department
+                </span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif text-charcoal-900 leading-tight mb-4">
+                    MSC 9/F Activity Room Utilization & Booking System
+                </h1>
+                <div class="mt-4 flex flex-wrap justify-center gap-4 text-xs font-medium text-sage-700">
+                    <span class="inline-flex items-center px-3 py-1 bg-cream-50 rounded-lg border border-sage-200 shadow-2xs">
+                        <i class="fa-solid fa-user-doctor mr-2 text-sage-600"></i> Therapists Supported
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 bg-cream-50 rounded-lg border border-sage-200 shadow-2xs">
+                        <i class="fa-solid fa-wheelchair mr-2 text-sage-600"></i> Service Types & Custom Options
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 bg-cream-50 rounded-lg border border-sage-200 shadow-2xs">
+                        <i class="fa-solid fa-shield-halved mr-2 text-sage-600"></i> Admin Special Activity Management
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <section id="register" class="scroll-mt-28">
+            <div class="bg-cream-50 rounded-3xl border border-sage-200/80 shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-sage-700 to-sage-600 px-6 sm:px-8 py-6 text-cream-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">Register Activity Room Appointment</h2>
+                    </div>
+                    <p class="text-xs sm:text-sm text-sage-100 max-w-xs">
+                        Book the MSC 9/F Activity Room for patient interventions and equipment fittings.
+                    </p>
+                </div>
+
+                <div class="p-6 sm:p-10">
+                    <form id="appointmentForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <!-- Date -->
+                        <div class="space-y-2">
+                            <label for="appointmentDate" class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-regular fa-calendar text-sage-600 mr-1.5"></i> Date of Appointment <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="appointmentDate" required placeholder="DD/MM/YYYY"
+                                    class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs pr-10">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-sage-600">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </div>
+                            </div>
+                            <p class="text-xs text-charcoal-700/60">Format: DD/MM/YYYY</p>
+                        </div>
+
+                        <!-- Patient No -->
+                        <div class="space-y-2">
+                            <label for="patientNo" class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-regular fa-id-card text-sage-600 mr-1.5"></i> Patient No. <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="patientNo" required placeholder="e.g. 26-101234" value=""
+                                class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
+                            <p class="text-xs text-charcoal-700/60">Format e.g. 26-101234</p>
+                        </div>
+
+                        <!-- Timeslot -->
+                        <div class="space-y-2">
+                            <label for="timeslotSelect" class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-regular fa-clock text-sage-600 mr-1.5"></i> Timeslot <span class="text-rose-500">*</span>
+                            </label>
+                            <select id="timeslotSelect" onchange="handleTimeslotChange()" required
+                                class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
+                                <option value="1500">15:00</option>
+                                <option value="1530" selected>15:30</option>
+                                <option value="1600">16:00</option>
+                                <option value="others">Others (Custom)</option>
+                            </select>
+                            <input type="text" id="customTimeslot" placeholder="e.g. 14:15 or Morning" style="display:none;"
+                                class="w-full mt-2 px-4 py-2.5 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                            <p class="text-xs text-charcoal-700/60">Session time slot</p>
+                        </div>
+
+                        <!-- Therapist -->
+                        <div class="space-y-2">
+                            <label for="therapist" class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-solid fa-user-doctor text-sage-600 mr-1.5"></i> Therapist <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="therapist" required placeholder="Enter therapist name"
+                                class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
+                            <p class="text-xs text-charcoal-700/60">Assigned OT (required)</p>
+                        </div>
+
+                        <!-- Service Type -->
+                        <div class="space-y-2">
+                            <label for="serviceType" class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-solid fa-hand-holding-medical text-sage-600 mr-1.5"></i> Service Type <span class="text-rose-500">*</span>
+                            </label>
+                            <select id="serviceType" onchange="handleServiceTypeChange()" required
+                                class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
+                                <option value="" disabled selected>Select Service Type</option>
+                                <option value="power w/c">power w/c</option>
+                                <option value="manual w/c">manual w/c</option>
+                                <option value="seating cushion">seating cushion</option>
+                                <option value="carer training">carer training</option>
+                                <option value="aids prescription">aids prescription</option>
+                                <option value="home modification">home modification</option>
+                                <option value="oxygen therapy">oxygen therapy</option>
+                                <option value="others">Others (Custom)</option>
+                            </select>
+                            <input type="text" id="customServiceType" placeholder="Enter custom service type" style="display:none;"
+                                class="w-full mt-2 px-4 py-2.5 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
+                            <p class="text-xs text-charcoal-700/60">Therapy session type</p>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="md:col-span-2 lg:col-span-3 xl:col-span-5 pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-sage-200/60">
+                            <div class="text-xs text-charcoal-700/70 flex items-center">
+                                <i class="fa-solid fa-circle-info text-sage-600 mr-2"></i>
+                                Double bookings prompt a notice when registered for the exact same timeslot by a different therapist.
+                            </div>
+                            <div class="flex items-center space-x-3 w-full sm:w-auto">
+                                <button type="reset" onclick="resetFormCustomFields()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-sage-300 bg-white text-charcoal-700 font-medium text-sm hover:bg-sage-50 transition-all">
+                                    Clear Form
+                                </button>
+                                <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-xl bg-sage-600 text-cream-50 font-medium text-sm shadow-md hover:bg-sage-700 transition-all flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>Confirm Booking</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="scroll-mt-28">
+            <div class="bg-cream-50 rounded-3xl border border-sage-200/80 shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-sage-700 to-sage-600 px-6 sm:px-8 py-6 text-cream-50 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div class="flex items-center justify-between lg:justify-start gap-4">
+                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">Appointment Schedule Overview</h2>
+                        <button onclick="openAdminModal()" class="px-3 py-1.5 rounded-xl bg-navy-700 hover:bg-navy-800 text-cream-50 text-xs font-semibold border border-sage-400/40 shadow-sm transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-shield-halved text-sage-300"></i>
+                            <span>Admin Special Activity</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="inline-flex rounded-xl bg-sage-800/60 p-1 border border-sage-500/40">
+                            <button id="viewMonthBtn" onclick="switchCalendarView('month')" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-50 text-sage-800 shadow-sm">
+                                Monthly View
+                            </button>
+                            <button id="viewWeekBtn" onclick="switchCalendarView('week')" class="px-4 py-2 rounded-lg text-xs font-semibold transition-all text-sage-100 hover:text-white">
+                                Weekly View
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2 bg-sage-800/60 rounded-xl px-3 py-1.5 border border-sage-500/40">
+                            <button onclick="changeCalendarPeriod(-1)" class="p-1.5 rounded-lg text-sage-200 hover:bg-sage-700 hover:text-white transition-all" aria-label="Previous Period">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <span id="calendarPeriodLabel" class="text-xs font-semibold text-cream-50 px-2 min-w-[140px] text-center">August 2026</span>
+                            <button onclick="changeCalendarPeriod(1)" class="p-1.5 rounded-lg text-sage-200 hover:bg-sage-700 hover:text-white transition-all" aria-label="Next Period">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-sage-200">
+                        <div class="flex items-center space-x-3 text-xs font-medium text-charcoal-700">
+                            <span class="font-semibold text-sage-800">Filter Therapist:</span>
+                            <select id="filterTherapist" onchange="renderCalendar()" class="px-3 py-1.5 bg-white border border-sage-200 rounded-lg text-xs text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                <option value="all">All Therapists & Special Activities</option>
+                                <option value="Hang">Hang</option>
+                                <option value="Abu">Abu</option>
+                                <option value="Andrea">Andrea</option>
+                                <option value="Michael">Michael</option>
+                                <option value="Sam">Sam</option>
+                                <option value="admin_special">Special Activities (Admin)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs text-charcoal-700/70">
+                            <i class="fa-solid fa-circle-info text-sage-600"></i> Click any appointment or special activity block to view details, edit, or delete.
+                        </div>
+                    </div>
+
+                    <div id="calendarContainer" class="overflow-x-auto min-h-[450px]">
+                        <!-- Dynamic Calendar Rendered via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="statistics" class="scroll-mt-28">
+            <div class="bg-cream-50 rounded-3xl border border-sage-200/80 shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-sage-700 to-sage-600 px-6 sm:px-8 py-6 text-cream-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold font-serif">MSC 9/F Activity Room Utilization Statistics</h2>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <select id="statsYearSelect" onchange="syncGlobalYear(this.value)" class="px-3 py-2 bg-sage-800/80 border border-sage-500 rounded-xl text-xs text-cream-50 font-semibold focus:outline-none">
+                            <option value="2026" selected>Year 2026</option>
+                            <option value="2027">Year 2027</option>
+                            <option value="2028">Year 2028</option>
+                            <option value="2029">Year 2029</option>
+                            <option value="2030">Year 2030</option>
+                        </select>
+                        <!-- Export Options Dropdown -->
+                        <div class="relative">
+                            <button id="exportDropdownBtn" onclick="toggleExportDropdown()" class="px-3.5 py-2 bg-cream-50 text-sage-900 hover:bg-cream-100 border border-sage-200 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-file-export text-sage-600"></i>
+                                <span>Export Statistics</span>
+                                <i class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
+                            </button>
+                            <div id="exportDropdownMenu" class="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-sage-200 py-2 hidden z-30">
+                                <button onclick="exportStatisticsData('xlsx')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-excel text-emerald-600 w-4"></i>
+                                    <span>Export as .xlsx</span>
+                                </button>
+                                <button onclick="exportStatisticsData('pdf')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-pdf text-rose-600 w-4"></i>
+                                    <span>Export as .pdf</span>
+                                </button>
+                                <button onclick="exportStatisticsData('doc')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-word text-blue-600 w-4"></i>
+                                    <span>Export as .doc</span>
+                                </button>
+                                <button onclick="exportStatisticsData('html')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
+                                    <i class="fa-solid fa-file-code text-amber-600 w-4"></i>
+                                    <span>Export as .html</span>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="toggleStatsBtn" onclick="toggleStatisticsSection()" class="px-3.5 py-2 bg-sage-800/80 hover:bg-sage-800 border border-sage-500 rounded-xl text-xs text-cream-50 font-semibold transition-all flex items-center space-x-1.5">
+                            <i id="toggleStatsIcon" class="fa-solid fa-eye-slash"></i>
+                            <span id="toggleStatsText">Hide Section</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="statisticsContent" class="p-6 sm:p-10 space-y-10 transition-all duration-300">
+                    <!-- Top Summary Metric Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Total Bookings</p>
+                                <h3 id="statTotalBookings" class="text-3xl font-bold font-serif text-charcoal-900 mt-1">0</h3>
+                                <p class="text-xs text-charcoal-700/60 mt-1">MSC 9/F Activity Room</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-sage-100 flex items-center justify-center text-sage-700">
+                                <i class="fa-solid fa-door-open text-xl"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Peak Service</p>
+                                <h3 id="statPeakService" class="text-lg font-bold font-serif text-charcoal-900 mt-1 truncate max-w-[140px]" title="None">-</h3>
+                                <p class="text-xs text-charcoal-700/60 mt-1">Highest utilization</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-sage-100 flex items-center justify-center text-sage-700">
+                                <i class="fa-solid fa-trophy text-xl"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Avg. Monthly Rate</p>
+                                    <select id="avgRatePeriodSelect" onchange="updateStatistics()" class="text-[10px] bg-sage-50 border border-sage-200 rounded px-1.5 py-0.5 text-sage-800 font-semibold">
+                                        <option value="annual">Annual Avg</option>
+                                        <option value="monthly">Specific Month...</option>
+                                        <option value="Q1">Q1 (Jan-Mar)</option>
+                                        <option value="Q2">Q2 (Apr-Jun)</option>
+                                        <option value="Q3">Q3 (Jul-Sep)</option>
+                                        <option value="Q4">Q4 (Oct-Dec)</option>
+                                    </select>
+                                </div>
+                                <div id="specificMonthSelectContainer" class="mt-1 hidden">
+                                    <select id="avgRateSpecificMonth" onchange="updateStatistics()" class="text-[10px] bg-sage-100 border border-sage-300 rounded px-2 py-0.5 text-sage-900 font-semibold w-full">
+                                        <option value="0">January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3">April</option>
+                                        <option value="4">May</option>
+                                        <option value="5">June</option>
+                                        <option value="6">July</option>
+                                        <option value="7" selected>August</option>
+                                        <option value="8">September</option>
+                                        <option value="9">October</option>
+                                        <option value="10">November</option>
+                                        <option value="11">December</option>
+                                    </select>
+                                </div>
+                                <h3 id="statAvgMonthly" class="text-3xl font-bold font-serif text-charcoal-900 mt-1">0%</h3>
+                                <p id="avgRateSubLabel" class="text-xs text-charcoal-700/60 mt-1">Weekday share (Annual)</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-sage-100 flex items-center justify-center text-sage-700">
+                                <i class="fa-solid fa-chart-line text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COMBINED SECTION: Service Utilization Count & Visual Distribution Breakdown -->
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage-200 shadow-sm">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-4 border-b border-sage-200">
+                            <div>
+                                <h3 class="text-lg font-bold font-serif text-charcoal-900 flex items-center">
+                                    <i class="fa-solid fa-table-list text-sage-600 mr-2"></i> Service Utilization Count & Visual Distribution
+                                </h3>
+                                <p class="text-xs text-charcoal-700/70 mt-1">Comprehensive breakdown of service types with totals, percentages, and visual bars (Excludes Admin special activities)</p>
+                            </div>
+                            
+                            <!-- Dual Month & Year Filter for Service Distribution -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-center gap-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
+                                    <i class="fa-regular fa-filter text-sage-600 text-xs"></i>
+                                    <span class="text-xs font-semibold text-sage-800">Filter Period:</span>
+                                    
+                                    <!-- Month Option Selector -->
+                                    <select id="serviceMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                        <option value="all" selected>All Months (Full Year)</option>
+                                        <option value="0">January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3">April</option>
+                                        <option value="4">May</option>
+                                        <option value="5">June</option>
+                                        <option value="6">July</option>
+                                        <option value="7">August</option>
+                                        <option value="8">September</option>
+                                        <option value="9">October</option>
+                                        <option value="10">November</option>
+                                        <option value="11">December</option>
+                                    </select>
+
+                                    <!-- Year Option Selector -->
+                                    <select id="serviceYearSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                        <option value="2026" selected>Year 2026</option>
+                                        <option value="2027">Year 2027</option>
+                                        <option value="2028">Year 2028</option>
+                                        <option value="2029">Year 2029</option>
+                                        <option value="2030">Year 2030</option>
+                                    </select>
+                                </div>
+                                <span id="serviceDistributionFilterBadge" class="text-xs bg-sage-100 text-sage-800 px-3 py-1.5 rounded-xl font-semibold border border-sage-200">
+                                    Period: All Months 2026
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                            <!-- Table of Total Count & Percentage -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead>
+                                        <tr class="border-b border-sage-200 text-xs uppercase tracking-wider text-sage-700 font-semibold bg-cream-50">
+                                            <th class="py-3 px-4 rounded-l-xl">Service Type</th>
+                                            <th class="py-3 px-4 text-center">Total Count</th>
+                                            <th class="py-3 px-4 text-right rounded-r-xl">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="serviceTableBody" class="divide-y divide-sage-100 text-charcoal-800">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Visual Percentage Bars Distribution -->
+                            <div id="serviceDistributionBars" class="space-y-4 pt-2">
+                                <!-- Dynamically populated progress bars -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Utilization Rate Grid -->
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage-200 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold font-serif text-charcoal-900 flex items-center">
+                                    <i class="fa-solid fa-calendar-alt text-sage-600 mr-2"></i> Monthly Utilization Rate & Weekday Analysis
+                                </h3>
+                                <p class="text-xs text-charcoal-700/70 mt-1">Equation: Total Bookings / Number of Weekdays (Excluding Saturdays, Sundays & Public Holidays)</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
+                                    <label for="monthlyAnalysisYearSelect" class="text-xs font-semibold text-sage-800">Year:</label>
+                                    <select id="monthlyAnalysisYearSelect" onchange="syncMonthlyAnalysisYear(this.value)" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                    </select>
+                                </div>
+                                <div class="text-xs font-semibold text-sage-800 bg-sage-100 px-3.5 py-1.5 rounded-xl border border-sage-200">
+                                    Annual Total: <span id="annualTotalCount">0</span> Bookings
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="monthlyStatsGrid">
+                            <!-- Dynamically populated month cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Conflict & Notice Modal -->
+    <div id="customModal" class="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/60 backdrop-blur-xs hidden transition-all">
+        <div class="bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl max-w-md w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0" id="modalBox">
+            <div class="bg-amber-600 px-6 py-4 text-cream-50 flex items-center justify-between" id="modalHeaderBg">
+                <div class="flex items-center space-x-2">
+                    <i id="modalIcon" class="fa-solid fa-triangle-exclamation text-lg"></i>
+                    <h3 id="modalTitle" class="font-bold font-serif text-lg">Booking Conflict Reminder</h3>
+                </div>
+                <button onclick="closeModal()" class="text-cream-50/80 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p id="modalMessage" class="text-charcoal-800 text-sm leading-relaxed">
+                    The timeslot on this date has already been registered by a different therapist.
+                </p>
+                <div id="modalConflictDetails" class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 hidden">
+                    <!-- Conflict details -->
+                </div>
+            </div>
+            <div class="bg-cream-100 px-6 py-4 border-t border-sage-200 flex justify-end space-x-3" id="modalFooterActions">
+                <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-sage-600 text-cream-50 font-medium text-xs shadow-md hover:bg-sage-700 transition-all">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Special Activity Input Modal -->
+    <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/60 backdrop-blur-xs hidden transition-all">
+        <div class="bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl max-w-lg w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0" id="adminModalBox">
+            <div class="bg-navy-700 px-6 py-4 text-cream-50 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-shield-halved text-sage-300 text-lg"></i>
+                    <h3 class="font-bold font-serif text-lg">Admin: Special Activity Input</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-cream-50/80 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-charcoal-700/80 leading-relaxed bg-sage-50 p-3 rounded-xl border border-sage-200">
+                    <i class="fa-solid fa-circle-info text-sage-600 mr-1.5"></i> Special activities are added separately to the Schedule Overview. They do <strong>not</strong> interrupt regular register appointments and are <strong>excluded</strong> from statistical calculations and utilization rates.
+                </p>
+                <form id="adminSpecialForm" onsubmit="handleAdminSpecialSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Date of Special Activity (DD/MM/YYYY) <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="text" id="adminSpecialDate" required placeholder="DD/MM/YYYY" class="w-full px-3.5 py-2.5 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 pr-9">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-sage-600">
+                                <i class="fa-regular fa-calendar-days text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Timeslot / Duration <span class="text-rose-500">*</span></label>
+                        <input type="text" id="adminSpecialTimeslot" required placeholder="e.g. 09:00 - 12:00 or All Day" class="w-full px-3.5 py-2.5 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-sage-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Activity Details / Description <span class="text-rose-500">*</span></label>
+                        <textarea id="adminSpecialDetails" required rows="3" placeholder="Enter special activity description (e.g. Room Maintenance, Department Briefing, Special Workshop)..." class="w-full px-3.5 py-2.5 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+                    </div>
+                    <div class="bg-cream-100 -mx-6 -mb-6 px-6 py-4 border-t border-sage-200 flex justify-end space-x-3">
+                        <button type="button" onclick="closeAdminModal()" class="px-4 py-2 rounded-xl border border-sage-300 bg-white text-charcoal-700 font-medium text-xs hover:bg-sage-50">Cancel</button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-navy-700 text-cream-50 font-medium text-xs shadow-md hover:bg-navy-800 transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Special Activity</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment / Special Activity Details & Edit Modal -->
+    <div id="detailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/60 backdrop-blur-xs hidden transition-all">
+        <div class="bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl max-w-lg w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0" id="detailsModalBox">
+            <div id="detailsModalHeader" class="bg-sage-700 px-6 py-4 text-cream-50 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i id="detailsModalHeaderIcon" class="fa-regular fa-calendar-check text-lg"></i>
+                    <h3 id="detailsModalTitle" class="font-bold font-serif text-lg">Appointment Details & Management</h3>
+                </div>
+                <button onclick="closeDetailsModal()" class="text-cream-50/80 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <input type="hidden" id="editAppId">
+                <input type="hidden" id="editIsSpecial" value="false">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Date (DD/MM/YYYY)</label>
+                        <div class="relative">
+                            <input type="text" id="editDate" placeholder="DD/MM/YYYY" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 pr-9">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-sage-600">
+                                <i class="fa-regular fa-calendar-days text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editPatientNoGroup">
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Patient No.</label>
+                        <input type="text" id="editPatientNo" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800" placeholder="e.g. 26-101234">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1" id="editTimeslotLabel">Timeslot</label>
+                        <input type="text" id="editTimeslot" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800" placeholder="e.g. 15:30">
+                    </div>
+                    <div id="editTherapistGroup">
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1">Therapist</label>
+                        <input type="text" id="editTherapist" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800" placeholder="Enter therapist name">
+                    </div>
+                </div>
+                
+                <div id="editServiceTypeGroup">
+                    <label class="block text-xs font-semibold text-charcoal-700 mb-1">Service Type</label>
+                    <select id="editServiceType" onchange="handleEditServiceTypeChange()" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800">
+                        <option value="power w/c">power w/c</option>
+                        <option value="manual w/c">manual w/c</option>
+                        <option value="seating cushion">seating cushion</option>
+                        <option value="carer training">carer training</option>
+                        <option value="aids prescription">aids prescription</option>
+                        <option value="home modification">home modification</option>
+                        <option value="oxygen therapy">oxygen therapy</option>
+                        <option value="others">others (custom)</option>
+                    </select>
+                    <input type="text" id="editCustomServiceType" placeholder="Enter custom service type" style="display:none;"
+                        class="w-full mt-2 px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-sage-500">
+                </div>
+
+                <div id="editSpecialDetailsGroup" class="hidden">
+                    <label class="block text-xs font-semibold text-charcoal-700 mb-1">Special Activity Details</label>
+                    <textarea id="editSpecialDescription" rows="3" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-sage-500" placeholder="Special activity details..."></textarea>
+                </div>
+            </div>
+            <div class="bg-cream-100 px-6 py-4 border-t border-sage-200 flex justify-between items-center">
+                <button onclick="deleteAppointmentFromModal()" class="px-4 py-2 rounded-xl bg-rose-600 text-cream-50 font-medium text-xs shadow-md hover:bg-rose-700 transition-all flex items-center space-x-1.5">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Delete Entry</span>
+                </button>
+                <div class="flex space-x-3">
+                    <button onclick="closeDetailsModal()" class="px-4 py-2 rounded-xl border border-sage-300 bg-white text-charcoal-700 font-medium text-xs hover:bg-sage-50">Cancel</button>
+                    <button onclick="saveEditedAppointment()" class="px-5 py-2 rounded-xl bg-sage-600 text-cream-50 font-medium text-xs shadow-md hover:bg-sage-700">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-cream-200/80 border-t border-sage-200 mt-20 py-10 text-charcoal-700 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-sage-600 flex items-center justify-center text-cream-50">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <p class="font-bold font-serif text-charcoal-900">MSC 9/F Activity Room Management System</p>
+                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department © 2026</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6 text-xs text-charcoal-700/80">
+                <a href="#register" class="hover:text-sage-700 transition-all">Register Appointment</a>
+                <a href="#overview" class="hover:text-sage-700 transition-all">Schedule Overview</a>
+                <a href="#statistics" class="hover:text-sage-700 transition-all">Utilization Statistics</a>
+                <button onclick="openAdminModal()" class="hover:text-navy-700 transition-all font-semibold">Admin</button>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const baseServiceTypesList = [
+            "power w/c",
+            "manual w/c",
+            "seating cushion",
+            "carer training",
+            "aids prescription",
+            "home modification",
+            "oxygen therapy"
+        ];
+
+        const monthNamesFull = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const publicHolidays2026 = [
+            "2026-01-01", "2026-02-17", "2026-02-18", "2026-02-19", 
+            "2026-04-05", "2026-04-06", "2026-05-01", "2026-05-25", 
+            "2026-06-19", "2026-07-01", "2026-09-26", "2026-10-01", 
+            "2026-10-21", "2026-12-25", "2026-12-26"
+        ];
+
+        const STORAGE_KEY = 'msc_activity_room_appointments_v5';
+        const ADMIN_SPECIAL_STORAGE_KEY = 'msc_activity_room_admin_special_v5';
+        
+        let appointments = [];
+        let specialActivities = [];
+        
+        const defaultMockAppointments = [
+            { id: 1, date: "2026-06-05", timeslot: "15:30", patientNo: "26-101234", therapist: "Hang", serviceType: "power w/c" },
+            { id: 2, date: "2026-06-05", timeslot: "16:00", patientNo: "26-101235", therapist: "Abu", serviceType: "manual w/c" },
+            { id: 3, date: "2026-06-12", timeslot: "15:00", patientNo: "26-102210", therapist: "Andrea", serviceType: "seating cushion" },
+            { id: 4, date: "2026-06-18", timeslot: "15:30", patientNo: "26-103340", therapist: "Michael", serviceType: "carer training" },
+            { id: 5, date: "2026-06-25", timeslot: "16:00", patientNo: "26-104491", therapist: "Sam", serviceType: "aids prescription" },
+            { id: 6, date: "2026-08-03", timeslot: "15:00", patientNo: "26-105123", therapist: "Hang", serviceType: "home modification" },
+            { id: 7, date: "2026-08-05", timeslot: "15:30", patientNo: "26-105145", therapist: "Abu", serviceType: "oxygen therapy" },
+            { id: 8, date: "2026-08-10", timeslot: "16:00", patientNo: "26-106211", therapist: "Andrea", serviceType: "power w/c" },
+            { id: 9, date: "2026-08-15", timeslot: "15:00", patientNo: "26-107314", therapist: "Michael", serviceType: "seating cushion" },
+            { id: 10, date: "2026-08-20", timeslot: "15:30", patientNo: "26-108482", therapist: "Sam", serviceType: "manual w/c" }
+        ];
+
+        const defaultMockSpecialActivities = [
+            { id: 101, date: "2026-08-08", timeslot: "09:00 - 12:00", details: "MSC 9/F Activity Room Deep Maintenance & Sanitization" },
+            { id: 102, date: "2026-08-22", timeslot: "14:00 - 16:30", details: "Departmental OT Staff Quarterly Meeting" }
+        ];
+
+        function loadAppointments() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    appointments = JSON.parse(stored);
+                } else {
+                    appointments = defaultMockAppointments;
+                    saveAppointmentsToLocalStorage();
+                }
+            } catch (e) {
+                appointments = defaultMockAppointments;
+            }
+
+            try {
+                const storedSpecial = localStorage.getItem(ADMIN_SPECIAL_STORAGE_KEY);
+                if (storedSpecial) {
+                    specialActivities = JSON.parse(storedSpecial);
+                } else {
+                    specialActivities = defaultMockSpecialActivities;
+                    saveSpecialActivitiesToLocalStorage();
+                }
+            } catch (e) {
+                specialActivities = defaultMockSpecialActivities;
+            }
+        }
+
+        function saveAppointmentsToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+            } catch (e) {
+                console.error("Could not save to localStorage", e);
+            }
+        }
+
+        function saveSpecialActivitiesToLocalStorage() {
+            try {
+                localStorage.setItem(ADMIN_SPECIAL_STORAGE_KEY, JSON.stringify(specialActivities));
+            } catch (e) {
+                console.error("Could not save special activities", e);
+            }
+        }
+
+        let currentCalendarDate = new Date(2026, 7, 1); // August 2026
+        let currentCalendarViewMode = 'month';
+        let isStatisticsVisible = true;
+        let appointmentPicker = null;
+        let editPicker = null;
+        let adminSpecialPicker = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAppointments();
+
+            appointmentPicker = flatpickr("#appointmentDate", {
+                dateFormat: "d/m/Y",
+                defaultDate: "10/08/2026",
+                allowInput: true
+            });
+
+            editPicker = flatpickr("#editDate", {
+                dateFormat: "d/m/Y",
+                allowInput: true
+            });
+
+            adminSpecialPicker = flatpickr("#adminSpecialDate", {
+                dateFormat: "d/m/Y",
+                defaultDate: "10/08/2026",
+                allowInput: true
+            });
+
+            const form = document.getElementById('appointmentForm');
+            if (form) {
+                form.addEventListener('submit', (e) => handleAppointmentSubmit(e, false));
+            }
+
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            window.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('exportDropdownMenu');
+                const btn = document.getElementById('exportDropdownBtn');
+                if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            renderCalendar();
+            updateStatistics();
+        });
+
+        function syncGlobalYear(yearVal) {
+            const serviceYearSelect = document.getElementById('serviceYearSelect');
+            if (serviceYearSelect) serviceYearSelect.value = yearVal;
+            const monthlyYearSelect = document.getElementById('monthlyAnalysisYearSelect');
+            if (monthlyYearSelect) monthlyYearSelect.value = yearVal;
+            updateStatistics();
+        }
+
+        function syncMonthlyAnalysisYear(yearVal) {
+            const statsYearSelect = document.getElementById('statsYearSelect');
+            if (statsYearSelect && statsYearSelect.value !== yearVal) {
+                statsYearSelect.value = yearVal;
+            }
+            updateStatistics();
+        }
+
+        function toggleExportDropdown() {
+            const dropdown = document.getElementById('exportDropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        function openAdminModal() {
+            const modal = document.getElementById('adminModal');
+            const box = document.getElementById('adminModalBox');
+            document.getElementById('adminSpecialForm').reset();
+            if (adminSpecialPicker) adminSpecialPicker.setDate("10/08/2026");
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('adminModal');
+            const box = document.getElementById('adminModalBox');
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAdminSpecialSubmit(e) {
+            e.preventDefault();
+            const rawDate = document.getElementById('adminSpecialDate').value;
+            const isoDate = convertDisplayDateToISO(rawDate);
+            const timeslot = document.getElementById('adminSpecialTimeslot').value.trim();
+            const details = document.getElementById('adminSpecialDetails').value.trim();
+
+            if (!isoDate || !timeslot || !details) {
+                showCustomModal("Incomplete Input", "Please fill in all details for the admin special activity.");
+                return;
+            }
+
+            const newSpecial = {
+                id: Date.now(),
+                date: isoDate,
+                timeslot: timeslot,
+                details: details,
+                isSpecial: true
+            };
+
+            specialActivities.push(newSpecial);
+            saveSpecialActivitiesToLocalStorage();
+            closeAdminModal();
+            renderCalendar();
+
+            showCustomModal("Special Activity Added", `Admin special activity successfully scheduled for ${formatDateString(isoDate)} without affecting register appointment statistics.`);
+        }
+
+        function handleTimeslotChange() {
+            const select = document.getElementById('timeslotSelect');
+            const customInput = document.getElementById('customTimeslot');
+            if (select.value === 'others') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
+        function handleServiceTypeChange() {
+            const select = document.getElementById('serviceType');
+            const customInput = document.getElementById('customServiceType');
+            if (select.value === 'others') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
+        function handleEditServiceTypeChange() {
+            const select = document.getElementById('editServiceType');
+            const customInput = document.getElementById('editCustomServiceType');
+            if (select.value === 'others') {
+                customInput.style.display = 'block';
+                customInput.required = true;
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
+        function resetFormCustomFields() {
+            document.getElementById('customTimeslot').style.display = 'none';
+            document.getElementById('customServiceType').style.display = 'none';
+        }
+
+        function toggleStatisticsSection() {
+            isStatisticsVisible = !isStatisticsVisible;
+            const content = document.getElementById('statisticsContent');
+            const btnText = document.getElementById('toggleStatsText');
+            const btnIcon = document.getElementById('toggleStatsIcon');
+
+            if (isStatisticsVisible) {
+                content.classList.remove('hidden');
+                btnText.textContent = "Hide Section";
+                btnIcon.className = "fa-solid fa-eye-slash";
+            } else {
+                content.classList.add('hidden');
+                btnText.textContent = "Show Section";
+                btnIcon.className = "fa-solid fa-eye";
+            }
+        }
+
+        function getAllActiveServiceTypes() {
+            const dynamicSet = new Set(baseServiceTypesList);
+            appointments.forEach(app => {
+                if (app.serviceType) dynamicSet.add(app.serviceType);
+            });
+            return Array.from(dynamicSet);
+        }
+
+        function convertDisplayDateToISO(displayDate) {
+            if (!displayDate) return '';
+            if (/^\d{4}-\d{2}-\d{2}$/.test(displayDate)) return displayDate;
+            const parts = displayDate.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return displayDate;
+        }
+
+        function formatDateString(dateStr) {
+            if (!dateStr) return '';
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                const parts = dateStr.split('-');
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        function getValidWeekdaysCount(year, monthIndex) {
+            const startDate = new Date(year, monthIndex, 1);
+            const endDate = new Date(year, monthIndex + 1, 0);
+            let count = 0;
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dayOfWeek = d.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Sat (6) & Sun (0)
+                    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    if (year === 2026 && publicHolidays2026.includes(iso)) {
+                        continue;
+                    }
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function updateStatistics() {
+            const statsYear = document.getElementById('statsYearSelect').value;
+            const serviceMonth = document.getElementById('serviceMonthSelect').value;
+            const serviceYear = document.getElementById('serviceYearSelect').value;
+            const monthlyAnalysisYear = document.getElementById('monthlyAnalysisYearSelect').value;
+
+            // 1. Total bookings for the selected main year
+            const yearApps = appointments.filter(app => {
+                const iso = convertDisplayDateToISO(app.date);
+                return iso && iso.startsWith(statsYear);
+            });
+            document.getElementById('statTotalBookings').textContent = yearApps.length;
+
+            // 2. Filter appointments specifically for Service Utilization Count & Visual Distribution (Month + Year)
+            const serviceApps = appointments.filter(app => {
+                const iso = convertDisplayDateToISO(app.date);
+                if (!iso) return false;
+                const parts = iso.split('-');
+                const appYear = parts[0];
+                const appMonth = parseInt(parts[1]) - 1;
+
+                if (appYear !== serviceYear) return false;
+                if (serviceMonth !== 'all' && appMonth !== parseInt(serviceMonth)) return false;
+                return true;
+            });
+
+            const totalServiceCount = serviceApps.length;
+
+            // Badge text update
+            const badgeLabel = serviceMonth === 'all' 
+                ? `Period: All Months ${serviceYear}`
+                : `Period: ${monthNamesFull[parseInt(serviceMonth)]} ${serviceYear}`;
+            document.getElementById('serviceDistributionFilterBadge').textContent = badgeLabel;
+
+            // Calculate Counts for each Service Type
+            const activeServices = getAllActiveServiceTypes();
+            const serviceCounts = {};
+            activeServices.forEach(st => serviceCounts[st] = 0);
+            
+            serviceApps.forEach(app => {
+                const st = app.serviceType || 'others';
+                if (serviceCounts[st] !== undefined) serviceCounts[st]++;
+                else serviceCounts[st] = 1;
+            });
+
+            // Update Table & Visual Distribution Bars
+            const tableBody = document.getElementById('serviceTableBody');
+            const barsContainer = document.getElementById('serviceDistributionBars');
+            
+            tableBody.innerHTML = '';
+            barsContainer.innerHTML = '';
+
+            let peakService = "None";
+            let maxCount = -1;
+
+            activeServices.forEach(st => {
+                const count = serviceCounts[st] || 0;
+                const percentage = totalServiceCount > 0 ? ((count / totalServiceCount) * 100).toFixed(1) : "0.0";
+
+                if (count > maxCount && count > 0) {
+                    maxCount = count;
+                    peakService = st;
+                }
+
+                // Table row
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-sage-50/60 transition-all";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-medium capitalize text-charcoal-900">${st}</td>
+                    <td class="py-3 px-4 text-center font-bold text-sage-800">${count}</td>
+                    <td class="py-3 px-4 text-right font-semibold text-charcoal-700">${percentage}%</td>
+                `;
+                tableBody.appendChild(tr);
+
+                // Bar element
+                const barDiv = document.createElement('div');
+                barDiv.className = "space-y-1.5";
+                barDiv.innerHTML = `
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                        <span class="capitalize text-charcoal-800">${st}</span>
+                        <span class="text-sage-800">${count} (${percentage}%)</span>
+                    </div>
+                    <div class="w-full bg-sage-100 rounded-full h-3 overflow-hidden border border-sage-200">
+                        <div class="bg-gradient-to-r from-sage-500 to-sage-700 h-3 rounded-full transition-all duration-500" style="width: ${percentage}%;"></div>
+                    </div>
+                `;
+                barsContainer.appendChild(barDiv);
+            });
+
+            const statPeakEl = document.getElementById('statPeakService');
+            statPeakEl.textContent = peakService;
+            statPeakEl.title = peakService !== 'None' ? `${peakService} (${maxCount} bookings)` : 'None';
+
+            // 3. Average Monthly Utilization Rate calculation
+            const avgRatePeriod = document.getElementById('avgRatePeriodSelect').value;
+            const specificMonthContainer = document.getElementById('specificMonthSelectContainer');
+            const subLabel = document.getElementById('avgRateSubLabel');
+            
+            if (avgRatePeriod === 'monthly') {
+                specificMonthContainer.classList.remove('hidden');
+                subLabel.textContent = `Month Share (${monthNamesFull[parseInt(document.getElementById('avgRateSpecificMonth').value)]} ${statsYear})`;
+            } else {
+                specificMonthContainer.classList.add('hidden');
+                subLabel.textContent = `Weekday Share (${avgRatePeriod.toUpperCase()} ${statsYear})`;
+            }
+
+            let periodBookings = 0;
+            let periodWeekdays = 0;
+
+            const mainYearApps = appointments.filter(app => {
+                const iso = convertDisplayDateToISO(app.date);
+                return iso && iso.startsWith(statsYear);
+            });
+
+            for (let m = 0; m < 12; m++) {
+                let includeMonth = false;
+                if (avgRatePeriod === 'annual') includeMonth = true;
+                else if (avgRatePeriod === 'Q1' && m >= 0 && m <= 2) includeMonth = true;
+                else if (avgRatePeriod === 'Q2' && m >= 3 && m <= 5) includeMonth = true;
+                else if (avgRatePeriod === 'Q3' && m >= 6 && m <= 8) includeMonth = true;
+                else if (avgRatePeriod === 'Q4' && m >= 9 && m <= 11) includeMonth = true;
+                else if (avgRatePeriod === 'monthly') {
+                    const selM = parseInt(document.getElementById('avgRateSpecificMonth').value);
+                    if (m === selM) includeMonth = true;
+                }
+
+                if (includeMonth) {
+                    const monthApps = mainYearApps.filter(app => {
+                        const iso = convertDisplayDateToISO(app.date);
+                        return parseInt(iso.split('-')[1]) - 1 === m;
+                    });
+                    periodBookings += monthApps.length;
+                    periodWeekdays += getValidWeekdaysCount(parseInt(statsYear), m);
+                }
+            }
+
+            const avgRateVal = periodWeekdays > 0 ? ((periodBookings / periodWeekdays) * 100).toFixed(1) + '%' : '0.0%';
+            document.getElementById('statAvgMonthly').textContent = avgRateVal;
+
+            // 4. Monthly Analysis Grid (for monthlyAnalysisYear)
+            const gridContainer = document.getElementById('monthlyStatsGrid');
+            gridContainer.innerHTML = '';
+
+            const monthlyAppsForAnalysis = appointments.filter(app => {
+                const iso = convertDisplayDateToISO(app.date);
+                return iso && iso.startsWith(monthlyAnalysisYear);
+            });
+
+            document.getElementById('annualTotalCount').textContent = monthlyAppsForAnalysis.length;
+
+            monthNamesFull.forEach((mName, mIdx) => {
+                const mApps = monthlyAppsForAnalysis.filter(app => {
+                    const iso = convertDisplayDateToISO(app.date);
+                    return parseInt(iso.split('-')[1]) - 1 === mIdx;
+                });
+
+                const weekdaysCount = getValidWeekdaysCount(parseInt(monthlyAnalysisYear), mIdx);
+                const rateVal = weekdaysCount > 0 ? ((mApps.length / weekdaysCount) * 100).toFixed(1) : "0.0";
+
+                const card = document.createElement('div');
+                card.className = "bg-sage-50/70 p-4 rounded-2xl border border-sage-200 text-center hover:bg-sage-100/70 transition-all";
+                card.innerHTML = `
+                    <span class="text-xs font-bold uppercase tracking-wider text-sage-700 block mb-1">${mName.slice(0,3)}</span>
+                    <div class="text-2xl font-bold font-serif text-charcoal-900">${rateVal}%</div>
+                    <div class="mt-2 text-[11px] text-charcoal-700/70 space-y-0.5">
+                        <div><strong>${mApps.length}</strong> Bookings</div>
+                        <div><strong>${weekdaysCount}</strong> Weekdays</div>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function exportStatisticsData(format) {
+            document.getElementById('exportDropdownMenu').classList.add('hidden');
+            
+            const selectedYear = document.getElementById('statsYearSelect').value;
+            const selectedServiceMonth = document.getElementById('serviceMonthSelect').value;
+            const selectedServiceYear = document.getElementById('serviceYearSelect').value;
+
+            // Synchronized full year bookings
+            const yearApps = appointments.filter(app => {
+                const isoDate = convertDisplayDateToISO(app.date);
+                return isoDate && isoDate.startsWith(selectedYear);
+            });
+            const totalBookingsYear = yearApps.length;
+
+            // Synchronized Service Utilization Filtered Appointments (Month + Year selector synchronization)
+            const serviceFilteredApps = appointments.filter(app => {
+                const iso = convertDisplayDateToISO(app.date);
+                if (!iso) return false;
+                const parts = iso.split('-');
+                const appYear = parts[0];
+                const appMonth = parseInt(parts[1]) - 1;
+
+                if (appYear !== selectedServiceYear) return false;
+                if (selectedServiceMonth !== 'all' && appMonth !== parseInt(selectedServiceMonth)) return false;
+                return true;
+            });
+            const totalServiceFilteredCount = serviceFilteredApps.length;
+
+            const activeServiceTypes = getAllActiveServiceTypes();
+            const serviceCounts = {};
+            activeServiceTypes.forEach(st => serviceCounts[st] = 0);
+            
+            serviceFilteredApps.forEach(app => {
+                const st = app.serviceType || 'others';
+                if (serviceCounts[st] !== undefined) serviceCounts[st]++;
+                else serviceCounts[st] = 1;
+            });
+
+            let peakService = "None";
+            let maxCount = -1;
+            Object.keys(serviceCounts).forEach(st => {
+                if (serviceCounts[st] > maxCount && serviceCounts[st] > 0) {
+                    maxCount = serviceCounts[st];
+                    peakService = st;
+                }
+            });
+
+            const avgRatePeriod = document.getElementById('avgRatePeriodSelect').value;
+            const statAvgMonthlyText = document.getElementById('statAvgMonthly').textContent;
+
+            const servicePeriodLabel = selectedServiceMonth === 'all' 
+                ? `Full Year ${selectedServiceYear}` 
+                : `${monthNamesFull[parseInt(selectedServiceMonth)]} ${selectedServiceYear}`;
+
+            const monthlyDataExport = monthNamesFull.map((mName, mIdx) => {
+                const weekdaysCount = getValidWeekdaysCount(parseInt(selectedYear), mIdx);
+                const monthApps = yearApps.filter(app => {
+                    const iso = convertDisplayDateToISO(app.date);
+                    const parts = iso.split('-');
+                    return parseInt(parts[1]) - 1 === mIdx;
+                });
+                const mBookings = monthApps.length;
+                const utilRate = weekdaysCount > 0 ? ((mBookings / weekdaysCount) * 100).toFixed(1) + '%' : '0.0%';
+                return { month: mName, bookings: mBookings, weekdays: weekdaysCount, utilizationRate: utilRate };
+            });
+
+            const filename = `MSC_9F_ActivityRoom_Statistics_${selectedServiceYear}_${selectedServiceMonth === 'all' ? 'FullYear' : monthNamesFull[parseInt(selectedServiceMonth)]}`;
+
+            if (format === 'html') {
+                const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MSC 9/F Activity Room Statistics Report (${selectedServiceYear})</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; padding: 20px; color: #242924; background: #f9f6ee; max-width: 900px; margin: 0 auto; }
+        h1 { color: #486048; font-size: 22px; border-bottom: 2px solid #c7d6c7; padding-bottom: 10px; }
+        h2 { color: #5a785a; font-size: 18px; margin-top: 25px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #e3eae3; padding: 10px 12px; text-align: left; font-size: 13px; }
+        th { background-color: #e3eae3; color: #3a4e3a; font-weight: 600; }
+        .summary-card { background: #ffffff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c7d6c7; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .metric-value { font-size: 20px; font-weight: bold; color: #333933; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <h1>MSC 9/F Activity Room Utilization Statistics & Analysis</h1>
+    <p><strong>Report Year:</strong> ${selectedYear} | <strong>Distribution Filter Period:</strong> ${servicePeriodLabel} | <strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+    
+    <h2>1. Summary Metrics</h2>
+    <div class="grid-2">
+        <div class="summary-card">
+            <div style="font-size: 12px; color: #5a785a; font-weight: 600;">TOTAL BOOKINGS (${selectedYear})</div>
+            <div class="metric-value">${totalBookingsYear}</div>
+        </div>
+        <div class="summary-card">
+            <div style="font-size: 12px; color: #5a785a; font-weight: 600;">PEAK SERVICE TYPE (${servicePeriodLabel})</div>
+            <div class="metric-value" style="font-size: 16px;">${peakService} (${maxCount > 0 ? maxCount : 0})</div>
+        </div>
+        <div class="summary-card">
+            <div style="font-size: 12px; color: #5a785a; font-weight: 600;">AVG. UTILIZATION RATE (${avgRatePeriod})</div>
+            <div class="metric-value">${statAvgMonthlyText}</div>
+        </div>
+    </div>
+
+    <h2>2. Service Utilization Count & Distribution (${servicePeriodLabel})</h2>
+    <p style="font-size: 12px; color: #5a785a;">Total Bookings in this period: <strong>${totalServiceFilteredCount}</strong></p>
+    <table>
+        <thead>
+            <tr><th>Service Type</th><th style="text-align:center;">Total Count</th><th style="text-align:right;">Percentage Share</th></tr>
+        </thead>
+        <tbody>
+            ${Object.keys(serviceCounts).map(st => {
+                const count = serviceCounts[st] || 0;
+                const pct = totalServiceFilteredCount > 0 ? ((count / totalServiceFilteredCount) * 100).toFixed(1) + '%' : '0.0%';
+                return `<tr><td><strong>${st}</strong></td><td style="text-align:center;">${count}</td><td style="text-align:right;">${pct}</td></tr>`;
+            }).join('')}
+        </tbody>
+    </table>
+
+    <h2>3. Monthly Utilization Rate & Weekday Analysis (${selectedYear})</h2>
+    <table>
+        <thead>
+            <tr><th>Month</th><th style="text-align:center;">Bookings</th><th style="text-align:center;">Valid Weekdays</th><th style="text-align:right;">Utilization Rate</th></tr>
+        </thead>
+        <tbody>
+            ${monthlyDataExport.map(m => `
+                <tr>
+                    <td><strong>${m.month}</strong></td>
+                    <td style="text-align:center;">${m.bookings}</td>
+                    <td style="text-align:center;">${m.weekdays}</td>
+                    <td style="text-align:right; font-weight:600; color:#486048;">${m.utilizationRate}</td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
+</body>
+</html>`;
+                downloadFile(htmlContent, `${filename}.html`, 'text/html');
+                showCustomModal("Export Successful", `Comprehensive statistics report exported as HTML synchronized for ${servicePeriodLabel}.`);
+            } 
+            else if (format === 'xlsx') {
+                let csvContent = `MSC 9/F Activity Room Complete Utilization Statistics (${selectedYear})\r\n\r\n`;
+                csvContent += `SECTION 1: SUMMARY METRICS\r\n`;
+                csvContent += `Total Bookings (${selectedYear}),${totalBookingsYear}\r\n`;
+                csvContent += `Distribution Period Filter,${servicePeriodLabel}\r\n`;
+                csvContent += `Peak Service (${servicePeriodLabel}),${peakService}\r\n`;
+                csvContent += `Average Utilization Rate (${avgRatePeriod}),${statAvgMonthlyText}\r\n\r\n`;
+                
+                csvContent += `SECTION 2: SERVICE UTILIZATION COUNT & DISTRIBUTION (${servicePeriodLabel})\r\n`;
+                csvContent += `Service Type,Total Count,Percentage Share\r\n`;
+                Object.keys(serviceCounts).forEach(st => {
+                    const count = serviceCounts[st] || 0;
+                    const pct = totalServiceFilteredCount > 0 ? ((count / totalServiceFilteredCount) * 100).toFixed(1) + '%' : '0.0%';
+                    csvContent += `"${st}",${count},"${pct}"\r\n`;
+                });
+                
+                csvContent += `\r\nSECTION 3: MONTHLY UTILIZATION RATE & WEEKDAY ANALYSIS (${selectedYear})\r\n`;
+                csvContent += `Month,Bookings,Valid Weekdays,Utilization Rate\r\n`;
+                monthlyDataExport.forEach(m => {
+                    csvContent += `"${m.month}",${m.bookings},${m.weekdays},"${m.utilizationRate}"\r\n`;
+                });
+
+                downloadFile(csvContent, `${filename}.csv`, 'text/csv');
+                showCustomModal("Export Successful", `Comprehensive statistics exported as Spreadsheet (.csv format) synchronized for ${servicePeriodLabel}.`);
+            }
+            else if (format === 'doc') {
+                const docContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><title>Statistics Report</title><meta charset='utf-8'>
+<style>
+  body { font-family: Arial, sans-serif; color: #242924; }
+  h2 { color:#486048; }
+  h3 { color:#5a785a; margin-top:20px; }
+  table { width:100%; border-collapse:collapse; margin-bottom: 20px; }
+  th, td { border: 1px solid #c7d6c7; padding: 8px 10px; font-size: 13px; text-align: left; }
+  th { background:#e3eae3; color:#3a4e3a; }
+  .bar-container { background: #e3eae3; border-radius: 4px; height: 14px; width: 100%; position: relative; overflow: hidden; }
+  .bar-fill { background: #739573; height: 100%; }
+</style>
+</head>
+<body>
+    <h2>MSC 9/F Activity Room Utilization Statistics & Analysis (${selectedYear})</h2>
+    <p><strong>Total Bookings (${selectedYear}):</strong> ${totalBookingsYear} | <strong>Distribution Period Filter:</strong> ${servicePeriodLabel} | <strong>Average Rate:</strong> ${statAvgMonthlyText}</p>
+    
+    <h3>Service Utilization Count & Visual Distribution (${servicePeriodLabel})</h3>
+    <p style="font-size: 12px; color: #5a785a;">Total Bookings in this period: <strong>${totalServiceFilteredCount}</strong></p>
+    <table>
+        <tr style="background:#e3eae3;"><th>Service Type</th><th style="text-align:center;">Total Count</th><th style="text-align:right;">Percentage Share</th><th style="width: 40%;">Distribution Bar</th></tr>
+        ${Object.keys(serviceCounts).map(st => {
+            const count = serviceCounts[st] || 0;
+            const pct = totalServiceFilteredCount > 0 ? parseFloat(((count / totalServiceFilteredCount) * 100).toFixed(1)) : 0;
+            return `<tr>
+                <td><strong>${st}</strong></td>
+                <td style="text-align:center;">${count}</td>
+                <td style="text-align:right;">${pct}%</td>
+                <td>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: ${pct}%;"></div>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('')}
+    </table>
+
+    <h3>Monthly Utilization Rate & Weekday Analysis (${selectedYear})</h3>
+    <table>
+        <tr style="background:#e3eae3;"><th>Month</th><th style="text-align:center;">Bookings</th><th style="text-align:center;">Valid Weekdays</th><th style="text-align:right;">Utilization Rate</th></tr>
+        ${monthlyDataExport.map(m => `
+            <tr><td><strong>${m.month}</strong></td><td style="text-align:center;">${m.bookings}</td><td style="text-align:center;">${m.weekdays}</td><td style="text-align:right; font-weight:600;">${m.utilizationRate}</td></tr>
+        `).join('')}
+    </table>
+</body>
+</html>`;
+                downloadFile(docContent, `${filename}.doc`, 'application/msword');
+                showCustomModal("Export Successful", `Comprehensive statistics exported as Word Document (.doc format) synchronized for ${servicePeriodLabel}.`);
+            }
+            else if (format === 'pdf') {
+                const printContainer = document.createElement('div');
+                printContainer.id = 'printPdfContainer';
+                printContainer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f9f6ee;z-index:99999;overflow-y:auto;padding:30px;box-sizing:border-box;color:#242924;';
+                printContainer.innerHTML = `
+                    <style>
+                        @media print {
+                            body * { visibility: hidden; }
+                            #printPdfContainer, #printPdfContainer * { visibility: visible; }
+                            #printPdfContainer { position: absolute; left: 0; top: 0; background: white; }
+                        }
+                        .pdf-report { max-width: 850px; margin: 0 auto; font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+                        .pdf-header { border-bottom: 2px solid #739573; padding-bottom: 15px; margin-bottom: 25px; }
+                        .pdf-title { font-size: 24px; font-weight: bold; color: #191d19; font-family: 'Lora', serif; }
+                        .pdf-subtitle { font-size: 13px; color: #5a785a; margin-top: 5px; }
+                        .pdf-section { margin-bottom: 30px; }
+                        .pdf-section h3 { font-size: 16px; color: #486048; font-family: 'Lora', serif; border-bottom: 1px solid #c7d6c7; padding-bottom: 6px; margin-bottom: 12px; }
+                        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+                        .metric-box { background: white; border: 1px solid #c7d6c7; border-radius: 12px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+                        .metric-label { font-size: 11px; font-weight: 600; color: #5a785a; text-transform: uppercase; }
+                        .metric-val { font-size: 22px; font-weight: bold; color: #191d19; margin-top: 5px; }
+                        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; border: 1px solid #c7d6c7; margin-bottom: 15px; }
+                        th, td { padding: 10px 14px; text-align: left; font-size: 12px; border-bottom: 1px solid #e3eae3; }
+                        th { background: #e3eae3; color: #3a4e3a; font-weight: 600; }
+                        .bar-track { background: #e3eae3; border-radius: 9999px; height: 10px; width: 100%; overflow: hidden; }
+                        .bar-prog { background: #739573; height: 100%; border-radius: 9999px; }
+                        .close-print-bar { text-align: right; margin-bottom: 20px; }
+                        .btn-print { background: #5a785a; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
+                        .btn-close-view { background: #d1d5db; color: #374151; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; margin-left: 8px; }
+                    </style>
+                    <div class="pdf-report">
+                        <div class="close-print-bar">
+                            <button class="btn-print" onclick="window.print();">Print / Save as PDF</button>
+                            <button class="btn-close-view" onclick="document.body.removeChild(document.getElementById('printPdfContainer'));">Close View</button>
+                        </div>
+                        <div class="pdf-header">
+                            <div class="pdf-title">MSC 9/F Activity Room Utilization Statistics</div>
+                            <div class="pdf-subtitle">Year: ${selectedYear} | Distribution Period Filter: ${servicePeriodLabel} | Generated on ${new Date().toLocaleDateString()}</div>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric-box">
+                                <div class="metric-label">Total Bookings (${selectedYear})</div>
+                                <div class="metric-val">${totalBookingsYear}</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-label">Peak Service (${servicePeriodLabel})</div>
+                                <div class="metric-val" style="font-size:16px;">${peakService} (${maxCount > 0 ? maxCount : 0})</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-label">Avg. Rate (${avgRatePeriod})</div>
+                                <div class="metric-val">${statAvgMonthlyText}</div>
+                            </div>
+                        </div>
+
+                        <div class="pdf-section">
+                            <h3>Service Utilization Count & Visual Distribution Bars (${servicePeriodLabel})</h3>
+                            <p style="font-size:11px; color:#5a785a; margin-bottom:10px;">Total bookings in filter period: <strong>${totalServiceFilteredCount}</strong></p>
+                            <table>
+                                <tr>
+                                    <th>Service Type</th>
+                                    <th style="text-align:center;">Total Count</th>
+                                    <th style="text-align:right;">Percentage</th>
+                                    <th style="width: 45%;">Visual Distribution Bar</th>
+                                </tr>
+                                ${Object.keys(serviceCounts).map(st => {
+                                    const count = serviceCounts[st] || 0;
+                                    const pct = totalServiceFilteredCount > 0 ? parseFloat(((count / totalServiceFilteredCount) * 100).toFixed(1)) : 0;
+                                    return `
+                                        <tr>
+                                            <td><strong>${st}</strong></td>
+                                            <td style="text-align:center;">${count}</td>
+                                            <td style="text-align:right;">${pct}%</td>
+                                            <td>
+                                                <div class="bar-track">
+                                                    <div class="bar-prog" style="width: ${pct}%;"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </table>
+                        </div>
+
+                        <div class="pdf-section">
+                            <h3>Monthly Utilization Rate & Weekday Analysis (${selectedYear})</h3>
+                            <table>
+                                <tr>
+                                    <th>Month</th>
+                                    <th style="text-align:center;">Bookings</th>
+                                    <th style="text-align:center;">Valid Weekdays</th>
+                                    <th style="text-align:right;">Utilization Rate</th>
+                                </tr>
+                                ${monthlyDataExport.map(m => `
+                                    <tr>
+                                        <td><strong>${m.month}</strong></td>
+                                        <td style="text-align:center;">${m.bookings}</td>
+                                        <td style="text-align:center;">${m.weekdays}</td>
+                                        <td style="text-align:right; font-weight:600; color:#486048;">${m.utilizationRate}</td>
+                                    </tr>
+                                `).join('')}
+                            </table>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(printContainer);
+                showCustomModal("PDF Print Preview", `A formatted PDF report synchronized for ${servicePeriodLabel} with visual distribution bar charts has opened. Click 'Print / Save as PDF' to export.`);
+            }
+        }
+
+        function downloadFile(content, fileName, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showCustomModal(title, message, conflictHtml = '', showConfirmBtn = false, onConfirm = null) {
+            const modal = document.getElementById('customModal');
+            const modalBox = document.getElementById('modalBox');
+            const titleEl = document.getElementById('modalTitle');
+            const msgEl = document.getElementById('modalMessage');
+            const detailsEl = document.getElementById('modalConflictDetails');
+            const footerActions = document.getElementById('modalFooterActions');
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+
+            if (conflictHtml) {
+                detailsEl.innerHTML = conflictHtml;
+                detailsEl.classList.remove('hidden');
+            } else {
+                detailsEl.classList.add('hidden');
+            }
+
+            if (showConfirmBtn) {
+                footerActions.innerHTML = `
+                    <button onclick="closeModal()" class="px-4 py-2 rounded-xl border border-sage-300 bg-white text-charcoal-700 font-medium text-xs hover:bg-sage-50">Cancel</button>
+                    <button id="modalConfirmBtn" class="px-5 py-2.5 rounded-xl bg-amber-600 text-cream-50 font-medium text-xs shadow-md hover:bg-amber-700 transition-all">Confirm Double Booking</button>
+                `;
+                document.getElementById('modalConfirmBtn').onclick = () => {
+                    closeModal();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                footerActions.innerHTML = `
+                    <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-sage-600 text-cream-50 font-medium text-xs shadow-md hover:bg-sage-700 transition-all">
+                        Understood
+                    </button>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalBox.classList.remove('scale-95', 'opacity-0');
+                modalBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            const modalBox = document.getElementById('modalBox');
+            modalBox.classList.remove('scale-100', 'opacity-100');
+            modalBox.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function handleAppointmentSubmit(e, forceDoubleBook = false) {
+            if (e) e.preventDefault();
+            
+            const rawDateVal = document.getElementById('appointmentDate').value;
+            const isoDateVal = convertDisplayDateToISO(rawDateVal);
+            const patientNo = document.getElementById('patientNo').value.trim();
+            const timeslotSelectVal = document.getElementById('timeslotSelect').value;
+            const customTimeslotVal = document.getElementById('customTimeslot').value.trim();
+            let timeslot = timeslotSelectVal === 'others' ? (customTimeslotVal || '15:30') : (timeslotSelectVal === '1500' ? '15:00' : (timeslotSelectVal === '1530' ? '15:30' : '16:00'));
+            
+            const therapist = document.getElementById('therapist').value.trim();
+            
+            const serviceTypeSelectVal = document.getElementById('serviceType').value;
+            const customServiceTypeVal = document.getElementById('customServiceType').value.trim();
+            let serviceType = serviceTypeSelectVal === 'others' ? (customServiceTypeVal || 'Custom Service') : serviceTypeSelectVal;
+
+            if (!isoDateVal || !patientNo || !therapist || !serviceType) {
+                showCustomModal("Incomplete Form", "Please fill in all required appointment fields including patient no. and therapist name.");
+                return;
+            }
+
+            const conflictingBooking = appointments.find(app => {
+                const appIso = convertDisplayDateToISO(app.date);
+                return appIso === isoDateVal && 
+                    app.timeslot === timeslot && 
+                    app.therapist && therapist && app.therapist.toLowerCase() !== therapist.toLowerCase();
+            });
+
+            if (conflictingBooking && !forceDoubleBook) {
+                const formattedDate = formatDateString(isoDateVal);
+                const exactPromptMessage = `The timeslot (${timeslot}) on this date (${formattedDate}) has already been registered by a different therapist (${conflictingBooking.therapist}). Please communicate with the corresponding therapist.`;
+                
+                const details = `
+                    <div class="font-semibold mb-1">Conflicting Existing Booking Details:</div>
+                    <ul class="list-disc list-inside space-y-0.5 text-xs">
+                        <li><strong>Therapist:</strong> ${conflictingBooking.therapist}</li>
+                        <li><strong>Timeslot:</strong> ${conflictingBooking.timeslot}</li>
+                        <li><strong>Patient No:</strong> ${conflictingBooking.patientNo}</li>
+                        <li><strong>Service Type:</strong> ${conflictingBooking.serviceType}</li>
+                        <li><strong>Date:</strong> ${formattedDate}</li>
+                    </ul>
+                    <div class="mt-2 text-amber-900 font-medium">Do you wish to confirm double booking?</div>
+                `;
+
+                showCustomModal("Booking Conflict Reminder", exactPromptMessage, details, true, () => {
+                    handleAppointmentSubmit(null, true);
+                });
+                return;
+            }
+
+            const newApp = {
+                id: Date.now(),
+                date: isoDateVal,
+                timeslot: timeslot,
+                patientNo: patientNo,
+                therapist: therapist,
+                serviceType: serviceType
+            };
+
+            appointments.push(newApp);
+            saveAppointmentsToLocalStorage();
+
+            document.getElementById('appointmentForm').reset();
+            if (appointmentPicker) appointmentPicker.setDate("10/08/2026");
+            document.getElementById('patientNo').value = "";
+            document.getElementById('timeslotSelect').value = "1530";
+            document.getElementById('customTimeslot').style.display = 'none';
+            document.getElementById('serviceType').value = "";
+            document.getElementById('customServiceType').style.display = 'none';
+
+            renderCalendar();
+            updateStatistics();
+
+            showCustomModal("Booking Successful", `MSC 9/F Activity Room successfully booked for ${formatDateString(isoDateVal)} at ${timeslot} by Therapist ${therapist} (${serviceType}).`);
+        }
+
+        function switchCalendarView(mode) {
+            currentCalendarViewMode = mode;
+            const monthBtn = document.getElementById('viewMonthBtn');
+            const weekBtn = document.getElementById('viewWeekBtn');
+
+            if (mode === 'month') {
+                monthBtn.className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-50 text-sage-800 shadow-sm";
+                weekBtn.className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-sage-100 hover:text-white";
+            } else {
+                weekBtn.className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-50 text-sage-800 shadow-sm";
+                monthBtn.className = "px-4 py-2 rounded-lg text-xs font-semibold transition-all text-sage-100 hover:text-white";
+            }
+            renderCalendar();
+        }
+
+        function changeCalendarPeriod(direction) {
+            if (currentCalendarViewMode === 'month') {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            } else {
+                currentCalendarDate.setDate(currentCalendarDate.getDate() + (direction * 7));
+            }
+            renderCalendar();
+        }
+
+        function getStartOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.setDate(diff));
+        }
+
+        function isCurrentDateToday(year, month, day) {
+            const today = new Date();
+            return today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        }
+
+        function renderCalendar() {
+            const container = document.getElementById('calendarContainer');
+            const periodLabel = document.getElementById('calendarPeriodLabel');
+            const filterTherapist = document.getElementById('filterTherapist').value;
+
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            if (currentCalendarViewMode === 'month') {
+                periodLabel.textContent = `${monthNamesFull[month]} ${year}`;
+                container.innerHTML = generateMonthViewHTML(year, month, filterTherapist);
+            } else {
+                const weekStart = getStartOfWeek(new Date(currentCalendarDate));
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                periodLabel.textContent = `${weekStart.getDate()} ${monthNamesFull[weekStart.getMonth()].slice(0,3)} - ${weekEnd.getDate()} ${monthNamesFull[weekEnd.getMonth()].slice(0,3)} ${year}`;
+                container.innerHTML = generateWeekViewHTML(weekStart, filterTherapist);
+            }
+        }
+
+        function generateMonthViewHTML(year, month, filterTherapist) {
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            let html = `<div class="grid grid-cols-7 gap-2 min-w-[700px]">`;
+            
+            dayNames.forEach(d => {
+                html += `<div class="text-center font-semibold text-xs py-2 text-sage-700 bg-sage-100/60 rounded-lg">${d}</div>`;
+            });
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                html += `<div class="bg-cream-100/40 rounded-xl min-h-[100px] border border-sage-100 opacity-40"></div>`;
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const dayApps = filterTherapist === 'admin_special' ? [] : appointments.filter(app => {
+                    const appIso = convertDisplayDateToISO(app.date);
+                    if (appIso !== dateStr) return false;
+                    if (filterTherapist !== 'all' && app.therapist.toLowerCase() !== filterTherapist.toLowerCase()) return false;
+                    return true;
+                });
+
+                const daySpecials = (filterTherapist !== 'all' && filterTherapist !== 'admin_special' && filterTherapist !== '') ? [] : specialActivities.filter(spec => {
+                    const specIso = convertDisplayDateToISO(spec.date);
+                    return specIso === dateStr;
+                });
+
+                const totalItemsCount = dayApps.length + daySpecials.length;
+                const isToday = isCurrentDateToday(year, month, day);
+
+                html += `
+                    <div class="bg-white rounded-xl p-2.5 min-h-[110px] border ${isToday ? 'border-sage-500 ring-2 ring-sage-300' : 'border-sage-200'} flex flex-col justify-between shadow-2xs hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold ${isToday ? 'bg-sage-600 text-cream-50 w-6 h-6 rounded-full flex items-center justify-center' : 'text-charcoal-800'}">${day}</span>
+                            ${totalItemsCount > 0 ? `<span class="text-[10px] bg-sage-100 text-sage-800 px-1.5 py-0.5 rounded font-medium">${totalItemsCount} item${totalItemsCount>1?'s':''}</span>` : ''}
+                        </div>
+                        <div class="space-y-1.5 mt-2 overflow-y-auto max-h-[90px]">
+                `;
+
+                // Render Special Activities
+                if (daySpecials.length > 0) {
+                    daySpecials.forEach(spec => {
+                        html += `
+                            <div onclick="openSpecialActivityDetails(${spec.id})" title="Click to view/edit admin special activity details" 
+                                class="p-2 rounded-xl bg-navy-700 text-cream-50 hover:bg-navy-800 border border-navy-800 text-[11px] cursor-pointer transition-all shadow-2xs">
+                                <div class="flex items-center justify-between text-[10px] font-semibold text-sage-300 mb-1">
+                                    <span class="truncate pr-1"><i class="fa-solid fa-shield-halved text-[10px] mr-1 text-sage-300"></i>Special Activity</span>
+                                    <span class="text-[9px] text-cream-50 bg-navy-800 px-1.5 py-0.5 rounded shrink-0">${spec.timeslot}</span>
+                                </div>
+                                <div class="text-[11px] font-medium text-cream-50 leading-snug line-clamp-2 break-words">${spec.details}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                // Render Regular Appointments
+                if (dayApps.length > 0) {
+                    dayApps.forEach(app => {
+                        html += `
+                            <div onclick="openAppointmentDetails(${app.id})" title="Click to view details / edit" 
+                                class="p-1.5 rounded-lg bg-sage-50 hover:bg-sage-100 border border-sage-200 text-[11px] cursor-pointer transition-all">
+                                <div class="font-semibold text-sage-900 truncate flex items-center justify-between">
+                                    <span><i class="fa-solid fa-user-doctor text-[10px] mr-1 text-sage-600"></i>${app.therapist}</span>
+                                    <span class="text-[9px] text-sage-700 bg-sage-200 px-1 rounded">${app.timeslot || '15:30'}</span>
+                                </div>
+                                <div class="text-charcoal-700/80 truncate text-[10px] mt-0.5">${app.serviceType}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                if (totalItemsCount === 0) {
+                    html += `<div class="text-[10px] text-charcoal-700/30 text-center py-4">Available</div>`;
+                }
+
+                html += `</div></div>`;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        function generateWeekViewHTML(startDate, filterTherapist) {
+            let html = `<div class="grid grid-cols-7 gap-3 min-w-[750px]">`;
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            for (let i = 0; i < 7; i++) {
+                const currDate = new Date(startDate);
+                currDate.setDate(currDate.getDate() + i);
+                
+                const year = currDate.getFullYear();
+                const month = String(currDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currDate.getDate()).padStart(2, '0');
+                const dateStr = `${year}-${month}-${day}`;
+
+                const dayApps = filterTherapist === 'admin_special' ? [] : appointments.filter(app => {
+                    const appIso = convertDisplayDateToISO(app.date);
+                    if (appIso !== dateStr) return false;
+                    if (filterTherapist !== 'all' && app.therapist.toLowerCase() !== filterTherapist.toLowerCase()) return false;
+                    return true;
+                });
+
+                const daySpecials = (filterTherapist !== 'all' && filterTherapist !== 'admin_special' && filterTherapist !== '') ? [] : specialActivities.filter(spec => {
+                    const specIso = convertDisplayDateToISO(spec.date);
+                    return specIso === dateStr;
+                });
+
+                html += `
+                    <div class="bg-white rounded-2xl p-3 border border-sage-200 shadow-2xs flex flex-col min-h-[350px]">
+                        <div class="text-center pb-3 border-b border-sage-100">
+                            <span class="text-xs font-semibold text-sage-700 block uppercase">${dayNames[currDate.getDay()]}</span>
+                            <span class="text-lg font-bold font-serif text-charcoal-900">${currDate.getDate()}</span>
+                        </div>
+                        <div class="space-y-2 mt-3 flex-grow overflow-y-auto">
+                `;
+
+                if (daySpecials.length > 0) {
+                    daySpecials.forEach(spec => {
+                        html += `
+                            <div onclick="openSpecialActivityDetails(${spec.id})" class="p-2.5 rounded-xl bg-navy-700 text-cream-50 hover:bg-navy-800 border border-navy-800 text-xs cursor-pointer shadow-2xs">
+                                <div class="flex items-center justify-between text-[10px] font-semibold text-sage-300 mb-1">
+                                    <span>Special Activity</span>
+                                    <span>${spec.timeslot}</span>
+                                </div>
+                                <div class="text-xs text-cream-50 font-medium">${spec.details}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                if (dayApps.length > 0) {
+                    dayApps.forEach(app => {
+                        html += `
+                            <div onclick="openAppointmentDetails(${app.id})" class="p-2 rounded-xl bg-sage-50 hover:bg-sage-100 border border-sage-200 text-xs cursor-pointer">
+                                <div class="font-bold text-sage-900 flex justify-between">
+                                    <span>${app.therapist}</span>
+                                    <span class="text-[10px] text-sage-700 bg-sage-200 px-1 rounded">${app.timeslot}</span>
+                                </div>
+                                <div class="text-charcoal-700 text-[11px] mt-0.5">${app.serviceType}</div>
+                                <div class="text-[10px] text-charcoal-700/60 mt-0.5">Pt: ${app.patientNo}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                if (dayApps.length === 0 && daySpecials.length === 0) {
+                    html += `<div class="text-xs text-charcoal-700/30 text-center py-10">No activities</div>`;
+                }
+
+                html += `</div></div>`;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        function openAppointmentDetails(id) {
+            const app = appointments.find(a => a.id === id);
+            if (!app) return;
+
+            document.getElementById('editAppId').value = app.id;
+            document.getElementById('editIsSpecial').value = "false";
+            
+            document.getElementById('detailsModalHeader').className = "bg-sage-700 px-6 py-4 text-cream-50 flex items-center justify-between";
+            document.getElementById('detailsModalTitle').textContent = "Appointment Details & Management";
+            document.getElementById('detailsModalHeaderIcon').className = "fa-regular fa-calendar-check text-lg";
+
+            document.getElementById('editPatientNoGroup').classList.remove('hidden');
+            document.getElementById('editTherapistGroup').classList.remove('hidden');
+            document.getElementById('editServiceTypeGroup').classList.remove('hidden');
+            document.getElementById('editSpecialDetailsGroup').classList.add('hidden');
+            document.getElementById('editTimeslotLabel').textContent = "Timeslot";
+
+            if (editPicker) editPicker.setDate(formatDateString(convertDisplayDateToISO(app.date)));
+            document.getElementById('editPatientNo').value = app.patientNo || '';
+            document.getElementById('editTimeslot').value = app.timeslot || '15:30';
+            document.getElementById('editTherapist').value = app.therapist || '';
+
+            const st = app.serviceType || 'power w/c';
+            const editServiceSelect = document.getElementById('editServiceType');
+            if (baseServiceTypesList.includes(st)) {
+                editServiceSelect.value = st;
+                document.getElementById('editCustomServiceType').style.display = 'none';
+            } else {
+                editServiceSelect.value = 'others';
+                const customInput = document.getElementById('editCustomServiceType');
+                customInput.style.display = 'block';
+                customInput.value = st;
+            }
+
+            openDetailsModalBox();
+        }
+
+        function openSpecialActivityDetails(id) {
+            const spec = specialActivities.find(s => s.id === id);
+            if (!spec) return;
+
+            document.getElementById('editAppId').value = spec.id;
+            document.getElementById('editIsSpecial').value = "true";
+
+            document.getElementById('detailsModalHeader').className = "bg-navy-700 px-6 py-4 text-cream-50 flex items-center justify-between";
+            document.getElementById('detailsModalTitle').textContent = "Admin Special Activity Details";
+            document.getElementById('detailsModalHeaderIcon').className = "fa-solid fa-shield-halved text-sage-300 text-lg";
+
+            document.getElementById('editPatientNoGroup').classList.add('hidden');
+            document.getElementById('editTherapistGroup').classList.add('hidden');
+            document.getElementById('editServiceTypeGroup').classList.add('hidden');
+            document.getElementById('editSpecialDetailsGroup').classList.remove('hidden');
+            document.getElementById('editTimeslotLabel').textContent = "Timeslot / Duration";
+
+            if (editPicker) editPicker.setDate(formatDateString(convertDisplayDateToISO(spec.date)));
+            document.getElementById('editTimeslot').value = spec.timeslot || '';
+            document.getElementById('editSpecialDescription').value = spec.details || '';
+
+            openDetailsModalBox();
+        }
+
+        function openDetailsModalBox() {
+            const modal = document.getElementById('detailsModal');
+            const box = document.getElementById('detailsModalBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            const box = document.getElementById('detailsModalBox');
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function saveEditedAppointment() {
+            const id = parseInt(document.getElementById('editAppId').value);
+            const isSpecial = document.getElementById('editIsSpecial').value === "true";
+            const rawDate = document.getElementById('editDate').value;
+            const isoDate = convertDisplayDateToISO(rawDate);
+            const timeslot = document.getElementById('editTimeslot').value.trim();
+
+            if (isSpecial) {
+                const spec = specialActivities.find(s => s.id === id);
+                const details = document.getElementById('editSpecialDescription').value.trim();
+                if (spec && isoDate && timeslot && details) {
+                    spec.date = isoDate;
+                    spec.timeslot = timeslot;
+                    spec.details = details;
+                    saveSpecialActivitiesToLocalStorage();
+                    closeDetailsModal();
+                    renderCalendar();
+                    showCustomModal("Updated", "Admin special activity details updated successfully.");
+                }
+            } else {
+                const app = appointments.find(a => a.id === id);
+                const patientNo = document.getElementById('editPatientNo').value.trim();
+                const therapist = document.getElementById('editTherapist').value.trim();
+                const stSelect = document.getElementById('editServiceType').value;
+                const customSt = document.getElementById('editCustomServiceType').value.trim();
+                const serviceType = stSelect === 'others' ? (customSt || 'Custom Service') : stSelect;
+
+                if (app && isoDate && patientNo && therapist && timeslot && serviceType) {
+                    app.date = isoDate;
+                    app.patientNo = patientNo;
+                    app.timeslot = timeslot;
+                    app.therapist = therapist;
+                    app.serviceType = serviceType;
+                    saveAppointmentsToLocalStorage();
+                    closeDetailsModal();
+                    renderCalendar();
+                    updateStatistics();
+                    showCustomModal("Updated", "Appointment entry updated successfully.");
+                }
+            }
+        }
+
+        function deleteAppointmentFromModal() {
+            const id = parseInt(document.getElementById('editAppId').value);
+            const isSpecial = document.getElementById('editIsSpecial').value === "true";
+
+            if (isSpecial) {
+                specialActivities = specialActivities.filter(s => s.id !== id);
+                saveSpecialActivitiesToLocalStorage();
+                closeDetailsModal();
+                renderCalendar();
+                showCustomModal("Deleted", "Special activity entry removed.");
+            } else {
+                appointments = appointments.filter(a => a.id !== id);
+                saveAppointmentsToLocalStorage();
+                closeDetailsModal();
+                renderCalendar();
+                updateStatistics();
+                showCustomModal("Deleted", "Appointment entry removed.");
+            }
+        }
+    </script>
+</body>
+</html>
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
+  authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
+  projectId: "ot-msc-9f-activity-room",
+  storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
+  messagingSenderId: "899540598545",
+  appId: "1:899540598545:web:3eb3e296dbed3070ee16b0",
+  measurementId: "G-FZD8X1QSTT"
+};
