@@ -79,6 +79,54 @@
 </head>
 <body class="bg-cream-100 text-charcoal-800 min-h-screen flex flex-col antialiased selection:bg-sage-200 selection:text-sage-800">
 
+    <!-- ===================== Login Gate ===================== -->
+    <div id="loginScreen" class="fixed inset-0 z-[100] flex items-center justify-center bg-gradient-to-b from-cream-100 via-sage-50/60 to-cream-100 px-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-sage-600 flex items-center justify-center text-cream-50 shadow-lg mb-4">
+                    <i class="fa-solid fa-leaf text-2xl"></i>
+                </div>
+                <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-sage-100 text-sage-800 text-xs font-semibold uppercase tracking-wider mb-3 border border-sage-200">
+                    <i class="fa-solid fa-hospital text-sage-600 mr-1.5"></i> Occupational Therapy Department
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-bold font-serif text-charcoal-900 leading-tight">
+                    MSC 9/F Activity Room OT Utilization System
+                </h1>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="bg-cream-50 rounded-3xl border border-sage-200/80 shadow-xl p-8 space-y-5">
+                <div class="space-y-2">
+                    <label for="loginPassword" class="block text-sm font-semibold text-charcoal-800">
+                        <i class="fa-solid fa-lock text-sage-600 mr-1.5"></i> Password <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword" required autofocus placeholder="Enter password"
+                            class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs pr-10">
+                        <button type="button" onclick="toggleLoginPasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sage-600" aria-label="Toggle password visibility">
+                            <i id="loginPasswordEyeIcon" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="loginErrorMessage" class="hidden text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                    <i class="fa-solid fa-circle-exclamation mr-1.5"></i> Incorrect password. Please try again.
+                </div>
+
+                <button type="submit" class="w-full px-6 py-3 rounded-xl bg-sage-600 text-cream-50 font-medium text-sm shadow-md hover:bg-sage-700 transition-all active:scale-95 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Access System</span>
+                </button>
+            </form>
+
+            <p class="text-center text-xs text-charcoal-700/60 mt-6">
+                Occupational Therapy Department &copy; 2026
+            </p>
+        </div>
+    </div>
+
+    <!-- ===================== Main System (hidden until correct password is entered) ===================== -->
+    <div id="appContent" style="display:none;">
+
     <header class="sticky top-0 z-50 bg-cream-50/90 backdrop-blur-md border-b border-sage-200 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -107,8 +155,8 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <!-- Cloud Status Indicator -->
-                <div id="cloudStatusBadge" class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold shadow-2xs">
+                <!-- Cloud Status Indicator (hidden from display; Firebase connection logic below still runs and updates these hidden elements) -->
+                <div id="cloudStatusBadge" class="hidden items-center px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold shadow-2xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
                     <span id="cloudStatusText">Connecting Cloud...</span>
                 </div>
@@ -148,9 +196,6 @@
                     Real-time cloud synchronized platform for room booking, schedule coordination, and utilization analytics across all departmental devices.
                 </p>
                 <div class="flex flex-wrap justify-center gap-3 text-xs font-medium text-sage-700">
-                    <span class="inline-flex items-center px-3 py-1 bg-cream-50 rounded-lg border border-sage-200 shadow-2xs">
-                        <i class="fa-solid fa-cloud-arrow-up mr-2 text-emerald-600"></i> Multi-Device Cloud Sync
-                    </span>
                     <span class="inline-flex items-center px-3 py-1 bg-cream-50 rounded-lg border border-sage-200 shadow-2xs">
                         <i class="fa-solid fa-user-doctor mr-2 text-sage-600"></i> Therapists Supported
                     </span>
@@ -711,7 +756,7 @@
                 </div>
                 <div>
                     <p class="font-bold font-serif text-charcoal-900">MSC 9/F Activity Room Management System</p>
-                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department © 2026 • Firebase Cloud Synchronized</p>
+                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department © 2026</p>
                 </div>
             </div>
             <div class="flex items-center space-x-6 text-xs text-charcoal-700/80">
@@ -723,7 +768,62 @@
         </div>
     </footer>
 
+    </div>
+    <!-- ===================== End Main System ===================== -->
+
+    <!-- ===================== Login Gate Logic ===================== -->
+    <script>
+        const SYSTEM_PASSWORD = 'ychoccu';
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContent').style.display = 'contents';
+        }
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const entered = document.getElementById('loginPassword').value;
+            const errorBox = document.getElementById('loginErrorMessage');
+            if (entered === SYSTEM_PASSWORD) {
+                errorBox.classList.add('hidden');
+                try { sessionStorage.setItem('otSystemAuthenticated', 'true'); } catch (e) {}
+                showApp();
+            } else {
+                errorBox.classList.remove('hidden');
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+            }
+        }
+
+        function toggleLoginPasswordVisibility() {
+            const input = document.getElementById('loginPassword');
+            const icon = document.getElementById('loginPasswordEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-regular fa-eye';
+            }
+        }
+
+        // Skip the login screen if this browser tab was already authenticated in this session
+        (function checkExistingSession() {
+            try {
+                if (sessionStorage.getItem('otSystemAuthenticated') === 'true') {
+                    showApp();
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Libraries for full-data, chart-inclusive Utilization Statistics export (Word/.doc, Excel/.xlsx, PDF, HTML) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -1704,34 +1804,134 @@
             }
         }
 
-        function exportStatisticsData(format) {
-            toggleExportDropdown();
-            const selYear = document.getElementById('statsYearSelect').value;
-            const total = document.getElementById('statTotalBookings').innerText;
-            const peak = document.getElementById('statPeakService').innerText;
-            const avgRate = document.getElementById('statAvgMonthly').innerText;
+        // ===================== Utilization Statistics Export (Full Data + Chart) =====================
+        // Produces real, fully-populated .xlsx, .pdf, .doc (Word) and .html files containing the
+        // complete Service Distribution table, the complete Monthly Utilization Rate table, the
+        // summary metrics, and rendered charts (bar chart for service distribution, line chart for
+        // monthly rate trend). Scrapes the currently rendered tables so the export always matches
+        // exactly what's on screen (respecting the selected year/month filters).
 
-            let filename = `OT_MSC_9F_Utilization_Statistics_${selYear}.${format}`;
-            let content = `OT MSC 9/F Activity Room Utilization Report (${selYear})\n`;
-            content += `==============================================\n`;
-            content += `Total Bookings: ${total}\n`;
-            content += `Peak Service: ${peak}\n`;
-            content += `Avg. Monthly Rate: ${avgRate}\n\n`;
-            content += `Generated on: ${new Date().toLocaleString()}\n`;
+        function getServiceDistributionRows() {
+            const rows = [];
+            document.querySelectorAll('#serviceTableBody tr').forEach(tr => {
+                const tds = tr.querySelectorAll('td');
+                if (tds.length >= 3) {
+                    rows.push({
+                        service: tds[0].textContent.trim(),
+                        count: tds[1].textContent.trim(),
+                        percent: tds[2].textContent.trim().replace('%', '')
+                    });
+                }
+            });
+            return rows;
+        }
 
-            if (format === 'html') {
-                content = `
-                    <html><head><title>Utilization Report ${selYear}</title></head>
-                    <body style="font-family: sans-serif; padding: 20px;">
-                        <h2>MSC 9/F Activity Room Utilization Report - ${selYear}</h2>
-                        <p><strong>Total Bookings:</strong> ${total}</p>
-                        <p><strong>Peak Service:</strong> ${peak}</p>
-                        <p><strong>Avg. Monthly Rate:</strong> ${avgRate}</p>
-                    </body></html>
-                `;
-            }
+        function getMonthlyGridRows() {
+            const rows = [];
+            document.querySelectorAll('#monthlyStatsGrid > div').forEach(card => {
+                const month = card.querySelector('span') ? card.querySelector('span').textContent.trim() : '';
+                const divs = card.querySelectorAll('div');
+                const bookings = divs[0] ? divs[0].textContent.trim() : '0';
+                const weekdaysRaw = divs[1] ? divs[1].textContent.trim() : '0 Weekdays';
+                const rateRaw = divs[2] ? divs[2].textContent.trim() : '0% Rate';
+                const weekdaysMatch = weekdaysRaw.match(/[\d.]+/);
+                const rateMatch = rateRaw.match(/[\d.]+/);
+                rows.push({
+                    month: month,
+                    bookings: bookings,
+                    weekdays: weekdaysMatch ? weekdaysMatch[0] : '0',
+                    rate: rateMatch ? rateMatch[0] : '0'
+                });
+            });
+            return rows;
+        }
 
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        function collectExportContext() {
+            return {
+                year: document.getElementById('statsYearSelect').value,
+                total: document.getElementById('statTotalBookings').innerText,
+                peak: document.getElementById('statPeakService').innerText,
+                avgRateValue: document.getElementById('statAvgMonthly').innerText,
+                avgRateLabel: document.getElementById('avgRateSubLabel').innerText,
+                periodBadge: document.getElementById('serviceDistributionFilterBadge').innerText,
+                serviceRows: getServiceDistributionRows(),
+                monthlyRows: getMonthlyGridRows()
+            };
+        }
+
+        function generateServiceChartImage(serviceRows) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 700;
+            canvas.height = 380;
+            const ctx = canvas.getContext('2d');
+            const labels = serviceRows.map(r => r.service);
+            const counts = serviceRows.map(r => parseInt(r.count, 10) || 0);
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Count',
+                        data: counts,
+                        backgroundColor: '#5a785a'
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Service Utilization Distribution', font: { size: 16 } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+            const dataUrl = chart.toBase64Image('image/png', 1.0);
+            chart.destroy();
+            return dataUrl;
+        }
+
+        function generateMonthlyChartImage(monthlyRows) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 700;
+            canvas.height = 380;
+            const ctx = canvas.getContext('2d');
+            const labels = monthlyRows.map(r => r.month);
+            const rates = monthlyRows.map(r => parseFloat(r.rate) || 0);
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Utilization Rate (%)',
+                        data: rates,
+                        borderColor: '#285285',
+                        backgroundColor: 'rgba(40,82,133,0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#285285'
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Monthly Utilization Rate Trend', font: { size: 16 } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { callback: v => v + '%' } }
+                    }
+                }
+            });
+            const dataUrl = chart.toBase64Image('image/png', 1.0);
+            chart.destroy();
+            return dataUrl;
+        }
+
+        function downloadBlob(blob, filename) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -1740,6 +1940,235 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        function buildReportHtml(ctx) {
+            const serviceTableRows = ctx.serviceRows.map(r =>
+                `<tr><td>${r.service}</td><td align="center">${r.count}</td><td align="right">${r.percent}%</td></tr>`
+            ).join('');
+            const monthlyTableRows = ctx.monthlyRows.map(r =>
+                `<tr><td>${r.month}</td><td align="center">${r.bookings}</td><td align="center">${r.weekdays}</td><td align="center">${r.rate}%</td></tr>`
+            ).join('');
+
+            return `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>MSC 9/F Activity Room Utilization Report ${ctx.year}</title>
+<style>
+    body { font-family: Calibri, Arial, sans-serif; color:#242924; padding: 20px; }
+    h1 { font-size: 20pt; color:#163050; margin-bottom: 4px; }
+    h2 { font-size: 14pt; color:#3a4e3a; margin-top: 28px; }
+    .meta { font-size: 10pt; color: #555; margin-bottom: 16px; }
+    table { border-collapse: collapse; width:100%; margin-top:10px; }
+    th, td { border:1px solid #a3bba3; padding:6px 10px; font-size:10.5pt; }
+    th { background:#e3eae3; text-align:left; }
+    .summary-table td { border:none; padding:4px 10px 4px 0; font-size: 11pt; }
+    img { margin-top:12px; max-width:650px; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+    <h1>MSC 9/F Activity Room Utilization Report — ${ctx.year}</h1>
+    <p class="meta">Occupational Therapy Department &bull; Generated on ${new Date().toLocaleString()}</p>
+
+    <table class="summary-table">
+        <tr><td><b>Total Bookings:</b></td><td>${ctx.total}</td></tr>
+        <tr><td><b>Peak Service:</b></td><td>${ctx.peak}</td></tr>
+        <tr><td><b>${ctx.avgRateLabel}:</b></td><td>${ctx.avgRateValue}</td></tr>
+        <tr><td><b>Service Distribution Period:</b></td><td>${ctx.periodBadge}</td></tr>
+    </table>
+
+    <h2>Service Utilization Distribution</h2>
+    <img src="${ctx.chartServiceImg}" alt="Service Distribution Chart">
+    <table>
+        <tr><th>Service Type</th><th>Total Count</th><th>Percentage</th></tr>
+        ${serviceTableRows}
+    </table>
+
+    <h2>Monthly Utilization Rate &amp; Weekday Analysis</h2>
+    <img src="${ctx.chartMonthlyImg}" alt="Monthly Utilization Rate Chart">
+    <table>
+        <tr><th>Month</th><th>Bookings</th><th>Weekdays</th><th>Rate</th></tr>
+        ${monthlyTableRows}
+    </table>
+</body>
+</html>`;
+        }
+
+        function exportAsWord(ctx) {
+            const html = buildReportHtml(ctx);
+            const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.doc`);
+        }
+
+        function exportAsHtmlFile(ctx) {
+            const html = buildReportHtml(ctx);
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.html`);
+        }
+
+        async function exportAsPDF(ctx) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+            const marginX = 40;
+            const pageHeight = doc.internal.pageSize.getHeight();
+            let y = 50;
+
+            doc.setFontSize(17);
+            doc.setTextColor(22, 48, 80);
+            doc.text(`MSC 9/F Activity Room Utilization Report - ${ctx.year}`, marginX, y);
+            y += 18;
+            doc.setFontSize(9);
+            doc.setTextColor(90, 90, 90);
+            doc.text(`Occupational Therapy Department  |  Generated on ${new Date().toLocaleString()}`, marginX, y);
+            y += 22;
+
+            doc.setFontSize(11);
+            doc.setTextColor(30, 30, 30);
+            doc.text(`Total Bookings: ${ctx.total}`, marginX, y); y += 16;
+            doc.text(`Peak Service: ${ctx.peak}`, marginX, y); y += 16;
+            doc.text(`${ctx.avgRateLabel}: ${ctx.avgRateValue}`, marginX, y); y += 16;
+            doc.text(`Service Distribution Period: ${ctx.periodBadge}`, marginX, y); y += 22;
+
+            doc.setFontSize(13);
+            doc.setTextColor(58, 78, 58);
+            doc.text('Service Utilization Distribution', marginX, y);
+            y += 12;
+            doc.addImage(ctx.chartServiceImg, 'PNG', marginX, y, 500, 270);
+            y += 285;
+
+            doc.autoTable({
+                startY: y,
+                margin: { left: marginX, right: marginX },
+                head: [['Service Type', 'Total Count', 'Percentage']],
+                body: ctx.serviceRows.map(r => [r.service, r.count, `${r.percent}%`]),
+                theme: 'grid',
+                headStyles: { fillColor: [90, 120, 90] },
+                styles: { fontSize: 9 }
+            });
+            y = doc.lastAutoTable.finalY + 30;
+
+            if (y > pageHeight - 320) { doc.addPage(); y = 50; }
+
+            doc.setFontSize(13);
+            doc.setTextColor(22, 48, 80);
+            doc.text('Monthly Utilization Rate & Weekday Analysis', marginX, y);
+            y += 12;
+            doc.addImage(ctx.chartMonthlyImg, 'PNG', marginX, y, 500, 270);
+            y += 285;
+
+            if (y > pageHeight - 260) { doc.addPage(); y = 50; }
+
+            doc.autoTable({
+                startY: y,
+                margin: { left: marginX, right: marginX },
+                head: [['Month', 'Bookings', 'Weekdays', 'Rate']],
+                body: ctx.monthlyRows.map(r => [r.month, r.bookings, r.weekdays, `${r.rate}%`]),
+                theme: 'grid',
+                headStyles: { fillColor: [40, 82, 133] },
+                styles: { fontSize: 9 }
+            });
+
+            doc.save(`OT_MSC_9F_Utilization_Statistics_${ctx.year}.pdf`);
+        }
+
+        async function exportAsExcel(ctx) {
+            const workbook = new ExcelJS.Workbook();
+            workbook.creator = 'OT MSC 9/F Utilization System';
+            workbook.created = new Date();
+
+            const stripPrefix = (dataUrl) => dataUrl.split(',')[1];
+
+            // --- Summary sheet (with embedded charts) ---
+            const summarySheet = workbook.addWorksheet('Summary');
+            summarySheet.getColumn(1).width = 28;
+            summarySheet.getColumn(2).width = 28;
+
+            summarySheet.mergeCells('A1:B1');
+            summarySheet.getCell('A1').value = `MSC 9/F Activity Room Utilization Report - ${ctx.year}`;
+            summarySheet.getCell('A1').font = { bold: true, size: 14, color: { argb: 'FF163050' } };
+
+            summarySheet.getCell('A2').value = 'Generated on';
+            summarySheet.getCell('B2').value = new Date().toLocaleString();
+            summarySheet.getCell('A3').value = 'Total Bookings';
+            summarySheet.getCell('B3').value = isNaN(parseInt(ctx.total, 10)) ? ctx.total : parseInt(ctx.total, 10);
+            summarySheet.getCell('A4').value = 'Peak Service';
+            summarySheet.getCell('B4').value = ctx.peak;
+            summarySheet.getCell('A5').value = ctx.avgRateLabel;
+            summarySheet.getCell('B5').value = ctx.avgRateValue;
+            summarySheet.getCell('A6').value = 'Service Distribution Period';
+            summarySheet.getCell('B6').value = ctx.periodBadge;
+            ['A2', 'A3', 'A4', 'A5', 'A6'].forEach(c => summarySheet.getCell(c).font = { bold: true });
+
+            const serviceImgId = workbook.addImage({ base64: stripPrefix(ctx.chartServiceImg), extension: 'png' });
+            summarySheet.addImage(serviceImgId, { tl: { col: 0, row: 7 }, ext: { width: 500, height: 270 } });
+
+            const monthlyImgId = workbook.addImage({ base64: stripPrefix(ctx.chartMonthlyImg), extension: 'png' });
+            summarySheet.addImage(monthlyImgId, { tl: { col: 0, row: 22 }, ext: { width: 500, height: 270 } });
+
+            // --- Service Distribution sheet (full data) ---
+            const svcSheet = workbook.addWorksheet('Service Distribution');
+            svcSheet.columns = [
+                { header: 'Service Type', key: 'service', width: 26 },
+                { header: 'Total Count', key: 'count', width: 16 },
+                { header: 'Percentage (%)', key: 'percent', width: 18 }
+            ];
+            svcSheet.getRow(1).font = { bold: true };
+            svcSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3EAE3' } };
+            ctx.serviceRows.forEach(r => svcSheet.addRow({
+                service: r.service,
+                count: isNaN(parseInt(r.count, 10)) ? r.count : parseInt(r.count, 10),
+                percent: isNaN(parseFloat(r.percent)) ? r.percent : parseFloat(r.percent)
+            }));
+
+            // --- Monthly Rates sheet (full data) ---
+            const monSheet = workbook.addWorksheet('Monthly Rates');
+            monSheet.columns = [
+                { header: 'Month', key: 'month', width: 14 },
+                { header: 'Bookings', key: 'bookings', width: 14 },
+                { header: 'Weekdays', key: 'weekdays', width: 14 },
+                { header: 'Rate (%)', key: 'rate', width: 14 }
+            ];
+            monSheet.getRow(1).font = { bold: true };
+            monSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3EAE3' } };
+            ctx.monthlyRows.forEach(r => monSheet.addRow({
+                month: r.month,
+                bookings: isNaN(parseInt(r.bookings, 10)) ? r.bookings : parseInt(r.bookings, 10),
+                weekdays: isNaN(parseInt(r.weekdays, 10)) ? r.weekdays : parseInt(r.weekdays, 10),
+                rate: isNaN(parseFloat(r.rate)) ? r.rate : parseFloat(r.rate)
+            }));
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.xlsx`);
+        }
+
+        async function exportStatisticsData(format) {
+            toggleExportDropdown();
+
+            if (typeof Chart === 'undefined') {
+                alert('Export libraries did not load (check your internet connection) - please try again.');
+                return;
+            }
+
+            const ctx = collectExportContext();
+            ctx.chartServiceImg = generateServiceChartImage(ctx.serviceRows);
+            ctx.chartMonthlyImg = generateMonthlyChartImage(ctx.monthlyRows);
+
+            try {
+                if (format === 'xlsx') {
+                    await exportAsExcel(ctx);
+                } else if (format === 'pdf') {
+                    await exportAsPDF(ctx);
+                } else if (format === 'doc') {
+                    exportAsWord(ctx);
+                } else if (format === 'html') {
+                    exportAsHtmlFile(ctx);
+                }
+            } catch (err) {
+                console.error('Statistics export failed:', err);
+                alert('Sorry, the export could not be generated. Please try again.');
+            }
         }
     </script>
 </body>
