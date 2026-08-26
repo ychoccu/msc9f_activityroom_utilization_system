@@ -124,7 +124,7 @@
         </div>
     </div>
 
-    <!-- ===================== Main System (hidden until correct password is entered) ===================== -->
+    <!-- ===================== Main System ===================== -->
     <div id="appContent" style="display:none;">
 
     <header class="sticky top-0 z-50 bg-cream-50/90 backdrop-blur-md border-b border-sage-200 shadow-sm transition-all duration-300">
@@ -155,7 +155,6 @@
             </nav>
 
             <div class="flex items-center space-x-3">
-                <!-- Cloud Status Indicator (hidden from display; Firebase connection logic below still runs and updates these hidden elements) -->
                 <div id="cloudStatusBadge" class="hidden items-center px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold shadow-2xs">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
                     <span id="cloudStatusText">Connecting Cloud...</span>
@@ -254,7 +253,8 @@
                             </label>
                             <select id="timeslotSelect" onchange="handleTimeslotChange()" required
                                 class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
-                                <option value="1500">15:00</option>
+                                <option value="1100">11:00</option>
+                                <option value="1130">11:30</option>
                                 <option value="1530" selected>15:30</option>
                                 <option value="1600">16:00</option>
                                 <option value="others">Others (Custom)</option>
@@ -425,7 +425,7 @@
 
                 <div id="statisticsContent" class="p-6 sm:p-10 space-y-10 transition-all duration-300">
                     <!-- Top Summary Metric Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
                             <div>
                                 <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Total Bookings</p>
@@ -450,8 +450,19 @@
 
                         <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
                             <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Peak Timeslot</p>
+                                <h3 id="statPeakTimeslot" class="text-lg font-bold font-serif text-charcoal-900 mt-1 truncate max-w-[140px]" title="None">-</h3>
+                                <p id="peakTimeslotSubLabel" class="text-xs text-charcoal-700/60 mt-1">Annual, most recorded</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-sage-100 flex items-center justify-center text-sage-700">
+                                <i class="fa-regular fa-clock text-xl"></i>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-sage-200 shadow-sm flex items-center justify-between">
+                            <div>
                                 <div class="flex items-center justify-between">
-                                    <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Avg. Monthly Rate</p>
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-sage-700">Avg. Utilization Rate</p>
                                     <select id="avgRatePeriodSelect" onchange="updateStatistics()" class="text-[10px] bg-sage-50 border border-sage-200 rounded px-1.5 py-0.5 text-sage-800 font-semibold">
                                         <option value="annual">Annual Avg</option>
                                         <option value="monthly">Specific Month...</option>
@@ -496,15 +507,16 @@
                                 <p class="text-xs text-charcoal-700/70 mt-1">Comprehensive breakdown of service types with totals, percentages, and visual bars (Excludes Admin special activities)</p>
                             </div>
                             
-                            <!-- Dual Month & Year Filter for Service Distribution -->
+                            <!-- Dual Month & Year Filter for Service Distribution with Custom Period Support -->
                             <div class="flex flex-wrap items-center gap-2">
                                 <div class="flex flex-wrap items-center gap-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
                                     <i class="fa-regular fa-filter text-sage-600 text-xs"></i>
                                     <span class="text-xs font-semibold text-sage-800">Filter Period:</span>
                                     
-                                    <!-- Month Option Selector -->
-                                    <select id="serviceMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                    <!-- Period Selector -->
+                                    <select id="serviceMonthSelect" onchange="toggleCustomPeriodInputs('service'); updateStatistics();" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
                                         <option value="all" selected>All Months (Full Year)</option>
+                                        <option value="custom">Custom Period (Select Months)</option>
                                         <option value="0">January</option>
                                         <option value="1">February</option>
                                         <option value="2">March</option>
@@ -518,6 +530,39 @@
                                         <option value="10">November</option>
                                         <option value="11">December</option>
                                     </select>
+
+                                    <!-- Custom Month Period Selectors Container -->
+                                    <div id="serviceCustomPeriodContainer" class="hidden flex items-center space-x-1 border-l border-sage-300 pl-2">
+                                        <select id="serviceStartMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
+                                            <option value="0" selected>Jan</option>
+                                            <option value="1">Feb</option>
+                                            <option value="2">Mar</option>
+                                            <option value="3">Apr</option>
+                                            <option value="4">May</option>
+                                            <option value="5">Jun</option>
+                                            <option value="6">Jul</option>
+                                            <option value="7">Aug</option>
+                                            <option value="8">Sep</option>
+                                            <option value="9">Oct</option>
+                                            <option value="10">Nov</option>
+                                            <option value="11">Dec</option>
+                                        </select>
+                                        <span class="text-xs font-bold text-sage-700">to</span>
+                                        <select id="serviceEndMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
+                                            <option value="0">Jan</option>
+                                            <option value="1">Feb</option>
+                                            <option value="2">Mar</option>
+                                            <option value="3">Apr</option>
+                                            <option value="4">May</option>
+                                            <option value="5">Jun</option>
+                                            <option value="6">Jul</option>
+                                            <option value="7" selected>Aug</option>
+                                            <option value="8">Sep</option>
+                                            <option value="9">Oct</option>
+                                            <option value="10">Nov</option>
+                                            <option value="11">Dec</option>
+                                        </select>
+                                    </div>
 
                                     <!-- Year Option Selector -->
                                     <select id="serviceYearSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
@@ -558,6 +603,107 @@
                         </div>
                     </div>
 
+                    <!-- NEW SECTION: Timeslot Utilization Statistics (Table + Chart Visualization) -->
+                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage-200 shadow-sm">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-4 border-b border-sage-200">
+                            <div>
+                                <h3 class="text-lg font-bold font-serif text-charcoal-900 flex items-center">
+                                    <i class="fa-solid fa-clock text-sage-600 mr-2"></i> Timeslot Utilization Statistics
+                                </h3>
+                                <p class="text-xs text-charcoal-700/70 mt-1">Recorded count and utilization rate by specific timeslot (11:00, 11:30, 15:30, 16:00, and Others). Formula: Recorded specific timeslots / Total specific available timeslots (Preset 4 slots daily).</p>
+                            </div>
+
+                            <!-- Month & Year Filter for Timeslot Statistics with Custom Period Support -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-center gap-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
+                                    <i class="fa-regular fa-filter text-sage-600 text-xs"></i>
+                                    <span class="text-xs font-semibold text-sage-800">Period:</span>
+                                    
+                                    <!-- Period Selector -->
+                                    <select id="timeslotMonthSelect" onchange="toggleCustomPeriodInputs('timeslot'); updateStatistics();" class="text-xs bg-white border border-sage-300 rounded-lg px-2 py-1 text-charcoal-800 font-semibold focus:outline-none focus:ring-1 focus:ring-sage-500">
+                                        <option value="all" selected>All Months (Full Year)</option>
+                                        <option value="custom">Custom Period (Select Months)</option>
+                                        <option value="0">January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3">April</option>
+                                        <option value="4">May</option>
+                                        <option value="5">June</option>
+                                        <option value="6">July</option>
+                                        <option value="7">August</option>
+                                        <option value="8">September</option>
+                                        <option value="9">October</option>
+                                        <option value="10">November</option>
+                                        <option value="11">December</option>
+                                    </select>
+
+                                    <!-- Custom Month Period Selectors Container for Timeslot -->
+                                    <div id="timeslotCustomPeriodContainer" class="hidden flex items-center space-x-1 border-l border-sage-300 pl-2">
+                                        <select id="timeslotStartMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
+                                            <option value="0" selected>Jan</option>
+                                            <option value="1">Feb</option>
+                                            <option value="2">Mar</option>
+                                            <option value="3">Apr</option>
+                                            <option value="4">May</option>
+                                            <option value="5">Jun</option>
+                                            <option value="6">Jul</option>
+                                            <option value="7">Aug</option>
+                                            <option value="8">Sep</option>
+                                            <option value="9">Oct</option>
+                                            <option value="10">Nov</option>
+                                            <option value="11">Dec</option>
+                                        </select>
+                                        <span class="text-xs font-bold text-sage-700">to</span>
+                                        <select id="timeslotEndMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
+                                            <option value="0">Jan</option>
+                                            <option value="1">Feb</option>
+                                            <option value="2">Mar</option>
+                                            <option value="3">Apr</option>
+                                            <option value="4">May</option>
+                                            <option value="5">Jun</option>
+                                            <option value="6">Jul</option>
+                                            <option value="7" selected>Aug</option>
+                                            <option value="8">Sep</option>
+                                            <option value="9">Oct</option>
+                                            <option value="10">Nov</option>
+                                            <option value="11">Dec</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <span id="timeslotFilterBadge" class="text-xs bg-sage-100 text-sage-800 px-3 py-1.5 rounded-xl font-semibold border border-sage-200">
+                                    Period: All Months 2026
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                            <!-- Table of Timeslot Utilization Count & Rate -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead>
+                                        <tr class="border-b border-sage-200 text-xs uppercase tracking-wider text-sage-700 font-semibold bg-cream-50">
+                                            <th class="py-3 px-4 rounded-l-xl">Timeslot</th>
+                                            <th class="py-3 px-4 text-center">Recorded Count</th>
+                                            <th class="py-3 px-4 text-center">Available Slots</th>
+                                            <th class="py-3 px-4 text-right rounded-r-xl">Utilization Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="timeslotTableBody" class="divide-y divide-sage-100 text-charcoal-800">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Timeslot Chart Visualization -->
+                            <div class="bg-cream-50/60 p-4 rounded-2xl border border-sage-200/80 flex flex-col items-center justify-center">
+                                <p class="text-xs font-semibold text-sage-800 mb-2 w-full text-center">Timeslot Recorded Count & Utilization Rate (%)</p>
+                                <div class="w-full h-64 relative">
+                                    <canvas id="timeslotChartCanvas"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Monthly Utilization Rate Grid -->
                     <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage-200 shadow-sm">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -565,7 +711,7 @@
                                 <h3 class="text-lg font-bold font-serif text-charcoal-900 flex items-center">
                                     <i class="fa-solid fa-calendar-alt text-sage-600 mr-2"></i> Monthly Utilization Rate & Weekday Analysis
                                 </h3>
-                                <p class="text-xs text-charcoal-700/70 mt-1">Equation: Total Bookings / Number of Weekdays (Excluding Saturdays, Sundays & Public Holidays)</p>
+                                <p class="text-xs text-charcoal-700/70 mt-1">Equation: Monthly Utilization Rate = Total Recorded Timeslots in Month / (Weekdays in Month &times; Preset 4 Timeslots/Day)</p>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <div class="flex items-center space-x-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
@@ -579,7 +725,7 @@
                                     </select>
                                 </div>
                                 <div class="text-xs font-semibold text-sage-800 bg-sage-100 px-3.5 py-1.5 rounded-xl border border-sage-200">
-                                    Annual Total: <span id="annualTotalCount">0</span> Bookings
+                                    Annual Utilization: <span id="annualUtilizationRateBadge">0.0%</span> (<span id="annualTotalCount">0</span> Bookings)
                                 </div>
                             </div>
                         </div>
@@ -756,7 +902,7 @@
                 </div>
                 <div>
                     <p class="font-bold font-serif text-charcoal-900">MSC 9/F Activity Room Management System</p>
-                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department © 2026</p>
+                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department &copy; 2026</p>
                 </div>
             </div>
             <div class="flex items-center space-x-6 text-xs text-charcoal-700/80">
@@ -771,7 +917,7 @@
     </div>
     <!-- ===================== End Main System ===================== -->
 
-    <!-- ===================== Login Gate Logic ===================== -->
+    <!-- Login Gate Logic -->
     <script>
         const SYSTEM_PASSWORD = 'ychoccu';
 
@@ -807,7 +953,6 @@
             }
         }
 
-        // Skip the login screen if this browser tab was already authenticated in this session
         (function checkExistingSession() {
             try {
                 if (sessionStorage.getItem('otSystemAuthenticated') === 'true') {
@@ -818,8 +963,6 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <!-- Libraries for full-data, chart-inclusive Utilization Statistics export (Word/.doc, Excel/.xlsx, PDF, HTML) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
@@ -830,7 +973,6 @@
         import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Firebase Configuration provided by user
         const firebaseConfig = {
             apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
             authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
@@ -842,12 +984,10 @@
             measurementId: "G-FZD8X1QSTT"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        // Global Firebase References and State
         window.firebaseDb = db;
         window.dbRefs = {
             appointments: ref(db, 'appointments'),
@@ -855,7 +995,6 @@
         };
         window.dbActions = { set, push, remove, update, ref };
 
-        // Authenticate anonymously so all connected computers can read/write
         signInAnonymously(auth).then(() => {
             console.log("Firebase Cloud Auth: Connected Anonymously");
             const badge = document.getElementById('cloudStatusBadge');
@@ -871,7 +1010,6 @@
             if (text) text.innerText = "Cloud Active (Public)";
         });
 
-        // Listen for Realtime Updates on Appointments Node
         onValue(ref(db, 'appointments'), (snapshot) => {
             const data = snapshot.val();
             let loaded = [];
@@ -882,14 +1020,12 @@
             }
             window.appointments = loaded;
             
-            // Refresh views
             if (typeof window.renderCalendar === 'function') window.renderCalendar();
             if (typeof window.updateStatistics === 'function') window.updateStatistics();
         }, (error) => {
             console.error("Realtime appointments read error:", error);
         });
 
-        // Listen for Realtime Updates on Special Activities Node
         onValue(ref(db, 'specialActivities'), (snapshot) => {
             const data = snapshot.val();
             let loaded = [];
@@ -900,7 +1036,6 @@
             }
             window.specialActivities = loaded;
 
-            // Refresh views
             if (typeof window.renderCalendar === 'function') window.renderCalendar();
             if (typeof window.updateStatistics === 'function') window.updateStatistics();
         }, (error) => {
@@ -920,6 +1055,26 @@
         ];
 
         const monthNamesFull = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const TOTAL_TIMESLOTS_PER_DAY = 4;
+
+        function getPeakTimeslot(apps) {
+            const counts = {};
+            apps.forEach(a => {
+                const ts = (a.timeslot || '').trim();
+                if (!ts) return;
+                counts[ts] = (counts[ts] || 0) + 1;
+            });
+            let peak = '-';
+            let max = 0;
+            Object.keys(counts).forEach(ts => {
+                if (counts[ts] > max) {
+                    max = counts[ts];
+                    peak = ts;
+                }
+            });
+            return { timeslot: peak, count: max };
+        }
 
         const publicHolidays2026 = [
             "2026-01-01", "2026-02-17", "2026-02-18", "2026-02-19", 
@@ -928,21 +1083,17 @@
             "2026-10-21", "2026-12-25", "2026-12-26"
         ];
 
-        // Global State Arrays
         window.appointments = [];
         window.specialActivities = [];
 
-        // Calendar State
-        let currentView = 'month'; // 'month' or 'week'
+        let currentView = 'month';
         let currentYear = 2026;
-        let currentMonth = 7; // August (0-indexed)
-        let currentWeekStart = new Date(2026, 7, 17); // Mid August 2026 Monday
-
-        // Date Pickers Instances
+        let currentMonth = 7;
+        let currentWeekStart = new Date(2026, 7, 17);
         let fpAppointment, fpAdmin, fpEdit;
+        let timeslotChartInstance = null;
 
         window.onload = function() {
-            // Initialize Flatpickr instances
             fpAppointment = flatpickr("#appointmentDate", {
                 dateFormat: "d/m/Y",
                 defaultDate: "18/08/2026",
@@ -960,7 +1111,6 @@
                 allowInput: true
             });
 
-            // Initial view renders
             renderCalendar();
             updateStatistics();
         };
@@ -984,6 +1134,26 @@
                 return `${parts[2]}/${parts[1]}/${parts[0]}`;
             }
             return isoStr;
+        }
+
+        function toggleCustomPeriodInputs(type) {
+            if (type === 'service') {
+                const val = document.getElementById('serviceMonthSelect').value;
+                const container = document.getElementById('serviceCustomPeriodContainer');
+                if (val === 'custom') {
+                    container.classList.remove('hidden');
+                } else {
+                    container.classList.add('hidden');
+                }
+            } else if (type === 'timeslot') {
+                const val = document.getElementById('timeslotMonthSelect').value;
+                const container = document.getElementById('timeslotCustomPeriodContainer');
+                if (val === 'custom') {
+                    container.classList.remove('hidden');
+                } else {
+                    container.classList.add('hidden');
+                }
+            }
         }
 
         function handleTimeslotChange() {
@@ -1039,7 +1209,8 @@
             
             const timeslotSelect = document.getElementById('timeslotSelect').value;
             let timeslot = timeslotSelect;
-            if (timeslotSelect === '1500') timeslot = '15:00';
+            if (timeslotSelect === '1100') timeslot = '11:00';
+            if (timeslotSelect === '1130') timeslot = '11:30';
             if (timeslotSelect === '1530') timeslot = '15:30';
             if (timeslotSelect === '1600') timeslot = '16:00';
             if (timeslotSelect === 'others') {
@@ -1054,7 +1225,6 @@
                 serviceType = document.getElementById('customServiceType').value.trim();
             }
 
-            // Conflict Check: exact same date & timeslot by a DIFFERENT therapist
             const conflict = window.appointments.find(a => 
                 a.date === isoDate && 
                 a.timeslot.toLowerCase() === timeslot.toLowerCase() && 
@@ -1086,7 +1256,6 @@
                     const newRef = window.dbActions.push(window.dbRefs.appointments);
                     await window.dbActions.set(newRef, newApp);
                 } else {
-                    // Fallback to memory
                     newApp.id = Date.now().toString();
                     window.appointments.push(newApp);
                     renderCalendar();
@@ -1444,7 +1613,7 @@
         function renderMonthlyCalendar(container, filter) {
             const firstDay = new Date(currentYear, currentMonth, 1);
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const startDayOfWeek = firstDay.getDay(); // 0 is Sun
+            const startDayOfWeek = firstDay.getDay();
 
             let html = `
                 <table class="w-full text-left border-collapse min-w-[700px]">
@@ -1475,7 +1644,6 @@
                         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`;
                         const isToday = new Date().toISOString().split('T')[0] === dateStr;
 
-                        // Filter appointments
                         let dayApps = window.appointments.filter(a => a.date === dateStr);
                         if (filter !== 'all' && filter !== 'admin_special') {
                             dayApps = dayApps.filter(a => a.therapist.toLowerCase().includes(filter.toLowerCase()));
@@ -1483,7 +1651,6 @@
                             dayApps = [];
                         }
 
-                        // Filter special activities
                         let daySpecials = window.specialActivities.filter(s => s.date === dateStr);
                         if (filter !== 'all' && filter !== 'admin_special') {
                             daySpecials = [];
@@ -1497,7 +1664,6 @@
                             <div class="space-y-1 overflow-y-auto max-h-20">
                         `;
 
-                        // Render Special Activities
                         daySpecials.forEach(s => {
                             html += `
                                 <div onclick="openDetailsModal('${s.id}', true)" class="bg-navy-700 text-cream-50 p-1.5 rounded-lg text-[11px] cursor-pointer hover:bg-navy-800 transition-all shadow-2xs leading-tight">
@@ -1510,7 +1676,6 @@
                             `;
                         });
 
-                        // Render Regular Appointments
                         dayApps.forEach(a => {
                             html += `
                                 <div onclick="openDetailsModal('${a.id}', false)" class="bg-sage-100 text-sage-900 border border-sage-300/80 p-1.5 rounded-lg text-[11px] cursor-pointer hover:bg-sage-200 transition-all shadow-2xs leading-tight">
@@ -1523,7 +1688,7 @@
                             `;
                         });
 
-                        html += `</div>td>`;
+                        html += `</div></td>`;
                         dayCount++;
                     }
                 }
@@ -1625,7 +1790,7 @@
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
-                const dayOfWeek = date.getDay(); // 0 Sun, 6 Sat
+                const dayOfWeek = date.getDay();
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
                 if (dayOfWeek !== 0 && dayOfWeek !== 6 && !publicHolidays2026.includes(dateStr)) {
@@ -1635,10 +1800,30 @@
             return count;
         }
 
+        function toggleExportDropdown() {
+            const menu = document.getElementById('exportDropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleStatisticsSection() {
+            const content = document.getElementById('statisticsContent');
+            const icon = document.getElementById('toggleStatsIcon');
+            const text = document.getElementById('toggleStatsText');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.className = 'fa-solid fa-eye-slash';
+                text.innerText = 'Hide Section';
+            } else {
+                content.classList.add('hidden');
+                icon.className = 'fa-solid fa-eye';
+                text.innerText = 'Show Section';
+            }
+        }
+
         function updateStatistics() {
             const selYear = parseInt(document.getElementById('statsYearSelect').value, 10);
             
-            // Filter appointments for selected year
             const yearApps = window.appointments.filter(a => {
                 if (!a.date) return false;
                 const y = parseInt(a.date.split('-')[0], 10);
@@ -1649,40 +1834,55 @@
             document.getElementById('statTotalBookings').innerText = yearApps.length;
             document.getElementById('annualTotalCount').innerText = yearApps.length;
 
-            // 2. Service Distribution Table & Bars
+            // Compute Annual Available Slots & Annual Utilization Rate
+            let annualWeekdays = 0;
+            for (let m = 0; m < 12; m++) {
+                annualWeekdays += getWeekdaysInMonth(selYear, m);
+            }
+            const annualTotalAvailableSlots = annualWeekdays * TOTAL_TIMESLOTS_PER_DAY;
+            const annualUtilizationRate = annualTotalAvailableSlots > 0 ? ((yearApps.length / annualTotalAvailableSlots) * 100).toFixed(1) : '0.0';
+            document.getElementById('annualUtilizationRateBadge').innerText = `${annualUtilizationRate}%`;
+
+            // 2. Service Distribution Table & Bars (with Custom Period Option)
             const monthFilter = document.getElementById('serviceMonthSelect').value;
-            let filteredApps = yearApps;
-            if (monthFilter !== 'all') {
+            let filteredServiceApps = yearApps;
+            const badge = document.getElementById('serviceDistributionFilterBadge');
+
+            if (monthFilter === 'all') {
+                badge.innerText = `Period: All Months ${selYear}`;
+            } else if (monthFilter === 'custom') {
+                const startM = parseInt(document.getElementById('serviceStartMonthSelect').value, 10);
+                const endM = parseInt(document.getElementById('serviceEndMonthSelect').value, 10);
+                const minM = Math.min(startM, endM);
+                const maxM = Math.max(startM, endM);
+                
+                filteredServiceApps = yearApps.filter(a => {
+                    const m = parseInt(a.date.split('-')[1], 10) - 1;
+                    return m >= minM && m <= maxM;
+                });
+                badge.innerText = `Period: ${monthNamesShort[minM]} - ${monthNamesShort[maxM]} ${selYear}`;
+            } else {
                 const mIdx = parseInt(monthFilter, 10);
-                filteredApps = yearApps.filter(a => {
+                filteredServiceApps = yearApps.filter(a => {
                     const m = parseInt(a.date.split('-')[1], 10) - 1;
                     return m === mIdx;
                 });
+                badge.innerText = `Period: ${monthNamesFull[mIdx]} ${selYear}`;
             }
 
-            // Update badge text
-            const badge = document.getElementById('serviceDistributionFilterBadge');
-            if (monthFilter === 'all') {
-                badge.innerText = `Period: All Months ${selYear}`;
-            } else {
-                badge.innerText = `Period: ${monthNamesFull[parseInt(monthFilter, 10)]} ${selYear}`;
-            }
+            const serviceCounts = {};
+            baseServiceTypesList.forEach(s => serviceCounts[s] = 0);
 
-            // Count services
-            const counts = {};
-            baseServiceTypesList.forEach(s => counts[s] = 0);
-            let customCount = 0;
-
-            filteredApps.forEach(a => {
+            filteredServiceApps.forEach(a => {
                 const st = (a.serviceType || '').toLowerCase();
-                if (counts.hasOwnProperty(st)) {
-                    counts[st]++;
+                if (serviceCounts.hasOwnProperty(st)) {
+                    serviceCounts[st]++;
                 } else {
-                    counts[st] = (counts[st] || 0) + 1;
+                    serviceCounts[st] = (serviceCounts[st] || 0) + 1;
                 }
             });
 
-            const totalFiltered = filteredApps.length;
+            const totalFilteredService = filteredServiceApps.length;
             const tableBody = document.getElementById('serviceTableBody');
             const barsContainer = document.getElementById('serviceDistributionBars');
 
@@ -1692,16 +1892,15 @@
             let topService = '-';
             let maxCount = -1;
 
-            Object.keys(counts).forEach(sKey => {
-                const cnt = counts[sKey];
-                const pct = totalFiltered > 0 ? ((cnt / totalFiltered) * 100).toFixed(1) : '0.0';
+            Object.keys(serviceCounts).forEach(sKey => {
+                const cnt = serviceCounts[sKey];
+                const pct = totalFilteredService > 0 ? ((cnt / totalFilteredService) * 100).toFixed(1) : '0.0';
 
                 if (cnt > maxCount && cnt > 0) {
                     maxCount = cnt;
                     topService = sKey;
                 }
 
-                // Append Table Row
                 tableBody.innerHTML += `
                     <tr class="hover:bg-sage-50/50 transition-all">
                         <td class="py-2.5 px-4 font-semibold capitalize">${sKey}</td>
@@ -1710,7 +1909,6 @@
                     </tr>
                 `;
 
-                // Append Visual Progress Bar
                 barsContainer.innerHTML += `
                     <div>
                         <div class="flex items-center justify-between text-xs font-semibold mb-1">
@@ -1726,7 +1924,14 @@
 
             document.getElementById('statPeakService').innerText = topService;
 
-            // 3. Avg Monthly Rate Card Logic
+            // 2b. Peak Timeslot Card
+            const annualPeakTimeslot = getPeakTimeslot(yearApps);
+            document.getElementById('statPeakTimeslot').innerText = annualPeakTimeslot.count > 0 ? annualPeakTimeslot.timeslot : '-';
+            document.getElementById('peakTimeslotSubLabel').innerText = annualPeakTimeslot.count > 0
+                ? `Annual, ${annualPeakTimeslot.count} recorded`
+                : 'Annual, most recorded';
+
+            // 3. Avg Utilization Rate Metric Card Logic
             const periodType = document.getElementById('avgRatePeriodSelect').value;
             const specificContainer = document.getElementById('specificMonthSelectContainer');
             const subLabel = document.getElementById('avgRateSubLabel');
@@ -1736,13 +1941,14 @@
                 const mIdx = parseInt(document.getElementById('avgRateSpecificMonth').value, 10);
                 const mApps = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === mIdx).length;
                 const wDays = getWeekdaysInMonth(selYear, mIdx);
-                const rate = wDays > 0 ? ((mApps / wDays) * 100).toFixed(1) : 0;
+                const totalSlots = wDays * TOTAL_TIMESLOTS_PER_DAY;
+                const rate = totalSlots > 0 ? ((mApps / totalSlots) * 100).toFixed(1) : 0;
                 document.getElementById('statAvgMonthly').innerText = `${rate}%`;
-                subLabel.innerText = `${monthNamesFull[mIdx]} Daily Rate`;
+                subLabel.innerText = `${monthNamesFull[mIdx]} Utilization Rate`;
             } else {
                 specificContainer.classList.add('hidden');
                 let targetMonths = [0,1,2,3,4,5,6,7,8,9,10,11];
-                let labelText = "Annual Daily Share";
+                let labelText = "Annual Utilization Rate";
 
                 if (periodType === 'Q1') { targetMonths = [0,1,2]; labelText = "Q1 Avg (Jan-Mar)"; }
                 if (periodType === 'Q2') { targetMonths = [3,4,5]; labelText = "Q2 Avg (Apr-Jun)"; }
@@ -1756,418 +1962,289 @@
                     sumDays += getWeekdaysInMonth(selYear, m);
                 });
 
-                const rate = sumDays > 0 ? ((sumApps / sumDays) * 100).toFixed(1) : 0;
+                const sumSlots = sumDays * TOTAL_TIMESLOTS_PER_DAY;
+                const rate = sumSlots > 0 ? ((sumApps / sumSlots) * 100).toFixed(1) : 0;
                 document.getElementById('statAvgMonthly').innerText = `${rate}%`;
                 subLabel.innerText = labelText;
             }
 
-            // 4. Monthly Utilization Rate Grid
-            const grid = document.getElementById('monthlyStatsGrid');
-            grid.innerHTML = '';
+            // 4. Timeslot Utilization Statistics (Section 3: Table + Chart + Custom Period)
+            const tsMonthFilter = document.getElementById('timeslotMonthSelect').value;
+            let filteredTimeslotApps = yearApps;
+            let totalAvailableDays = 0;
+
+            if (tsMonthFilter === 'all') {
+                for (let m = 0; m < 12; m++) {
+                    totalAvailableDays += getWeekdaysInMonth(selYear, m);
+                }
+                document.getElementById('timeslotFilterBadge').innerText = `Period: All Months ${selYear}`;
+            } else if (tsMonthFilter === 'custom') {
+                const startM = parseInt(document.getElementById('timeslotStartMonthSelect').value, 10);
+                const endM = parseInt(document.getElementById('timeslotEndMonthSelect').value, 10);
+                const minM = Math.min(startM, endM);
+                const maxM = Math.max(startM, endM);
+
+                filteredTimeslotApps = yearApps.filter(a => {
+                    const m = parseInt(a.date.split('-')[1], 10) - 1;
+                    return m >= minM && m <= maxM;
+                });
+                for (let m = minM; m <= maxM; m++) {
+                    totalAvailableDays += getWeekdaysInMonth(selYear, m);
+                }
+                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesShort[minM]} - ${monthNamesShort[maxM]} ${selYear}`;
+            } else {
+                const mIdx = parseInt(tsMonthFilter, 10);
+                filteredTimeslotApps = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === mIdx);
+                totalAvailableDays = getWeekdaysInMonth(selYear, mIdx);
+                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesFull[mIdx]} ${selYear}`;
+            }
+
+            const tsCounts = {
+                '11:00': 0,
+                '11:30': 0,
+                '15:30': 0,
+                '16:00': 0,
+                'Others': 0
+            };
+
+            filteredTimeslotApps.forEach(a => {
+                const tsRaw = (a.timeslot || '').trim();
+                if (tsRaw === '11:00' || tsRaw === '1100') {
+                    tsCounts['11:00']++;
+                } else if (tsRaw === '11:30' || tsRaw === '1130') {
+                    tsCounts['11:30']++;
+                } else if (tsRaw === '15:30' || tsRaw === '1530') {
+                    tsCounts['15:30']++;
+                } else if (tsRaw === '16:00' || tsRaw === '1600') {
+                    tsCounts['16:00']++;
+                } else {
+                    tsCounts['Others']++;
+                }
+            });
+
+            const tsTableBody = document.getElementById('timeslotTableBody');
+            tsTableBody.innerHTML = '';
+
+            const timeslotKeys = ['11:00', '11:30', '15:30', '16:00', 'Others'];
+            const tsChartLabels = [];
+            const tsChartCounts = [];
+            const tsChartRates = [];
+
+            timeslotKeys.forEach(key => {
+                const cnt = tsCounts[key];
+                const available = totalAvailableDays; // 1 available slot per weekday per specific timeslot
+                const rate = available > 0 ? ((cnt / available) * 100).toFixed(1) : '0.0';
+
+                tsChartLabels.push(key);
+                tsChartCounts.push(cnt);
+                tsChartRates.push(parseFloat(rate));
+
+                tsTableBody.innerHTML += `
+                    <tr class="hover:bg-sage-50/50 transition-all">
+                        <td class="py-2.5 px-4 font-semibold text-charcoal-900">${key}</td>
+                        <td class="py-2.5 px-4 text-center font-bold text-sage-800">${cnt}</td>
+                        <td class="py-2.5 px-4 text-center text-charcoal-700/80">${available}</td>
+                        <td class="py-2.5 px-4 text-right font-bold text-navy-700">${rate}%</td>
+                    </tr>
+                `;
+            });
+
+            // Render Chart.js Chart for Timeslot Utilization
+            const ctxCanvas = document.getElementById('timeslotChartCanvas');
+            if (ctxCanvas) {
+                if (timeslotChartInstance) {
+                    timeslotChartInstance.destroy();
+                }
+
+                timeslotChartInstance = new Chart(ctxCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: tsChartLabels,
+                        datasets: [
+                            {
+                                label: 'Utilization Rate (%)',
+                                data: tsChartRates,
+                                backgroundColor: 'rgba(40, 82, 133, 0.85)',
+                                borderColor: '#1F4068',
+                                borderWidth: 1,
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Rate: ${context.parsed.y}% (${tsChartCounts[context.dataIndex]} recorded / ${totalAvailableDays} available)`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: Math.max(...tsChartRates, 10) > 100 ? 120 : 100,
+                                ticks: {
+                                    callback: function(value) { return value + '%'; },
+                                    font: { size: 10 }
+                                }
+                            },
+                            x: {
+                                ticks: { font: { size: 11, weight: '600' } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 5. Render Monthly Utilization Grid
+            const monthlyGrid = document.getElementById('monthlyStatsGrid');
+            monthlyGrid.innerHTML = '';
 
             for (let m = 0; m < 12; m++) {
-                const mApps = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === m).length;
-                const wDays = getWeekdaysInMonth(selYear, m);
-                const rate = wDays > 0 ? ((mApps / wDays) * 100).toFixed(1) : 0;
+                const monthAppsCount = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === m).length;
+                const weekdaysInM = getWeekdaysInMonth(selYear, m);
+                const totalSlotsInM = weekdaysInM * TOTAL_TIMESLOTS_PER_DAY; // Preset total timeslot in a day is 4
+                const mUtilRate = totalSlotsInM > 0 ? ((monthAppsCount / totalSlotsInM) * 100).toFixed(1) : '0.0';
 
-                grid.innerHTML += `
-                    <div class="bg-sage-50/70 border border-sage-200 p-4 rounded-2xl text-center hover:bg-sage-100/60 transition-all">
-                        <span class="text-xs font-semibold uppercase text-sage-800 block">${monthNamesFull[m].substring(0,3)}</span>
-                        <div class="text-xl font-bold font-serif text-charcoal-900 mt-1">${mApps}</div>
-                        <div class="text-[10px] text-charcoal-700/70 mt-0.5">${wDays} Weekdays</div>
-                        <div class="mt-2 text-xs font-bold text-sage-700 bg-white border border-sage-200 py-1 px-2 rounded-lg inline-block">
-                            ${rate}% Rate
+                let rateColorClass = 'text-sage-700 bg-sage-50 border-sage-200';
+                if (parseFloat(mUtilRate) >= 50) rateColorClass = 'text-emerald-800 bg-emerald-50 border-emerald-200';
+                else if (parseFloat(mUtilRate) >= 25) rateColorClass = 'text-navy-700 bg-navy-50 border-navy-200';
+
+                monthlyGrid.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border border-sage-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-serif font-bold text-sm text-charcoal-900">${monthNamesShort[m]}</span>
+                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${rateColorClass}">${mUtilRate}%</span>
+                            </div>
+                            <p class="text-xs text-charcoal-700 font-semibold mt-1">${monthAppsCount} <span class="text-[10px] text-charcoal-700/60 font-normal">/ ${totalSlotsInM} slots</span></p>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-sage-100 flex items-center justify-between text-[10px] text-charcoal-700/70">
+                            <span>Weekdays: ${weekdaysInM}d</span>
+                            <span>4 slots/day</span>
                         </div>
                     </div>
                 `;
             }
         }
 
-        function toggleExportDropdown() {
-            const menu = document.getElementById('exportDropdownMenu');
-            menu.classList.toggle('hidden');
-        }
+        function exportStatisticsData(format) {
+            toggleExportDropdown();
+            const year = document.getElementById('statsYearSelect').value;
+            const yearApps = window.appointments.filter(a => a.date && a.date.startsWith(year));
 
-        function toggleStatisticsSection() {
-            const content = document.getElementById('statisticsContent');
-            const icon = document.getElementById('toggleStatsIcon');
-            const text = document.getElementById('toggleStatsText');
+            if (format === 'html') {
+                let htmlContent = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>MSC 9F OT Activity Room Utilization Report ${year}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; color: #242924; }
+                            h1 { color: #1F4068; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                            th, td { border: 1px solid #c7d6c7; padding: 8px 12px; text-align: left; }
+                            th { background-color: #5a785a; color: white; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>MSC 9/F Activity Room OT Utilization Report - ${year}</h1>
+                        <p>Generated on: ${new Date().toLocaleString()}</p>
+                        <p>Total Bookings Recorded: ${yearApps.length}</p>
+                        <h2>Appointments List</h2>
+                        <table>
+                            <thead>
+                                <tr><th>Date</th><th>Timeslot</th><th>Patient No</th><th>Therapist</th><th>Service Type</th></tr>
+                            </thead>
+                            <tbody>
+                                ${yearApps.map(a => `<tr><td>${formatDDMMYYYY(a.date)}</td><td>${a.timeslot}</td><td>${a.patientNo}</td><td>${a.therapist}</td><td>${a.serviceType}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </body>
+                    </html>
+                `;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `OT_Activity_Room_Utilization_Report_${year}.html`;
+                a.click();
+            } else if (format === 'doc') {
+                let docContent = `
+                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                    <head><title>Utilization Report</title></head>
+                    <body style="font-family: Arial, sans-serif;">
+                        <h2>Occupational Therapy Department - MSC 9/F Activity Room Report (${year})</h2>
+                        <p>Total Bookings: ${yearApps.length}</p>
+                        <table border="1" style="border-collapse:collapse; width:100%;">
+                            <tr style="background:#5a785a; color:white;">
+                                <th>Date</th><th>Timeslot</th><th>Patient No</th><th>Therapist</th><th>Service Type</th>
+                            </tr>
+                            ${yearApps.map(a => `<tr><td>${formatDDMMYYYY(a.date)}</td><td>${a.timeslot}</td><td>${a.patientNo}</td><td>${a.therapist}</td><td>${a.serviceType}</td></tr>`).join('')}
+                        </table>
+                    </body>
+                    </html>
+                `;
+                const blob = new Blob([docContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `OT_Utilization_Report_${year}.doc`;
+                a.click();
+            } else if (format === 'pdf') {
+                if (window.jspdf && window.jspdf.jsPDF) {
+                    const doc = new window.jspdf.jsPDF();
+                    doc.setFontSize(14);
+                    doc.text(`MSC 9/F Activity Room OT Utilization Report - ${year}`, 14, 15);
+                    doc.setFontSize(10);
+                    doc.text(`Total Bookings: ${yearApps.length}`, 14, 22);
 
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.className = "fa-solid fa-eye-slash";
-                text.innerText = "Hide Section";
-            } else {
-                content.classList.add('hidden');
-                icon.className = "fa-solid fa-eye";
-                text.innerText = "Show Section";
-            }
-        }
+                    const tableData = yearApps.map(a => [formatDDMMYYYY(a.date), a.timeslot, a.patientNo, a.therapist, a.serviceType]);
+                    doc.autoTable({
+                        startY: 28,
+                        head: [['Date', 'Timeslot', 'Patient No', 'Therapist', 'Service Type']],
+                        body: tableData,
+                    });
+                    doc.save(`OT_Activity_Room_Report_${year}.pdf`);
+                }
+            } else if (format === 'xlsx') {
+                if (window.ExcelJS) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('Utilization Report');
+                    worksheet.columns = [
+                        { header: 'Date', key: 'date', width: 15 },
+                        { header: 'Timeslot', key: 'timeslot', width: 12 },
+                        { header: 'Patient No', key: 'patientNo', width: 18 },
+                        { header: 'Therapist', key: 'therapist', width: 18 },
+                        { header: 'Service Type', key: 'serviceType', width: 22 }
+                    ];
 
-        // ===================== Utilization Statistics Export (Full Data + Chart) =====================
-        // Produces real, fully-populated .xlsx, .pdf, .doc (Word) and .html files containing the
-        // complete Service Distribution table, the complete Monthly Utilization Rate table, the
-        // summary metrics, and rendered charts (bar chart for service distribution, line chart for
-        // monthly rate trend). Scrapes the currently rendered tables so the export always matches
-        // exactly what's on screen (respecting the selected year/month filters).
+                    yearApps.forEach(a => {
+                        worksheet.addRow({
+                            date: formatDDMMYYYY(a.date),
+                            timeslot: a.timeslot,
+                            patientNo: a.patientNo,
+                            therapist: a.therapist,
+                            serviceType: a.serviceType
+                        });
+                    });
 
-        function getServiceDistributionRows() {
-            const rows = [];
-            document.querySelectorAll('#serviceTableBody tr').forEach(tr => {
-                const tds = tr.querySelectorAll('td');
-                if (tds.length >= 3) {
-                    rows.push({
-                        service: tds[0].textContent.trim(),
-                        count: tds[1].textContent.trim(),
-                        percent: tds[2].textContent.trim().replace('%', '')
+                    workbook.xlsx.writeBuffer().then(buffer => {
+                        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `OT_Activity_Room_Utilization_${year}.xlsx`;
+                        a.click();
                     });
                 }
-            });
-            return rows;
-        }
-
-        function getMonthlyGridRows() {
-            const rows = [];
-            document.querySelectorAll('#monthlyStatsGrid > div').forEach(card => {
-                const month = card.querySelector('span') ? card.querySelector('span').textContent.trim() : '';
-                const divs = card.querySelectorAll('div');
-                const bookings = divs[0] ? divs[0].textContent.trim() : '0';
-                const weekdaysRaw = divs[1] ? divs[1].textContent.trim() : '0 Weekdays';
-                const rateRaw = divs[2] ? divs[2].textContent.trim() : '0% Rate';
-                const weekdaysMatch = weekdaysRaw.match(/[\d.]+/);
-                const rateMatch = rateRaw.match(/[\d.]+/);
-                rows.push({
-                    month: month,
-                    bookings: bookings,
-                    weekdays: weekdaysMatch ? weekdaysMatch[0] : '0',
-                    rate: rateMatch ? rateMatch[0] : '0'
-                });
-            });
-            return rows;
-        }
-
-        function collectExportContext() {
-            return {
-                year: document.getElementById('statsYearSelect').value,
-                total: document.getElementById('statTotalBookings').innerText,
-                peak: document.getElementById('statPeakService').innerText,
-                avgRateValue: document.getElementById('statAvgMonthly').innerText,
-                avgRateLabel: document.getElementById('avgRateSubLabel').innerText,
-                periodBadge: document.getElementById('serviceDistributionFilterBadge').innerText,
-                serviceRows: getServiceDistributionRows(),
-                monthlyRows: getMonthlyGridRows()
-            };
-        }
-
-        function generateServiceChartImage(serviceRows) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 700;
-            canvas.height = 380;
-            const ctx = canvas.getContext('2d');
-            const labels = serviceRows.map(r => r.service);
-            const counts = serviceRows.map(r => parseInt(r.count, 10) || 0);
-            const chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Count',
-                        data: counts,
-                        backgroundColor: '#5a785a'
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    animation: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Service Utilization Distribution', font: { size: 16 } }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { precision: 0 } }
-                    }
-                }
-            });
-            const dataUrl = chart.toBase64Image('image/png', 1.0);
-            chart.destroy();
-            return dataUrl;
-        }
-
-        function generateMonthlyChartImage(monthlyRows) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 700;
-            canvas.height = 380;
-            const ctx = canvas.getContext('2d');
-            const labels = monthlyRows.map(r => r.month);
-            const rates = monthlyRows.map(r => parseFloat(r.rate) || 0);
-            const chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Utilization Rate (%)',
-                        data: rates,
-                        borderColor: '#285285',
-                        backgroundColor: 'rgba(40,82,133,0.15)',
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#285285'
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    animation: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Monthly Utilization Rate Trend', font: { size: 16 } }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { callback: v => v + '%' } }
-                    }
-                }
-            });
-            const dataUrl = chart.toBase64Image('image/png', 1.0);
-            chart.destroy();
-            return dataUrl;
-        }
-
-        function downloadBlob(blob, filename) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function buildReportHtml(ctx) {
-            const serviceTableRows = ctx.serviceRows.map(r =>
-                `<tr><td>${r.service}</td><td align="center">${r.count}</td><td align="right">${r.percent}%</td></tr>`
-            ).join('');
-            const monthlyTableRows = ctx.monthlyRows.map(r =>
-                `<tr><td>${r.month}</td><td align="center">${r.bookings}</td><td align="center">${r.weekdays}</td><td align="center">${r.rate}%</td></tr>`
-            ).join('');
-
-            return `<!DOCTYPE html>
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta charset="utf-8">
-<title>MSC 9/F Activity Room Utilization Report ${ctx.year}</title>
-<style>
-    body { font-family: Calibri, Arial, sans-serif; color:#242924; padding: 20px; }
-    h1 { font-size: 20pt; color:#163050; margin-bottom: 4px; }
-    h2 { font-size: 14pt; color:#3a4e3a; margin-top: 28px; }
-    .meta { font-size: 10pt; color: #555; margin-bottom: 16px; }
-    table { border-collapse: collapse; width:100%; margin-top:10px; }
-    th, td { border:1px solid #a3bba3; padding:6px 10px; font-size:10.5pt; }
-    th { background:#e3eae3; text-align:left; }
-    .summary-table td { border:none; padding:4px 10px 4px 0; font-size: 11pt; }
-    img { margin-top:12px; max-width:650px; width: 100%; height: auto; }
-</style>
-</head>
-<body>
-    <h1>MSC 9/F Activity Room Utilization Report — ${ctx.year}</h1>
-    <p class="meta">Occupational Therapy Department &bull; Generated on ${new Date().toLocaleString()}</p>
-
-    <table class="summary-table">
-        <tr><td><b>Total Bookings:</b></td><td>${ctx.total}</td></tr>
-        <tr><td><b>Peak Service:</b></td><td>${ctx.peak}</td></tr>
-        <tr><td><b>${ctx.avgRateLabel}:</b></td><td>${ctx.avgRateValue}</td></tr>
-        <tr><td><b>Service Distribution Period:</b></td><td>${ctx.periodBadge}</td></tr>
-    </table>
-
-    <h2>Service Utilization Distribution</h2>
-    <img src="${ctx.chartServiceImg}" alt="Service Distribution Chart">
-    <table>
-        <tr><th>Service Type</th><th>Total Count</th><th>Percentage</th></tr>
-        ${serviceTableRows}
-    </table>
-
-    <h2>Monthly Utilization Rate &amp; Weekday Analysis</h2>
-    <img src="${ctx.chartMonthlyImg}" alt="Monthly Utilization Rate Chart">
-    <table>
-        <tr><th>Month</th><th>Bookings</th><th>Weekdays</th><th>Rate</th></tr>
-        ${monthlyTableRows}
-    </table>
-</body>
-</html>`;
-        }
-
-        function exportAsWord(ctx) {
-            const html = buildReportHtml(ctx);
-            const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
-            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.doc`);
-        }
-
-        function exportAsHtmlFile(ctx) {
-            const html = buildReportHtml(ctx);
-            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.html`);
-        }
-
-        async function exportAsPDF(ctx) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-            const marginX = 40;
-            const pageHeight = doc.internal.pageSize.getHeight();
-            let y = 50;
-
-            doc.setFontSize(17);
-            doc.setTextColor(22, 48, 80);
-            doc.text(`MSC 9/F Activity Room Utilization Report - ${ctx.year}`, marginX, y);
-            y += 18;
-            doc.setFontSize(9);
-            doc.setTextColor(90, 90, 90);
-            doc.text(`Occupational Therapy Department  |  Generated on ${new Date().toLocaleString()}`, marginX, y);
-            y += 22;
-
-            doc.setFontSize(11);
-            doc.setTextColor(30, 30, 30);
-            doc.text(`Total Bookings: ${ctx.total}`, marginX, y); y += 16;
-            doc.text(`Peak Service: ${ctx.peak}`, marginX, y); y += 16;
-            doc.text(`${ctx.avgRateLabel}: ${ctx.avgRateValue}`, marginX, y); y += 16;
-            doc.text(`Service Distribution Period: ${ctx.periodBadge}`, marginX, y); y += 22;
-
-            doc.setFontSize(13);
-            doc.setTextColor(58, 78, 58);
-            doc.text('Service Utilization Distribution', marginX, y);
-            y += 12;
-            doc.addImage(ctx.chartServiceImg, 'PNG', marginX, y, 500, 270);
-            y += 285;
-
-            doc.autoTable({
-                startY: y,
-                margin: { left: marginX, right: marginX },
-                head: [['Service Type', 'Total Count', 'Percentage']],
-                body: ctx.serviceRows.map(r => [r.service, r.count, `${r.percent}%`]),
-                theme: 'grid',
-                headStyles: { fillColor: [90, 120, 90] },
-                styles: { fontSize: 9 }
-            });
-            y = doc.lastAutoTable.finalY + 30;
-
-            if (y > pageHeight - 320) { doc.addPage(); y = 50; }
-
-            doc.setFontSize(13);
-            doc.setTextColor(22, 48, 80);
-            doc.text('Monthly Utilization Rate & Weekday Analysis', marginX, y);
-            y += 12;
-            doc.addImage(ctx.chartMonthlyImg, 'PNG', marginX, y, 500, 270);
-            y += 285;
-
-            if (y > pageHeight - 260) { doc.addPage(); y = 50; }
-
-            doc.autoTable({
-                startY: y,
-                margin: { left: marginX, right: marginX },
-                head: [['Month', 'Bookings', 'Weekdays', 'Rate']],
-                body: ctx.monthlyRows.map(r => [r.month, r.bookings, r.weekdays, `${r.rate}%`]),
-                theme: 'grid',
-                headStyles: { fillColor: [40, 82, 133] },
-                styles: { fontSize: 9 }
-            });
-
-            doc.save(`OT_MSC_9F_Utilization_Statistics_${ctx.year}.pdf`);
-        }
-
-        async function exportAsExcel(ctx) {
-            const workbook = new ExcelJS.Workbook();
-            workbook.creator = 'OT MSC 9/F Utilization System';
-            workbook.created = new Date();
-
-            const stripPrefix = (dataUrl) => dataUrl.split(',')[1];
-
-            // --- Summary sheet (with embedded charts) ---
-            const summarySheet = workbook.addWorksheet('Summary');
-            summarySheet.getColumn(1).width = 28;
-            summarySheet.getColumn(2).width = 28;
-
-            summarySheet.mergeCells('A1:B1');
-            summarySheet.getCell('A1').value = `MSC 9/F Activity Room Utilization Report - ${ctx.year}`;
-            summarySheet.getCell('A1').font = { bold: true, size: 14, color: { argb: 'FF163050' } };
-
-            summarySheet.getCell('A2').value = 'Generated on';
-            summarySheet.getCell('B2').value = new Date().toLocaleString();
-            summarySheet.getCell('A3').value = 'Total Bookings';
-            summarySheet.getCell('B3').value = isNaN(parseInt(ctx.total, 10)) ? ctx.total : parseInt(ctx.total, 10);
-            summarySheet.getCell('A4').value = 'Peak Service';
-            summarySheet.getCell('B4').value = ctx.peak;
-            summarySheet.getCell('A5').value = ctx.avgRateLabel;
-            summarySheet.getCell('B5').value = ctx.avgRateValue;
-            summarySheet.getCell('A6').value = 'Service Distribution Period';
-            summarySheet.getCell('B6').value = ctx.periodBadge;
-            ['A2', 'A3', 'A4', 'A5', 'A6'].forEach(c => summarySheet.getCell(c).font = { bold: true });
-
-            const serviceImgId = workbook.addImage({ base64: stripPrefix(ctx.chartServiceImg), extension: 'png' });
-            summarySheet.addImage(serviceImgId, { tl: { col: 0, row: 7 }, ext: { width: 500, height: 270 } });
-
-            const monthlyImgId = workbook.addImage({ base64: stripPrefix(ctx.chartMonthlyImg), extension: 'png' });
-            summarySheet.addImage(monthlyImgId, { tl: { col: 0, row: 22 }, ext: { width: 500, height: 270 } });
-
-            // --- Service Distribution sheet (full data) ---
-            const svcSheet = workbook.addWorksheet('Service Distribution');
-            svcSheet.columns = [
-                { header: 'Service Type', key: 'service', width: 26 },
-                { header: 'Total Count', key: 'count', width: 16 },
-                { header: 'Percentage (%)', key: 'percent', width: 18 }
-            ];
-            svcSheet.getRow(1).font = { bold: true };
-            svcSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3EAE3' } };
-            ctx.serviceRows.forEach(r => svcSheet.addRow({
-                service: r.service,
-                count: isNaN(parseInt(r.count, 10)) ? r.count : parseInt(r.count, 10),
-                percent: isNaN(parseFloat(r.percent)) ? r.percent : parseFloat(r.percent)
-            }));
-
-            // --- Monthly Rates sheet (full data) ---
-            const monSheet = workbook.addWorksheet('Monthly Rates');
-            monSheet.columns = [
-                { header: 'Month', key: 'month', width: 14 },
-                { header: 'Bookings', key: 'bookings', width: 14 },
-                { header: 'Weekdays', key: 'weekdays', width: 14 },
-                { header: 'Rate (%)', key: 'rate', width: 14 }
-            ];
-            monSheet.getRow(1).font = { bold: true };
-            monSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE3EAE3' } };
-            ctx.monthlyRows.forEach(r => monSheet.addRow({
-                month: r.month,
-                bookings: isNaN(parseInt(r.bookings, 10)) ? r.bookings : parseInt(r.bookings, 10),
-                weekdays: isNaN(parseInt(r.weekdays, 10)) ? r.weekdays : parseInt(r.weekdays, 10),
-                rate: isNaN(parseFloat(r.rate)) ? r.rate : parseFloat(r.rate)
-            }));
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            downloadBlob(blob, `OT_MSC_9F_Utilization_Statistics_${ctx.year}.xlsx`);
-        }
-
-        async function exportStatisticsData(format) {
-            toggleExportDropdown();
-
-            if (typeof Chart === 'undefined') {
-                alert('Export libraries did not load (check your internet connection) - please try again.');
-                return;
-            }
-
-            const ctx = collectExportContext();
-            ctx.chartServiceImg = generateServiceChartImage(ctx.serviceRows);
-            ctx.chartMonthlyImg = generateMonthlyChartImage(ctx.monthlyRows);
-
-            try {
-                if (format === 'xlsx') {
-                    await exportAsExcel(ctx);
-                } else if (format === 'pdf') {
-                    await exportAsPDF(ctx);
-                } else if (format === 'doc') {
-                    exportAsWord(ctx);
-                } else if (format === 'html') {
-                    exportAsHtmlFile(ctx);
-                }
-            } catch (err) {
-                console.error('Statistics export failed:', err);
-                alert('Sorry, the export could not be generated. Please try again.');
             }
         }
     </script>
