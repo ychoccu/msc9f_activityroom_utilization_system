@@ -90,7 +90,8 @@
                     <i class="fa-solid fa-hospital text-sage-600 mr-1.5"></i> YCH Occupational Therapy Department
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-bold font-serif text-charcoal-900 leading-tight">
-                    MSC 9/F Activity Room YCH OT Utilization System
+                    MSC 9/F Activity Room<br>
+                    YCH OT Utilization System
                 </h1>
             </div>
 
@@ -135,7 +136,7 @@
                 </div>
                 <div>
                     <span class="text-xs font-semibold tracking-wider uppercase text-sage-700 block">MSC 9/F Activity Room</span>
-                    <h1 class="text-lg sm:text-xl font-bold font-serif text-charcoal-900 tracking-tight">YCH OT Utilization System</h1>
+                    <h1 class="text-lg sm:text-xl font-bold font-serif text-charcoal-900 tracking-tight"> YCH OT Utilization System</h1>
                 </div>
             </div>
             
@@ -246,22 +247,40 @@
                             <p class="text-xs text-charcoal-700/60">Format e.g. 26-101234</p>
                         </div>
 
-                        <!-- Timeslot -->
-                        <div class="space-y-2">
-                            <label for="timeslotSelect" class="block text-sm font-semibold text-charcoal-800">
-                                <i class="fa-regular fa-clock text-sage-600 mr-1.5"></i> Timeslot <span class="text-rose-500">*</span>
+                        <!-- Multiple Timeslots Selection Container -->
+                        <div class="space-y-2 xl:col-span-1">
+                            <label class="block text-sm font-semibold text-charcoal-800">
+                                <i class="fa-regular fa-clock text-sage-600 mr-1.5"></i> Select Timeslots <span class="text-rose-500">*</span>
                             </label>
-                            <select id="timeslotSelect" onchange="handleTimeslotChange()" required
-                                class="w-full px-4 py-3 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all shadow-2xs">
-                                <option value="1100">11:00</option>
-                                <option value="1130">11:30</option>
-                                <option value="1530" selected>15:30</option>
-                                <option value="1600">16:00</option>
-                                <option value="others">Others (Custom)</option>
-                            </select>
-                            <input type="text" id="customTimeslot" placeholder="e.g. 14:15 or Morning" style="display:none;"
-                                class="w-full mt-2 px-4 py-2.5 bg-white border border-sage-200 rounded-xl text-charcoal-800 text-sm focus:outline-none focus:ring-2 focus:ring-sage-500">
-                            <p class="text-xs text-charcoal-700/60">Session time slot</p>
+                            <div class="bg-white border border-sage-200 rounded-xl p-2.5 space-y-2 shadow-2xs">
+                                <div class="grid grid-cols-2 gap-1.5 text-xs font-medium">
+                                    <label class="flex items-center space-x-2 p-1.5 rounded-lg border border-sage-100 hover:bg-sage-50 cursor-pointer transition-all">
+                                        <input type="checkbox" name="registerTimeslots" value="11:00" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                                        <span class="text-charcoal-800 font-semibold">11:00</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-1.5 rounded-lg border border-sage-100 hover:bg-sage-50 cursor-pointer transition-all">
+                                        <input type="checkbox" name="registerTimeslots" value="11:30" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                                        <span class="text-charcoal-800 font-semibold">11:30</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-1.5 rounded-lg border border-sage-100 hover:bg-sage-50 cursor-pointer transition-all">
+                                        <input type="checkbox" name="registerTimeslots" value="15:30" checked class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                                        <span class="text-charcoal-800 font-semibold">15:30</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 p-1.5 rounded-lg border border-sage-100 hover:bg-sage-50 cursor-pointer transition-all">
+                                        <input type="checkbox" name="registerTimeslots" value="16:00" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                                        <span class="text-charcoal-800 font-semibold">16:00</span>
+                                    </label>
+                                </div>
+                                <div class="pt-1 border-t border-sage-100">
+                                    <label class="flex items-center space-x-2 text-xs font-medium cursor-pointer">
+                                        <input type="checkbox" id="registerCustomTsCheck" onchange="toggleRegisterCustomTimeslot(this.checked)" class="rounded text-sage-600 focus:ring-sage-500 w-4 h-4">
+                                        <span class="text-charcoal-700">Others (Custom Slot)</span>
+                                    </label>
+                                    <input type="text" id="customTimeslot" placeholder="e.g. 14:15 or Morning" style="display:none;"
+                                        class="w-full mt-2 px-3 py-1.5 bg-cream-50 border border-sage-200 rounded-lg text-charcoal-800 text-xs focus:outline-none focus:ring-2 focus:ring-sage-500">
+                                </div>
+                            </div>
+                            <p class="text-xs text-charcoal-700/60">Select one or multiple slots</p>
                         </div>
 
                         <!-- Therapist -->
@@ -300,7 +319,7 @@
                         <div class="md:col-span-2 lg:col-span-3 xl:col-span-5 pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-sage-200/60">
                             <div class="text-xs text-charcoal-700/70 flex items-center">
                                 <i class="fa-solid fa-circle-info text-sage-600 mr-2"></i>
-                                Cloud database automatically prompts a conflict notice if booked for the same timeslot by another therapist.
+                                Cloud database automatically prompts a conflict notice if booked for the same timeslots by another therapist.
                             </div>
                             <div class="flex items-center space-x-3 w-full sm:w-auto">
                                 <button type="reset" onclick="resetFormCustomFields()" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-sage-300 bg-white text-charcoal-700 font-medium text-sm hover:bg-sage-50 transition-all">
@@ -397,22 +416,22 @@
                                 <span>Export Statistics</span>
                                 <i class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
                             </button>
-                            <div id="exportDropdownMenu" class="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-sage-200 py-2 hidden z-30">
+                            <div id="exportDropdownMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-sage-200 py-2 hidden z-30">
                                 <button onclick="exportStatisticsData('xlsx')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
                                     <i class="fa-solid fa-file-excel text-emerald-600 w-4"></i>
-                                    <span>Export as .xlsx</span>
+                                    <span>Export as Excel (.xlsx)</span>
                                 </button>
                                 <button onclick="exportStatisticsData('pdf')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
                                     <i class="fa-solid fa-file-pdf text-rose-600 w-4"></i>
-                                    <span>Export as .pdf</span>
+                                    <span>Export as PDF (.pdf)</span>
                                 </button>
                                 <button onclick="exportStatisticsData('doc')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
                                     <i class="fa-solid fa-file-word text-blue-600 w-4"></i>
-                                    <span>Export as .doc</span>
+                                    <span>Export as Word (.doc)</span>
                                 </button>
                                 <button onclick="exportStatisticsData('html')" class="w-full text-left px-4 py-2 text-xs text-charcoal-800 hover:bg-sage-50 flex items-center space-x-2">
                                     <i class="fa-solid fa-file-code text-amber-600 w-4"></i>
-                                    <span>Export as .html</span>
+                                    <span>Export as HTML (.html)</span>
                                 </button>
                             </div>
                         </div>
@@ -507,7 +526,7 @@
                                 <p class="text-xs text-charcoal-700/70 mt-1">Comprehensive breakdown of service types with totals, percentages, and visual bars (Excludes Admin special activities)</p>
                             </div>
                             
-                            <!-- Dual Month & Year Filter for Service Distribution with Custom Period Support -->
+                            <!-- Dual Month & Year Filter for Service Distribution -->
                             <div class="flex flex-wrap items-center gap-2">
                                 <div class="flex flex-wrap items-center gap-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
                                     <i class="fa-regular fa-filter text-sage-600 text-xs"></i>
@@ -603,7 +622,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW SECTION: Timeslot Utilization Statistics (Table + Chart Visualization) -->
+                    <!-- Timeslot Utilization Statistics (Table + Chart Visualization) -->
                     <div class="bg-white p-6 sm:p-8 rounded-3xl border border-sage-200 shadow-sm">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-4 border-b border-sage-200">
                             <div>
@@ -613,7 +632,7 @@
                                 <p class="text-xs text-charcoal-700/70 mt-1">Recorded count and utilization rate by specific timeslot (11:00, 11:30, 15:30, 16:00, and Others). Formula: Recorded specific timeslots / Total specific available timeslots (Preset 4 slots daily).</p>
                             </div>
 
-                            <!-- Month & Year Filter for Timeslot Statistics with Custom Period Support -->
+                            <!-- Month & Year Filter for Timeslot Statistics -->
                             <div class="flex flex-wrap items-center gap-2">
                                 <div class="flex flex-wrap items-center gap-2 bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200">
                                     <i class="fa-regular fa-filter text-sage-600 text-xs"></i>
@@ -814,7 +833,7 @@
         </div>
     </div>
 
-    <!-- Appointment / Special Activity Details & Edit Modal -->
+    <!-- Appointment / Special Activity Details & Edit Modal with Multi-Timeslot Support -->
     <div id="detailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/60 backdrop-blur-xs hidden transition-all">
         <div class="bg-cream-50 rounded-3xl border border-sage-200 shadow-2xl max-w-lg w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0" id="detailsModalBox">
             <div id="detailsModalHeader" class="bg-sage-700 px-6 py-4 text-cream-50 flex items-center justify-between">
@@ -846,10 +865,43 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-charcoal-700 mb-1" id="editTimeslotLabel">Timeslot</label>
-                        <input type="text" id="editTimeslot" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800" placeholder="e.g. 15:30">
+                <!-- Edit Multiple Timeslot Checkboxes vs Special Activity Single Input -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div id="editTimeslotContainer">
+                        <label class="block text-xs font-semibold text-charcoal-700 mb-1" id="editTimeslotLabel">Timeslot Selection</label>
+                        <!-- Appointment Multi-Select Container -->
+                        <div id="editAppTimeslotGroup" class="bg-white border border-sage-200 rounded-xl p-2 space-y-1.5">
+                            <div class="grid grid-cols-2 gap-1 text-xs">
+                                <label class="flex items-center space-x-1.5 p-1 rounded hover:bg-sage-50 cursor-pointer">
+                                    <input type="checkbox" name="editTimeslots" value="11:00" class="rounded text-sage-600 focus:ring-sage-500 w-3.5 h-3.5">
+                                    <span class="text-charcoal-800 font-semibold">11:00</span>
+                                </label>
+                                <label class="flex items-center space-x-1.5 p-1 rounded hover:bg-sage-50 cursor-pointer">
+                                    <input type="checkbox" name="editTimeslots" value="11:30" class="rounded text-sage-600 focus:ring-sage-500 w-3.5 h-3.5">
+                                    <span class="text-charcoal-800 font-semibold">11:30</span>
+                                </label>
+                                <label class="flex items-center space-x-1.5 p-1 rounded hover:bg-sage-50 cursor-pointer">
+                                    <input type="checkbox" name="editTimeslots" value="15:30" class="rounded text-sage-600 focus:ring-sage-500 w-3.5 h-3.5">
+                                    <span class="text-charcoal-800 font-semibold">15:30</span>
+                                </label>
+                                <label class="flex items-center space-x-1.5 p-1 rounded hover:bg-sage-50 cursor-pointer">
+                                    <input type="checkbox" name="editTimeslots" value="16:00" class="rounded text-sage-600 focus:ring-sage-500 w-3.5 h-3.5">
+                                    <span class="text-charcoal-800 font-semibold">16:00</span>
+                                </label>
+                            </div>
+                            <div class="pt-1 border-t border-sage-100">
+                                <label class="flex items-center space-x-1.5 text-xs font-medium cursor-pointer">
+                                    <input type="checkbox" id="editCustomTsCheck" onchange="toggleEditCustomTimeslot(this.checked)" class="rounded text-sage-600 focus:ring-sage-500 w-3.5 h-3.5">
+                                    <span class="text-charcoal-700">Others</span>
+                                </label>
+                                <input type="text" id="editCustomTimeslot" placeholder="e.g. 14:15" style="display:none;"
+                                    class="w-full mt-1.5 px-2.5 py-1 bg-cream-50 border border-sage-200 rounded-lg text-charcoal-800 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+                            </div>
+                        </div>
+                        <!-- Admin Special Input (Single Text Input) -->
+                        <div id="editSpecialTimeslotGroup" class="hidden">
+                            <input type="text" id="editSpecialTimeslot" class="w-full px-3 py-2 bg-white border border-sage-200 rounded-xl text-xs text-charcoal-800" placeholder="e.g. 09:00 - 12:00">
+                        </div>
                     </div>
                     <div id="editTherapistGroup">
                         <label class="block text-xs font-semibold text-charcoal-700 mb-1">Therapist</label>
@@ -902,7 +954,7 @@
                 </div>
                 <div>
                     <p class="font-bold font-serif text-charcoal-900">MSC 9/F Activity Room Management System</p>
-                    <p class="text-xs text-charcoal-700/70">Occupational Therapy Department &copy; 2026</p>
+                    <p class="text-xs text-charcoal-700/70"> YCH Occupational Therapy Department &copy; 2026</p>
                 </div>
             </div>
             <div class="flex items-center space-x-6 text-xs text-charcoal-700/80">
@@ -917,7 +969,6 @@
     </div>
     <!-- ===================== End Main System ===================== -->
 
-    <!-- Login Gate Logic -->
     <script>
         const SYSTEM_PASSWORD = 'ychoccu';
 
@@ -1156,16 +1207,14 @@
             }
         }
 
-        function handleTimeslotChange() {
-            const select = document.getElementById('timeslotSelect');
-            const customInput = document.getElementById('customTimeslot');
-            if (select.value === 'others') {
-                customInput.style.display = 'block';
-                customInput.required = true;
-            } else {
-                customInput.style.display = 'none';
-                customInput.required = false;
-            }
+        function toggleRegisterCustomTimeslot(checked) {
+            const input = document.getElementById('customTimeslot');
+            input.style.display = checked ? 'block' : 'none';
+        }
+
+        function toggleEditCustomTimeslot(checked) {
+            const input = document.getElementById('editCustomTimeslot');
+            input.style.display = checked ? 'block' : 'none';
         }
 
         function handleServiceTypeChange() {
@@ -1191,6 +1240,7 @@
         }
 
         function resetFormCustomFields() {
+            document.getElementById('registerCustomTsCheck').checked = false;
             document.getElementById('customTimeslot').style.display = 'none';
             document.getElementById('customServiceType').style.display = 'none';
         }
@@ -1200,64 +1250,92 @@
             menu.classList.toggle('hidden');
         }
 
+        function toggleExportDropdown() {
+            const menu = document.getElementById('exportDropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
         async function handleAppointmentSubmit(event) {
             event.preventDefault();
             
             const rawDate = document.getElementById('appointmentDate').value;
             const isoDate = parseDDMMYYYY(rawDate);
             const patientNo = document.getElementById('patientNo').value.trim();
-            
-            const timeslotSelect = document.getElementById('timeslotSelect').value;
-            let timeslot = timeslotSelect;
-            if (timeslotSelect === '1100') timeslot = '11:00';
-            if (timeslotSelect === '1130') timeslot = '11:30';
-            if (timeslotSelect === '1530') timeslot = '15:30';
-            if (timeslotSelect === '1600') timeslot = '16:00';
-            if (timeslotSelect === 'others') {
-                timeslot = document.getElementById('customTimeslot').value.trim();
+            const therapist = document.getElementById('therapist').value.trim();
+
+            // Gather all selected timeslots
+            const timeslotChecks = document.querySelectorAll('input[name="registerTimeslots"]:checked');
+            let selectedTimeslots = Array.from(timeslotChecks).map(cb => cb.value);
+
+            const customTsChecked = document.getElementById('registerCustomTsCheck').checked;
+            if (customTsChecked) {
+                const customVal = document.getElementById('customTimeslot').value.trim();
+                if (customVal) selectedTimeslots.push(customVal);
             }
 
-            const therapist = document.getElementById('therapist').value.trim();
-            
+            if (selectedTimeslots.length === 0) {
+                showModal({
+                    title: "Timeslot Required",
+                    icon: "fa-solid fa-circle-exclamation",
+                    headerBg: "bg-amber-600",
+                    message: "Please select at least one timeslot before submitting.",
+                    details: null
+                });
+                return;
+            }
+
+            // Check conflict for each selected timeslot against other therapists
+            let conflicts = [];
+            selectedTimeslots.forEach(ts => {
+                const conflict = window.appointments.find(a => 
+                    a.date === isoDate && 
+                    a.timeslot.toLowerCase() === ts.toLowerCase() && 
+                    a.therapist.toLowerCase() !== therapist.toLowerCase()
+                );
+                if (conflict) {
+                    conflicts.push({ timeslot: ts, therapist: conflict.therapist, patientNo: conflict.patientNo });
+                }
+            });
+
+            if (conflicts.length > 0) {
+                const detailStr = conflicts.map(c => `• ${c.timeslot}: Booked by "${c.therapist}" (${c.patientNo})`).join("\n");
+                showModal({
+                    title: "Booking Conflict Notice",
+                    icon: "fa-solid fa-triangle-exclamation",
+                    headerBg: "bg-amber-600",
+                    message: `Conflict detected on ${rawDate} for ${conflicts.length} selected timeslot(s).`,
+                    details: detailStr
+                });
+                return;
+            }
+
             const serviceTypeSelect = document.getElementById('serviceType').value;
             let serviceType = serviceTypeSelect;
             if (serviceTypeSelect === 'others') {
                 serviceType = document.getElementById('customServiceType').value.trim();
             }
 
-            const conflict = window.appointments.find(a => 
-                a.date === isoDate && 
-                a.timeslot.toLowerCase() === timeslot.toLowerCase() && 
-                a.therapist.toLowerCase() !== therapist.toLowerCase()
-            );
-
-            if (conflict) {
-                showModal({
-                    title: "Booking Conflict Notice",
-                    icon: "fa-solid fa-triangle-exclamation",
-                    headerBg: "bg-amber-600",
-                    message: `Timeslot ${timeslot} on ${rawDate} is already booked by therapist "${conflict.therapist}" for Patient "${conflict.patientNo}".`,
-                    details: `Existing Booking: ${conflict.therapist} - ${conflict.serviceType} (${conflict.patientNo})`
-                });
-                return;
-            }
-
-            const newApp = {
-                date: isoDate,
-                patientNo: patientNo,
-                timeslot: timeslot,
-                therapist: therapist,
-                serviceType: serviceType,
-                createdAt: new Date().toISOString()
-            };
-
             try {
-                if (window.firebaseDb && window.dbActions) {
-                    const newRef = window.dbActions.push(window.dbRefs.appointments);
-                    await window.dbActions.set(newRef, newApp);
-                } else {
-                    newApp.id = Date.now().toString();
-                    window.appointments.push(newApp);
+                for (const ts of selectedTimeslots) {
+                    const newApp = {
+                        date: isoDate,
+                        patientNo: patientNo,
+                        timeslot: ts,
+                        therapist: therapist,
+                        serviceType: serviceType,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    if (window.firebaseDb && window.dbActions) {
+                        const newRef = window.dbActions.push(window.dbRefs.appointments);
+                        await window.dbActions.set(newRef, newApp);
+                    } else {
+                        newApp.id = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5);
+                        window.appointments.push(newApp);
+                    }
+                }
+
+                if (!window.firebaseDb) {
                     renderCalendar();
                     updateStatistics();
                 }
@@ -1266,7 +1344,7 @@
                     title: "Appointment Registered",
                     icon: "fa-solid fa-circle-check",
                     headerBg: "bg-emerald-600",
-                    message: `Successfully booked OT Activity Room on ${rawDate} at ${timeslot} for Patient ${patientNo}. Saved to Cloud Database!`,
+                    message: `Successfully booked OT Activity Room on ${rawDate} for ${selectedTimeslots.length} timeslot(s) (${selectedTimeslots.join(', ')}) for Patient ${patientNo}. Saved to Cloud Database!`,
                     details: null
                 });
 
@@ -1385,6 +1463,10 @@
             const therapistGroup = document.getElementById('editTherapistGroup');
             const serviceGroup = document.getElementById('editServiceTypeGroup');
             const specialGroup = document.getElementById('editSpecialDetailsGroup');
+            
+            const editAppTimeslotGroup = document.getElementById('editAppTimeslotGroup');
+            const editSpecialTimeslotGroup = document.getElementById('editSpecialTimeslotGroup');
+
             const header = document.getElementById('detailsModalHeader');
             const headerIcon = document.getElementById('detailsModalHeaderIcon');
             const modalTitle = document.getElementById('detailsModalTitle');
@@ -1398,9 +1480,12 @@
                 modalTitle.innerText = "Admin Special Activity Details";
 
                 fpEdit.setDate(formatDDMMYYYY(item.date));
-                document.getElementById('editTimeslot').value = item.timeslot;
+                document.getElementById('editSpecialTimeslot').value = item.timeslot || '';
                 document.getElementById('editTimeslotLabel').innerText = "Timeslot / Duration";
                 document.getElementById('editSpecialDescription').value = item.description || '';
+
+                editAppTimeslotGroup.classList.add('hidden');
+                editSpecialTimeslotGroup.classList.remove('hidden');
 
                 patientGroup.classList.add('hidden');
                 therapistGroup.classList.add('hidden');
@@ -1416,9 +1501,38 @@
 
                 fpEdit.setDate(formatDDMMYYYY(item.date));
                 document.getElementById('editPatientNo').value = item.patientNo || '';
-                document.getElementById('editTimeslot').value = item.timeslot || '';
-                document.getElementById('editTimeslotLabel').innerText = "Timeslot";
+                document.getElementById('editTimeslotLabel').innerText = "Timeslot Selection";
                 document.getElementById('editTherapist').value = item.therapist || '';
+
+                editAppTimeslotGroup.classList.remove('hidden');
+                editSpecialTimeslotGroup.classList.add('hidden');
+
+                // Pre-check corresponding timeslot checkbox
+                const editCheckboxes = document.querySelectorAll('input[name="editTimeslots"]');
+                const currentTs = (item.timeslot || '').trim();
+                let matchedPreset = false;
+
+                editCheckboxes.forEach(cb => {
+                    if (cb.value === currentTs) {
+                        cb.checked = true;
+                        matchedPreset = true;
+                    } else {
+                        cb.checked = false;
+                    }
+                });
+
+                const customTsCheck = document.getElementById('editCustomTsCheck');
+                const customTsInput = document.getElementById('editCustomTimeslot');
+
+                if (!matchedPreset && currentTs) {
+                    customTsCheck.checked = true;
+                    customTsInput.style.display = 'block';
+                    customTsInput.value = currentTs;
+                } else {
+                    customTsCheck.checked = false;
+                    customTsInput.style.display = 'none';
+                    customTsInput.value = '';
+                }
 
                 const serviceSelect = document.getElementById('editServiceType');
                 const customServiceInput = document.getElementById('editCustomServiceType');
@@ -1462,9 +1576,9 @@
             const isSpecial = document.getElementById('editIsSpecial').value === "true";
             const rawDate = document.getElementById('editDate').value;
             const isoDate = parseDDMMYYYY(rawDate);
-            const timeslot = document.getElementById('editTimeslot').value.trim();
 
             if (isSpecial) {
+                const timeslot = document.getElementById('editSpecialTimeslot').value.trim();
                 const description = document.getElementById('editSpecialDescription').value.trim();
                 if (window.firebaseDb && window.dbActions) {
                     const itemRef = window.dbActions.ref(window.firebaseDb, `specialActivities/${id}`);
@@ -1491,26 +1605,100 @@
                     serviceType = document.getElementById('editCustomServiceType').value.trim();
                 }
 
+                // Gather selected edit timeslots
+                const timeslotChecks = document.querySelectorAll('input[name="editTimeslots"]:checked');
+                let selectedTimeslots = Array.from(timeslotChecks).map(cb => cb.value);
+
+                const customTsChecked = document.getElementById('editCustomTsCheck').checked;
+                if (customTsChecked) {
+                    const customVal = document.getElementById('editCustomTimeslot').value.trim();
+                    if (customVal) selectedTimeslots.push(customVal);
+                }
+
+                if (selectedTimeslots.length === 0) {
+                    showModal({
+                        title: "Timeslot Required",
+                        icon: "fa-solid fa-circle-exclamation",
+                        headerBg: "bg-amber-600",
+                        message: "Please select at least one timeslot for this appointment.",
+                        details: null
+                    });
+                    return;
+                }
+
+                // Check conflict excluding current appointment record
+                let conflicts = [];
+                selectedTimeslots.forEach(ts => {
+                    const conflict = window.appointments.find(a => 
+                        a.id !== id &&
+                        a.date === isoDate && 
+                        a.timeslot.toLowerCase() === ts.toLowerCase() && 
+                        a.therapist.toLowerCase() !== therapist.toLowerCase()
+                    );
+                    if (conflict) {
+                        conflicts.push({ timeslot: ts, therapist: conflict.therapist, patientNo: conflict.patientNo });
+                    }
+                });
+
+                if (conflicts.length > 0) {
+                    const detailStr = conflicts.map(c => `• ${c.timeslot}: Booked by "${c.therapist}" (${c.patientNo})`).join("\n");
+                    showModal({
+                        title: "Booking Conflict Notice",
+                        icon: "fa-solid fa-triangle-exclamation",
+                        headerBg: "bg-amber-600",
+                        message: `Conflict detected on ${rawDate} for ${conflicts.length} selected timeslot(s).`,
+                        details: detailStr
+                    });
+                    return;
+                }
+
+                // Update primary item with first selected timeslot, and add extra appointments if multiple slots selected
+                const primaryTs = selectedTimeslots[0];
                 if (window.firebaseDb && window.dbActions) {
                     const itemRef = window.dbActions.ref(window.firebaseDb, `appointments/${id}`);
                     await window.dbActions.update(itemRef, {
                         date: isoDate,
                         patientNo: patientNo,
-                        timeslot: timeslot,
+                        timeslot: primaryTs,
                         therapist: therapist,
                         serviceType: serviceType
                     });
+
+                    // Additional timeslots create new entries
+                    for (let i = 1; i < selectedTimeslots.length; i++) {
+                        const newApp = {
+                            date: isoDate,
+                            patientNo: patientNo,
+                            timeslot: selectedTimeslots[i],
+                            therapist: therapist,
+                            serviceType: serviceType,
+                            createdAt: new Date().toISOString()
+                        };
+                        const newRef = window.dbActions.push(window.dbRefs.appointments);
+                        await window.dbActions.set(newRef, newApp);
+                    }
                 } else {
                     const item = window.appointments.find(a => a.id === id);
                     if (item) {
                         item.date = isoDate;
                         item.patientNo = patientNo;
-                        item.timeslot = timeslot;
+                        item.timeslot = primaryTs;
                         item.therapist = therapist;
                         item.serviceType = serviceType;
-                        renderCalendar();
-                        updateStatistics();
                     }
+                    for (let i = 1; i < selectedTimeslots.length; i++) {
+                        window.appointments.push({
+                            id: Date.now().toString() + '_' + i,
+                            date: isoDate,
+                            patientNo: patientNo,
+                            timeslot: selectedTimeslots[i],
+                            therapist: therapist,
+                            serviceType: serviceType,
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                    renderCalendar();
+                    updateStatistics();
                 }
             }
 
@@ -1751,13 +1939,12 @@
 
                 dayApps.forEach(a => {
                     html += `
-                        <div onclick="openDetailsModal('${a.id}', false)" class="bg-sage-50 border border-sage-300 p-2 rounded-xl text-xs cursor-pointer hover:bg-sage-100 transition-all shadow-2xs">
-                            <div class="font-bold text-sage-900 flex items-center justify-between">
+                        <div onclick="openDetailsModal('${a.id}', false)" class="bg-sage-100 text-sage-900 border border-sage-300/80 p-2 rounded-xl text-xs cursor-pointer hover:bg-sage-200 transition-all shadow-sm">
+                            <div class="font-bold flex items-center justify-between">
                                 <span>${a.therapist}</span>
                                 <span class="text-sage-700 font-semibold">${a.timeslot}</span>
                             </div>
-                            <p class="text-[11px] text-charcoal-700 font-medium mt-1">Pt: ${a.patientNo}</p>
-                            <span class="inline-block mt-1 px-2 py-0.5 bg-sage-200/80 text-sage-800 rounded-md text-[10px] font-semibold">${a.serviceType}</span>
+                            <p class="text-[11px] text-charcoal-700 mt-0.5">${a.patientNo} • ${a.serviceType}</p>
                         </div>
                     `;
                 });
@@ -1770,39 +1957,15 @@
         }
 
         function syncGlobalYear(yearVal) {
-            currentYear = parseInt(yearVal, 10);
             document.getElementById('serviceYearSelect').value = yearVal;
             document.getElementById('monthlyAnalysisYearSelect').value = yearVal;
-            renderCalendar();
             updateStatistics();
         }
 
         function syncMonthlyAnalysisYear(yearVal) {
             document.getElementById('statsYearSelect').value = yearVal;
             document.getElementById('serviceYearSelect').value = yearVal;
-            currentYear = parseInt(yearVal, 10);
-            renderCalendar();
             updateStatistics();
-        }
-
-        function getWeekdaysInMonth(year, month) {
-            let count = 0;
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day);
-                const dayOfWeek = date.getDay();
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !publicHolidays2026.includes(dateStr)) {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        function toggleExportDropdown() {
-            const menu = document.getElementById('exportDropdownMenu');
-            menu.classList.toggle('hidden');
         }
 
         function toggleStatisticsSection() {
@@ -1821,430 +1984,633 @@
             }
         }
 
+        function getWeekdaysCount(year, month) {
+            let count = 0;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let d = 1; d <= daysInMonth; d++) {
+                const date = new Date(year, month, d);
+                const day = date.getDay();
+                const isoStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                if (day !== 0 && day !== 6 && !publicHolidays2026.includes(isoStr)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         function updateStatistics() {
-            const selYear = parseInt(document.getElementById('statsYearSelect').value, 10);
-            
+            const yearStr = document.getElementById('statsYearSelect').value;
+            const selectedYear = parseInt(yearStr);
+
+            // Filter year appointments
             const yearApps = window.appointments.filter(a => {
                 if (!a.date) return false;
-                const y = parseInt(a.date.split('-')[0], 10);
-                return y === selYear;
+                return new Date(a.date).getFullYear() === selectedYear;
             });
 
-            // 1. Total Bookings Card
+            // 1. Metric Cards
             document.getElementById('statTotalBookings').innerText = yearApps.length;
-            document.getElementById('annualTotalCount').innerText = yearApps.length;
 
-            // Compute Annual Available Slots & Annual Utilization Rate
-            let annualWeekdays = 0;
-            for (let m = 0; m < 12; m++) {
-                annualWeekdays += getWeekdaysInMonth(selYear, m);
-            }
-            const annualTotalAvailableSlots = annualWeekdays * TOTAL_TIMESLOTS_PER_DAY;
-            const annualUtilizationRate = annualTotalAvailableSlots > 0 ? ((yearApps.length / annualTotalAvailableSlots) * 100).toFixed(1) : '0.0';
-            document.getElementById('annualUtilizationRateBadge').innerText = `${annualUtilizationRate}%`;
-
-            // 2. Service Distribution Table & Bars (with Custom Period Option)
-            const monthFilter = document.getElementById('serviceMonthSelect').value;
-            let filteredServiceApps = yearApps;
-            const badge = document.getElementById('serviceDistributionFilterBadge');
-
-            if (monthFilter === 'all') {
-                badge.innerText = `Period: All Months ${selYear}`;
-            } else if (monthFilter === 'custom') {
-                const startM = parseInt(document.getElementById('serviceStartMonthSelect').value, 10);
-                const endM = parseInt(document.getElementById('serviceEndMonthSelect').value, 10);
-                const minM = Math.min(startM, endM);
-                const maxM = Math.max(startM, endM);
-                
-                filteredServiceApps = yearApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1], 10) - 1;
-                    return m >= minM && m <= maxM;
-                });
-                badge.innerText = `Period: ${monthNamesShort[minM]} - ${monthNamesShort[maxM]} ${selYear}`;
-            } else {
-                const mIdx = parseInt(monthFilter, 10);
-                filteredServiceApps = yearApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1], 10) - 1;
-                    return m === mIdx;
-                });
-                badge.innerText = `Period: ${monthNamesFull[mIdx]} ${selYear}`;
-            }
-
+            // Peak Service
             const serviceCounts = {};
-            baseServiceTypesList.forEach(s => serviceCounts[s] = 0);
-
-            filteredServiceApps.forEach(a => {
-                const st = (a.serviceType || '').toLowerCase();
-                if (serviceCounts.hasOwnProperty(st)) {
-                    serviceCounts[st]++;
-                } else {
-                    serviceCounts[st] = (serviceCounts[st] || 0) + 1;
-                }
+            yearApps.forEach(a => {
+                const s = (a.serviceType || '').trim();
+                if (s) serviceCounts[s] = (serviceCounts[s] || 0) + 1;
             });
 
-            const totalFilteredService = filteredServiceApps.length;
-            const tableBody = document.getElementById('serviceTableBody');
-            const barsContainer = document.getElementById('serviceDistributionBars');
-
-            tableBody.innerHTML = '';
-            barsContainer.innerHTML = '';
-
-            let topService = '-';
-            let maxCount = -1;
-
-            Object.keys(serviceCounts).forEach(sKey => {
-                const cnt = serviceCounts[sKey];
-                const pct = totalFilteredService > 0 ? ((cnt / totalFilteredService) * 100).toFixed(1) : '0.0';
-
-                if (cnt > maxCount && cnt > 0) {
-                    maxCount = cnt;
-                    topService = sKey;
+            let peakService = '-';
+            let peakCount = 0;
+            Object.keys(serviceCounts).forEach(s => {
+                if (serviceCounts[s] > peakCount) {
+                    peakCount = serviceCounts[s];
+                    peakService = s;
                 }
+            });
+            document.getElementById('statPeakService').innerText = peakService !== '-' ? `${peakService} (${peakCount})` : '-';
 
-                tableBody.innerHTML += `
-                    <tr class="hover:bg-sage-50/50 transition-all">
-                        <td class="py-2.5 px-4 font-semibold capitalize">${sKey}</td>
-                        <td class="py-2.5 px-4 text-center font-bold text-sage-800">${cnt}</td>
-                        <td class="py-2.5 px-4 text-right text-sage-700 font-semibold">${pct}%</td>
+            // Peak Timeslot
+            const peakTs = getPeakTimeslot(yearApps);
+            document.getElementById('statPeakTimeslot').innerText = peakTs.timeslot !== '-' ? `${peakTs.timeslot} (${peakTs.count})` : '-';
+
+            // Avg Utilization Rate Calculation based on Period
+            const periodType = document.getElementById('avgRatePeriodSelect').value;
+            const specificMonthContainer = document.getElementById('specificMonthSelectContainer');
+
+            if (periodType === 'monthly') {
+                specificMonthContainer.classList.remove('hidden');
+            } else {
+                specificMonthContainer.classList.add('hidden');
+            }
+
+            let totalRecordedInPeriod = 0;
+            let totalAvailableInPeriod = 0;
+
+            let periodMonths = [];
+            if (periodType === 'annual') periodMonths = [0,1,2,3,4,5,6,7,8,9,10,11];
+            else if (periodType === 'Q1') periodMonths = [0,1,2];
+            else if (periodType === 'Q2') periodMonths = [3,4,5];
+            else if (periodType === 'Q3') periodMonths = [6,7,8];
+            else if (periodType === 'Q4') periodMonths = [9,10,11];
+            else if (periodType === 'monthly') {
+                const m = parseInt(document.getElementById('avgRateSpecificMonth').value);
+                periodMonths = [m];
+            }
+
+            periodMonths.forEach(m => {
+                const monthApps = yearApps.filter(a => new Date(a.date).getMonth() === m);
+                totalRecordedInPeriod += monthApps.length;
+                const wDays = getWeekdaysCount(selectedYear, m);
+                totalAvailableInPeriod += (wDays * TOTAL_TIMESLOTS_PER_DAY);
+            });
+
+            const avgRate = totalAvailableInPeriod > 0 ? ((totalRecordedInPeriod / totalAvailableInPeriod) * 100).toFixed(1) : "0.0";
+            document.getElementById('statAvgMonthly').innerText = `${avgRate}%`;
+
+            // 2. Service Distribution Table & Bars
+            const serviceMonthVal = document.getElementById('serviceMonthSelect').value;
+            let filteredServiceApps = yearApps;
+
+            if (serviceMonthVal === 'custom') {
+                const startM = parseInt(document.getElementById('serviceStartMonthSelect').value);
+                const endM = parseInt(document.getElementById('serviceEndMonthSelect').value);
+                filteredServiceApps = yearApps.filter(a => {
+                    const m = new Date(a.date).getMonth();
+                    return m >= startM && m <= endM;
+                });
+                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: ${monthNamesShort[startM]} - ${monthNamesShort[endM]} ${selectedYear}`;
+            } else if (serviceMonthVal !== 'all') {
+                const m = parseInt(serviceMonthVal);
+                filteredServiceApps = yearApps.filter(a => new Date(a.date).getMonth() === m);
+                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: ${monthNamesFull[m]} ${selectedYear}`;
+            } else {
+                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: All Months ${selectedYear}`;
+            }
+
+            const totalServiceCount = filteredServiceApps.length;
+            const currentServiceCounts = {};
+            filteredServiceApps.forEach(a => {
+                const s = (a.serviceType || 'others').trim();
+                currentServiceCounts[s] = (currentServiceCounts[s] || 0) + 1;
+            });
+
+            const sTableBody = document.getElementById('serviceTableBody');
+            const sBarsContainer = document.getElementById('serviceDistributionBars');
+            sTableBody.innerHTML = '';
+            sBarsContainer.innerHTML = '';
+
+            const allServiceKeys = Array.from(new Set([...baseServiceTypesList, ...Object.keys(currentServiceCounts)]));
+
+            allServiceKeys.forEach(sKey => {
+                const count = currentServiceCounts[sKey] || 0;
+                const pct = totalServiceCount > 0 ? ((count / totalServiceCount) * 100).toFixed(1) : "0.0";
+
+                sTableBody.innerHTML += `
+                    <tr>
+                        <td class="py-2.5 px-4 font-semibold text-charcoal-800 capitalize">${sKey}</td>
+                        <td class="py-2.5 px-4 text-center font-bold text-sage-800">${count}</td>
+                        <td class="py-2.5 px-4 text-right font-medium text-charcoal-700">${pct}%</td>
                     </tr>
                 `;
 
-                barsContainer.innerHTML += `
+                sBarsContainer.innerHTML += `
                     <div>
-                        <div class="flex items-center justify-between text-xs font-semibold mb-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
                             <span class="capitalize text-charcoal-800">${sKey}</span>
-                            <span class="text-sage-700">${cnt} (${pct}%)</span>
+                            <span class="text-sage-700">${count} (${pct}%)</span>
                         </div>
-                        <div class="w-full bg-sage-100 rounded-full h-2.5 overflow-hidden">
+                        <div class="w-full bg-cream-100 rounded-full h-2.5 overflow-hidden border border-sage-200">
                             <div class="bg-sage-600 h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
                         </div>
                     </div>
                 `;
             });
 
-            document.getElementById('statPeakService').innerText = topService;
-
-            // 2b. Peak Timeslot Card
-            const annualPeakTimeslot = getPeakTimeslot(yearApps);
-            document.getElementById('statPeakTimeslot').innerText = annualPeakTimeslot.count > 0 ? annualPeakTimeslot.timeslot : '-';
-            document.getElementById('peakTimeslotSubLabel').innerText = annualPeakTimeslot.count > 0
-                ? `Annual, ${annualPeakTimeslot.count} recorded`
-                : 'Annual, most recorded';
-
-            // 3. Avg Utilization Rate Metric Card Logic
-            const periodType = document.getElementById('avgRatePeriodSelect').value;
-            const specificContainer = document.getElementById('specificMonthSelectContainer');
-            const subLabel = document.getElementById('avgRateSubLabel');
-
-            if (periodType === 'monthly') {
-                specificContainer.classList.remove('hidden');
-                const mIdx = parseInt(document.getElementById('avgRateSpecificMonth').value, 10);
-                const mApps = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === mIdx).length;
-                const wDays = getWeekdaysInMonth(selYear, mIdx);
-                const totalSlots = wDays * TOTAL_TIMESLOTS_PER_DAY;
-                const rate = totalSlots > 0 ? ((mApps / totalSlots) * 100).toFixed(1) : 0;
-                document.getElementById('statAvgMonthly').innerText = `${rate}%`;
-                subLabel.innerText = `${monthNamesFull[mIdx]} Utilization Rate`;
-            } else {
-                specificContainer.classList.add('hidden');
-                let targetMonths = [0,1,2,3,4,5,6,7,8,9,10,11];
-                let labelText = "Annual Utilization Rate";
-
-                if (periodType === 'Q1') { targetMonths = [0,1,2]; labelText = "Q1 Avg (Jan-Mar)"; }
-                if (periodType === 'Q2') { targetMonths = [3,4,5]; labelText = "Q2 Avg (Apr-Jun)"; }
-                if (periodType === 'Q3') { targetMonths = [6,7,8]; labelText = "Q3 Avg (Jul-Sep)"; }
-                if (periodType === 'Q4') { targetMonths = [9,10,11]; labelText = "Q4 Avg (Oct-Dec)"; }
-
-                let sumApps = 0;
-                let sumDays = 0;
-                targetMonths.forEach(m => {
-                    sumApps += yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === m).length;
-                    sumDays += getWeekdaysInMonth(selYear, m);
-                });
-
-                const sumSlots = sumDays * TOTAL_TIMESLOTS_PER_DAY;
-                const rate = sumSlots > 0 ? ((sumApps / sumSlots) * 100).toFixed(1) : 0;
-                document.getElementById('statAvgMonthly').innerText = `${rate}%`;
-                subLabel.innerText = labelText;
-            }
-
-            // 4. Timeslot Utilization Statistics (Section 3: Table + Chart + Custom Period)
-            const tsMonthFilter = document.getElementById('timeslotMonthSelect').value;
+            // 3. Timeslot Utilization Breakdown & Chart
+            const timeslotMonthVal = document.getElementById('timeslotMonthSelect').value;
             let filteredTimeslotApps = yearApps;
-            let totalAvailableDays = 0;
+            let tsAvailableTotal = 0;
 
-            if (tsMonthFilter === 'all') {
-                for (let m = 0; m < 12; m++) {
-                    totalAvailableDays += getWeekdaysInMonth(selYear, m);
-                }
-                document.getElementById('timeslotFilterBadge').innerText = `Period: All Months ${selYear}`;
-            } else if (tsMonthFilter === 'custom') {
-                const startM = parseInt(document.getElementById('timeslotStartMonthSelect').value, 10);
-                const endM = parseInt(document.getElementById('timeslotEndMonthSelect').value, 10);
-                const minM = Math.min(startM, endM);
-                const maxM = Math.max(startM, endM);
-
+            if (timeslotMonthVal === 'custom') {
+                const startM = parseInt(document.getElementById('timeslotStartMonthSelect').value);
+                const endM = parseInt(document.getElementById('timeslotEndMonthSelect').value);
                 filteredTimeslotApps = yearApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1], 10) - 1;
-                    return m >= minM && m <= maxM;
+                    const m = new Date(a.date).getMonth();
+                    return m >= startM && m <= endM;
                 });
-                for (let m = minM; m <= maxM; m++) {
-                    totalAvailableDays += getWeekdaysInMonth(selYear, m);
+                for (let m = startM; m <= endM; m++) {
+                    tsAvailableTotal += getWeekdaysCount(selectedYear, m);
                 }
-                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesShort[minM]} - ${monthNamesShort[maxM]} ${selYear}`;
+                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesShort[startM]} - ${monthNamesShort[endM]} ${selectedYear}`;
+            } else if (timeslotMonthVal !== 'all') {
+                const m = parseInt(timeslotMonthVal);
+                filteredTimeslotApps = yearApps.filter(a => new Date(a.date).getMonth() === m);
+                tsAvailableTotal = getWeekdaysCount(selectedYear, m);
+                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesFull[m]} ${selectedYear}`;
             } else {
-                const mIdx = parseInt(tsMonthFilter, 10);
-                filteredTimeslotApps = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === mIdx);
-                totalAvailableDays = getWeekdaysInMonth(selYear, mIdx);
-                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesFull[mIdx]} ${selYear}`;
+                for (let m = 0; m < 12; m++) {
+                    tsAvailableTotal += getWeekdaysCount(selectedYear, m);
+                }
+                document.getElementById('timeslotFilterBadge').innerText = `Period: All Months ${selectedYear}`;
             }
 
-            const tsCounts = {
-                '11:00': 0,
-                '11:30': 0,
-                '15:30': 0,
-                '16:00': 0,
-                'Others': 0
-            };
+            const tsPresetList = ["11:00", "11:30", "15:30", "16:00", "Others"];
+            const tsCounts = { "11:00": 0, "11:30": 0, "15:30": 0, "16:00": 0, "Others": 0 };
 
             filteredTimeslotApps.forEach(a => {
-                const tsRaw = (a.timeslot || '').trim();
-                if (tsRaw === '11:00' || tsRaw === '1100') {
-                    tsCounts['11:00']++;
-                } else if (tsRaw === '11:30' || tsRaw === '1130') {
-                    tsCounts['11:30']++;
-                } else if (tsRaw === '15:30' || tsRaw === '1530') {
-                    tsCounts['15:30']++;
-                } else if (tsRaw === '16:00' || tsRaw === '1600') {
-                    tsCounts['16:00']++;
+                const ts = (a.timeslot || '').trim();
+                if (tsCounts.hasOwnProperty(ts)) {
+                    tsCounts[ts]++;
                 } else {
-                    tsCounts['Others']++;
+                    tsCounts["Others"]++;
                 }
             });
 
             const tsTableBody = document.getElementById('timeslotTableBody');
             tsTableBody.innerHTML = '';
 
-            const timeslotKeys = ['11:00', '11:30', '15:30', '16:00', 'Others'];
-            const tsChartLabels = [];
-            const tsChartCounts = [];
-            const tsChartRates = [];
+            const chartLabels = [];
+            const chartCounts = [];
+            const chartRates = [];
 
-            timeslotKeys.forEach(key => {
-                const cnt = tsCounts[key];
-                const available = totalAvailableDays; // 1 available slot per weekday per specific timeslot
-                const rate = available > 0 ? ((cnt / available) * 100).toFixed(1) : '0.0';
+            tsPresetList.forEach(ts => {
+                const cnt = tsCounts[ts];
+                const avail = tsAvailableTotal;
+                const rate = avail > 0 ? ((cnt / avail) * 100).toFixed(1) : "0.0";
 
-                tsChartLabels.push(key);
-                tsChartCounts.push(cnt);
-                tsChartRates.push(parseFloat(rate));
+                chartLabels.push(ts);
+                chartCounts.push(cnt);
+                chartRates.push(parseFloat(rate));
 
                 tsTableBody.innerHTML += `
-                    <tr class="hover:bg-sage-50/50 transition-all">
-                        <td class="py-2.5 px-4 font-semibold text-charcoal-900">${key}</td>
+                    <tr>
+                        <td class="py-2.5 px-4 font-semibold text-charcoal-800">${ts}</td>
                         <td class="py-2.5 px-4 text-center font-bold text-sage-800">${cnt}</td>
-                        <td class="py-2.5 px-4 text-center text-charcoal-700/80">${available}</td>
-                        <td class="py-2.5 px-4 text-right font-bold text-navy-700">${rate}%</td>
+                        <td class="py-2.5 px-4 text-center text-charcoal-700">${avail}</td>
+                        <td class="py-2.5 px-4 text-right font-medium text-sage-700">${rate}%</td>
                     </tr>
                 `;
             });
 
-            // Render Chart.js Chart for Timeslot Utilization
-            const ctxCanvas = document.getElementById('timeslotChartCanvas');
-            if (ctxCanvas) {
-                if (timeslotChartInstance) {
-                    timeslotChartInstance.destroy();
-                }
-
-                timeslotChartInstance = new Chart(ctxCanvas, {
-                    type: 'bar',
-                    data: {
-                        labels: tsChartLabels,
-                        datasets: [
-                            {
-                                label: 'Utilization Rate (%)',
-                                data: tsChartRates,
-                                backgroundColor: 'rgba(40, 82, 133, 0.85)',
-                                borderColor: '#1F4068',
-                                borderWidth: 1,
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `Rate: ${context.parsed.y}% (${tsChartCounts[context.dataIndex]} recorded / ${totalAvailableDays} available)`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: Math.max(...tsChartRates, 10) > 100 ? 120 : 100,
-                                ticks: {
-                                    callback: function(value) { return value + '%'; },
-                                    font: { size: 10 }
-                                }
-                            },
-                            x: {
-                                ticks: { font: { size: 11, weight: '600' } }
-                            }
-                        }
-                    }
-                });
+            // Update Chart.js Instance
+            const ctx = document.getElementById('timeslotChartCanvas').getContext('2d');
+            if (timeslotChartInstance) {
+                timeslotChartInstance.destroy();
             }
 
-            // 5. Render Monthly Utilization Grid
+            timeslotChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: 'Recorded Count',
+                            data: chartCounts,
+                            backgroundColor: '#5a785a',
+                            borderRadius: 6,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Utilization Rate (%)',
+                            data: chartRates,
+                            borderColor: '#285285',
+                            backgroundColor: '#285285',
+                            type: 'line',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Count' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Rate (%)' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+
+            // 4. Monthly Utilization Grid Analysis
             const monthlyGrid = document.getElementById('monthlyStatsGrid');
             monthlyGrid.innerHTML = '';
 
-            for (let m = 0; m < 12; m++) {
-                const monthAppsCount = yearApps.filter(a => (parseInt(a.date.split('-')[1], 10) - 1) === m).length;
-                const weekdaysInM = getWeekdaysInMonth(selYear, m);
-                const totalSlotsInM = weekdaysInM * TOTAL_TIMESLOTS_PER_DAY; // Preset total timeslot in a day is 4
-                const mUtilRate = totalSlotsInM > 0 ? ((monthAppsCount / totalSlotsInM) * 100).toFixed(1) : '0.0';
+            let totalYearRecorded = 0;
+            let totalYearAvailable = 0;
 
-                let rateColorClass = 'text-sage-700 bg-sage-50 border-sage-200';
-                if (parseFloat(mUtilRate) >= 50) rateColorClass = 'text-emerald-800 bg-emerald-50 border-emerald-200';
-                else if (parseFloat(mUtilRate) >= 25) rateColorClass = 'text-navy-700 bg-navy-50 border-navy-200';
+            for (let m = 0; m < 12; m++) {
+                const mApps = yearApps.filter(a => new Date(a.date).getMonth() === m);
+                const recordedCount = mApps.length;
+                const weekdays = getWeekdaysCount(selectedYear, m);
+                const availableSlots = weekdays * TOTAL_TIMESLOTS_PER_DAY;
+                const rate = availableSlots > 0 ? ((recordedCount / availableSlots) * 100).toFixed(1) : "0.0";
+
+                totalYearRecorded += recordedCount;
+                totalYearAvailable += availableSlots;
 
                 monthlyGrid.innerHTML += `
-                    <div class="bg-white p-4 rounded-2xl border border-sage-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-serif font-bold text-sm text-charcoal-900">${monthNamesShort[m]}</span>
-                                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${rateColorClass}">${mUtilRate}%</span>
-                            </div>
-                            <p class="text-xs text-charcoal-700 font-semibold mt-1">${monthAppsCount} <span class="text-[10px] text-charcoal-700/60 font-normal">/ ${totalSlotsInM} slots</span></p>
+                    <div class="bg-cream-50 p-4 rounded-2xl border border-sage-200/80 hover:shadow-md transition-all">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-charcoal-800 uppercase tracking-wider">${monthNamesShort[m]}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-sage-100 text-sage-800 font-bold">${rate}%</span>
                         </div>
-                        <div class="mt-3 pt-2 border-t border-sage-100 flex items-center justify-between text-[10px] text-charcoal-700/70">
-                            <span>Weekdays: ${weekdaysInM}d</span>
-                            <span>4 slots/day</span>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex justify-between text-charcoal-700">
+                                <span>Recorded:</span>
+                                <span class="font-bold text-sage-800">${recordedCount}</span>
+                            </div>
+                            <div class="flex justify-between text-charcoal-700">
+                                <span>Weekdays:</span>
+                                <span class="font-medium">${weekdays}</span>
+                            </div>
+                            <div class="flex justify-between text-charcoal-700">
+                                <span>Available:</span>
+                                <span class="font-medium">${availableSlots}</span>
+                            </div>
                         </div>
                     </div>
                 `;
             }
+
+            const annualRate = totalYearAvailable > 0 ? ((totalYearRecorded / totalYearAvailable) * 100).toFixed(1) : "0.0";
+            document.getElementById('annualUtilizationRateBadge').innerText = `${annualRate}%`;
+            document.getElementById('annualTotalCount').innerText = totalYearRecorded;
         }
 
-        function exportStatisticsData(format) {
-            toggleExportDropdown();
-            const year = document.getElementById('statsYearSelect').value;
-            const yearApps = window.appointments.filter(a => a.date && a.date.startsWith(year));
+        async function exportStatisticsData(format) {
+            document.getElementById('exportDropdownMenu').classList.add('hidden');
 
-            if (format === 'html') {
-                let htmlContent = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>MSC 9F OT Activity Room Utilization Report ${year}</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; padding: 20px; color: #242924; }
-                            h1 { color: #1F4068; }
-                            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-                            th, td { border: 1px solid #c7d6c7; padding: 8px 12px; text-align: left; }
-                            th { background-color: #5a785a; color: white; }
-                        </style>
+            const yearStr = document.getElementById('statsYearSelect').value;
+            const selectedYear = parseInt(yearStr);
+
+            const yearApps = window.appointments.filter(a => {
+                if (!a.date) return false;
+                return new Date(a.date).getFullYear() === selectedYear;
+            });
+
+            // Capture chart image as PNG base64
+            let chartImgData = '';
+            const canvas = document.getElementById('timeslotChartCanvas');
+            if (canvas) {
+                chartImgData = canvas.toDataURL('image/png');
+            }
+
+            const totalBookings = yearApps.length;
+            const peakService = document.getElementById('statPeakService').innerText;
+            const peakTimeslot = document.getElementById('statPeakTimeslot').innerText;
+            const avgRate = document.getElementById('statAvgMonthly').innerText;
+
+            // Service Breakdown Data
+            const serviceRows = [];
+            const sTableRows = document.querySelectorAll('#serviceTableBody tr');
+            sTableRows.forEach(tr => {
+                const cols = tr.querySelectorAll('td');
+                if (cols.length === 3) {
+                    serviceRows.push([cols[0].innerText, cols[1].innerText, cols[2].innerText]);
+                }
+            });
+
+            // Timeslot Breakdown Data
+            const timeslotRows = [];
+            const tsTableRows = document.querySelectorAll('#timeslotTableBody tr');
+            tsTableRows.forEach(tr => {
+                const cols = tr.querySelectorAll('td');
+                if (cols.length === 4) {
+                    timeslotRows.push([cols[0].innerText, cols[1].innerText, cols[2].innerText, cols[3].innerText]);
+                }
+            });
+
+            // Monthly Breakdown Data
+            const monthlyRows = [];
+            for (let m = 0; m < 12; m++) {
+                const mApps = yearApps.filter(a => new Date(a.date).getMonth() === m);
+                const recordedCount = mApps.length;
+                const weekdays = getWeekdaysCount(selectedYear, m);
+                const availableSlots = weekdays * TOTAL_TIMESLOTS_PER_DAY;
+                const rate = availableSlots > 0 ? ((recordedCount / availableSlots) * 100).toFixed(1) + '%' : "0.0%";
+                monthlyRows.push([monthNamesFull[m], recordedCount.toString(), weekdays.toString(), availableSlots.toString(), rate]);
+            }
+
+            if (format === 'xlsx') {
+                // EXCEL EXPORT USING EXCELJS
+                const workbook = new ExcelJS.Workbook();
+                const sheet = workbook.addWorksheet('Utilization Statistics');
+
+                sheet.columns = [
+                    { header: 'Category / Period', key: 'cat', width: 25 },
+                    { header: 'Value / Count', key: 'val', width: 20 },
+                    { header: 'Available Slots', key: 'avail', width: 20 },
+                    { header: 'Utilization / Percentage', key: 'rate', width: 25 }
+                ];
+
+                // Title Banner
+                sheet.mergeCells('A1:D1');
+                const titleCell = sheet.getCell('A1');
+                titleCell.value = `YCH Occupational Therapy Department - MSC 9/F Activity Room Utilization Report (${selectedYear})`;
+                titleCell.font = { name: 'Arial', size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
+                titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF285285' } };
+                titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+
+                // KPI Summary Section
+                sheet.addRow([]);
+                sheet.addRow(['Key Metrics Summary', '', '', '']);
+                sheet.addRow(['Total Bookings', totalBookings, '', '']);
+                sheet.addRow(['Peak Service Type', peakService, '', '']);
+                sheet.addRow(['Peak Timeslot', peakTimeslot, '', '']);
+                sheet.addRow(['Average Utilization Rate', avgRate, '', '']);
+
+                // Service Breakdown
+                sheet.addRow([]);
+                sheet.addRow(['Service Utilization Count & Distribution', '', '', '']);
+                sheet.addRow(['Service Type', 'Total Count', '', 'Percentage']);
+                serviceRows.forEach(r => sheet.addRow([r[0], parseInt(r[1]) || 0, '', r[2]]));
+
+                // Timeslot Breakdown
+                sheet.addRow([]);
+                sheet.addRow(['Timeslot Utilization Statistics', '', '', '']);
+                sheet.addRow(['Timeslot', 'Recorded Count', 'Available Slots', 'Utilization Rate']);
+                timeslotRows.forEach(r => sheet.addRow([r[0], parseInt(r[1]) || 0, parseInt(r[2]) || 0, r[3]]));
+
+                // Monthly Breakdown
+                sheet.addRow([]);
+                sheet.addRow(['Monthly Utilization Rate & Weekday Analysis', '', '', '']);
+                sheet.addRow(['Month', 'Recorded Slots', 'Weekdays', 'Available Slots', 'Utilization Rate']);
+                monthlyRows.forEach(r => sheet.addRow([r[0], parseInt(r[1]) || 0, parseInt(r[2]) || 0, parseInt(r[3]) || 0, r[4]]));
+
+                // Embed Chart Image into Excel Worksheet
+                if (chartImgData) {
+                    const imageId = workbook.addImage({
+                        base64: chartImgData,
+                        extension: 'png',
+                    });
+                    sheet.addImage(imageId, {
+                        tl: { col: 4, row: 3 },
+                        ext: { width: 500, height: 280 }
+                    });
+                }
+
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `MSC_9F_Activity_Room_Utilization_Statistics_${selectedYear}.xlsx`;
+                link.click();
+
+            } else if (format === 'pdf') {
+                // PDF EXPORT USING JSPDF & AUTOTABLE
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+
+                doc.setFillColor(40, 82, 133);
+                doc.rect(0, 0, 210, 25, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`MSC 9/F Activity Room Utilization Report (${selectedYear})`, 105, 12, { align: 'center' });
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text('YCH Occupational Therapy Department', 105, 18, { align: 'center' });
+
+                doc.setTextColor(36, 41, 36);
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Key Summary Indicators:', 14, 33);
+
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Total Bookings: ${totalBookings}   |   Peak Service: ${peakService}   |   Peak Timeslot: ${peakTimeslot}   |   Avg Utilization: ${avgRate}`, 14, 40);
+
+                // Service Breakdown Table
+                doc.autoTable({
+                    startY: 46,
+                    head: [['Service Type', 'Total Count', 'Percentage']],
+                    body: serviceRows,
+                    theme: 'striped',
+                    headStyles: { fillStyle: 'F', fillColor: [90, 120, 90] },
+                    styles: { fontSize: 8 }
+                });
+
+                // Timeslot Breakdown Table
+                const nextY = doc.lastAutoTable.finalY + 8;
+                doc.autoTable({
+                    startY: nextY,
+                    head: [['Timeslot', 'Recorded Count', 'Available Slots', 'Utilization Rate']],
+                    body: timeslotRows,
+                    theme: 'striped',
+                    headStyles: { fillStyle: 'F', fillColor: [90, 120, 90] },
+                    styles: { fontSize: 8 }
+                });
+
+                let chartY = doc.lastAutoTable.finalY + 8;
+                if (chartY + 70 > 280) {
+                    doc.addPage();
+                    chartY = 15;
+                }
+
+                if (chartImgData) {
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('Timeslot Visualization Chart:', 14, chartY);
+                    doc.addImage(chartImgData, 'PNG', 14, chartY + 4, 180, 70);
+                    chartY += 80;
+                }
+
+                if (chartY + 80 > 280) {
+                    doc.addPage();
+                    chartY = 15;
+                }
+
+                // Monthly Analysis Table
+                doc.autoTable({
+                    startY: chartY,
+                    head: [['Month', 'Recorded Slots', 'Weekdays', 'Available Slots', 'Utilization Rate']],
+                    body: monthlyRows,
+                    theme: 'striped',
+                    headStyles: { fillStyle: 'F', fillColor: [40, 82, 133] },
+                    styles: { fontSize: 8 }
+                });
+
+                doc.save(`MSC_9F_Activity_Room_Utilization_Statistics_${selectedYear}.pdf`);
+
+            } else if (format === 'doc') {
+                // WORD EXPORT (.DOC HTML BLOB)
+                let htmlDoc = `
+                    <html xmlns:o='urn:schemas-microsoft-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                    <head><meta charset='utf-8'><title>Utilization Statistics</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; color: #242924; }
+                        h1 { color: #1F4068; font-size: 20px; border-bottom: 2px solid #5a785a; padding-bottom: 5px; }
+                        h2 { color: #5a785a; font-size: 15px; margin-top: 20px; }
+                        .kpi-box { background: #f4f7f4; border: 1px solid #c7d6c7; padding: 10px; margin-bottom: 15px; border-radius: 5px; }
+                        table { border-collapse: collapse; width: 100%; margin-bottom: 15px; }
+                        th { background-color: #5a785a; color: white; border: 1px solid #486048; padding: 6px; font-size: 12px; }
+                        td { border: 1px solid #c7d6c7; padding: 6px; font-size: 11px; }
+                    </style>
                     </head>
                     <body>
-                        <h1>MSC 9/F Activity Room OT Utilization Report - ${year}</h1>
-                        <p>Generated on: ${new Date().toLocaleString()}</p>
-                        <p>Total Bookings Recorded: ${yearApps.length}</p>
-                        <h2>Appointments List</h2>
+                        <h1>YCH Occupational Therapy Department - MSC 9/F Activity Room Utilization Statistics (${selectedYear})</h1>
+                        
+                        <div class="kpi-box">
+                            <strong>Total Bookings:</strong> ${totalBookings} &nbsp;|&nbsp;
+                            <strong>Peak Service:</strong> ${peakService} &nbsp;|&nbsp;
+                            <strong>Peak Timeslot:</strong> ${peakTimeslot} &nbsp;|&nbsp;
+                            <strong>Avg Utilization Rate:</strong> ${avgRate}
+                        </div>
+
+                        <h2>1. Service Utilization Breakdown</h2>
                         <table>
-                            <thead>
-                                <tr><th>Date</th><th>Timeslot</th><th>Patient No</th><th>Therapist</th><th>Service Type</th></tr>
-                            </thead>
+                            <thead><tr><th>Service Type</th><th>Total Count</th><th>Percentage</th></tr></thead>
                             <tbody>
-                                ${yearApps.map(a => `<tr><td>${formatDDMMYYYY(a.date)}</td><td>${a.timeslot}</td><td>${a.patientNo}</td><td>${a.therapist}</td><td>${a.serviceType}</td></tr>`).join('')}
+                                ${serviceRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+
+                        <h2>2. Timeslot Utilization Breakdown & Visualization</h2>
+                        <table>
+                            <thead><tr><th>Timeslot</th><th>Recorded Count</th><th>Available Slots</th><th>Utilization Rate</th></tr></thead>
+                            <tbody>
+                                ${timeslotRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                        
+                        ${chartImgData ? `<div><p><strong>Timeslot Chart Visualization:</strong></p><img src="${chartImgData}" style="width:550px; height:auto;"/></div>` : ''}
+
+                        <h2>3. Monthly Utilization Rate & Weekday Analysis</h2>
+                        <table>
+                            <thead><tr><th>Month</th><th>Recorded Slots</th><th>Weekdays</th><th>Available Slots</th><th>Utilization Rate</th></tr></thead>
+                            <tbody>
+                                ${monthlyRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('')}
                             </tbody>
                         </table>
                     </body>
                     </html>
                 `;
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `OT_Activity_Room_Utilization_Report_${year}.html`;
-                a.click();
-            } else if (format === 'doc') {
-                let docContent = `
-                    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                    <head><title>Utilization Report</title></head>
-                    <body style="font-family: Arial, sans-serif;">
-                        <h2>YCH Occupational Therapy Department - MSC 9/F Activity Room Report (${year})</h2>
-                        <p>Total Bookings: ${yearApps.length}</p>
-                        <table border="1" style="border-collapse:collapse; width:100%;">
-                            <tr style="background:#5a785a; color:white;">
-                                <th>Date</th><th>Timeslot</th><th>Patient No</th><th>Therapist</th><th>Service Type</th>
-                            </tr>
-                            ${yearApps.map(a => `<tr><td>${formatDDMMYYYY(a.date)}</td><td>${a.timeslot}</td><td>${a.patientNo}</td><td>${a.therapist}</td><td>${a.serviceType}</td></tr>`).join('')}
-                        </table>
+
+                const blob = new Blob(['\ufeff' + htmlDoc], { type: 'application/msword' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `MSC_9F_Activity_Room_Utilization_Statistics_${selectedYear}.doc`;
+                link.click();
+
+            } else if (format === 'html') {
+                // HTML EXPORT (.HTML STANDALONE FILE)
+                let fullHtml = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>MSC 9/F Activity Room Utilization Statistics ${selectedYear}</title>
+                        <style>
+                            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f6ee; color: #242924; padding: 30px; }
+                            .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+                            .header { text-align: center; border-bottom: 2px solid #5a785a; padding-bottom: 15px; margin-bottom: 20px; }
+                            .header h1 { margin: 0; font-size: 24px; color: #163050; }
+                            .header p { margin: 5px 0 0; color: #5a785a; font-weight: 600; }
+                            .metrics { display: flex; justify-content: space-between; background: #f4f7f4; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #c7d6c7; }
+                            .metric-item { text-align: center; }
+                            .metric-item span { display: block; font-size: 11px; text-transform: uppercase; color: #5a785a; font-weight: bold; }
+                            .metric-item strong { font-size: 18px; color: #163050; }
+                            table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+                            th { background: #5a785a; color: white; padding: 10px; text-align: left; font-size: 13px; }
+                            td { padding: 8px 10px; border-bottom: 1px solid #e3eae3; font-size: 13px; }
+                            tr:nth-child(even) { background: #fdfcf7; }
+                            .chart-box { text-align: center; margin: 25px 0; background: #fdfcf7; padding: 15px; border-radius: 12px; border: 1px solid #e3eae3; }
+                            .chart-box img { max-width: 100%; height: auto; border-radius: 8px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="header">
+                                <h1>MSC 9/F Activity Room Utilization Statistics</h1>
+                                <p>YCH Occupational Therapy Department — Year ${selectedYear}</p>
+                            </div>
+
+                            <div class="metrics">
+                                <div class="metric-item"><span>Total Bookings</span><strong>${totalBookings}</strong></div>
+                                <div class="metric-item"><span>Peak Service</span><strong>${peakService}</strong></div>
+                                <div class="metric-item"><span>Peak Timeslot</span><strong>${peakTimeslot}</strong></div>
+                                <div class="metric-item"><span>Avg Utilization Rate</span><strong>${avgRate}</strong></div>
+                            </div>
+
+                            <h2>Service Utilization Breakdown</h2>
+                            <table>
+                                <thead><tr><th>Service Type</th><th>Total Count</th><th>Percentage</th></tr></thead>
+                                <tbody>${serviceRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+                            </table>
+
+                            <h2>Timeslot Utilization Breakdown</h2>
+                            <table>
+                                <thead><tr><th>Timeslot</th><th>Recorded Count</th><th>Available Slots</th><th>Utilization Rate</th></tr></thead>
+                                <tbody>${timeslotRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody>
+                            </table>
+
+                            ${chartImgData ? `<div class="chart-box"><h3>Timeslot Utilization Chart</h3><img src="${chartImgData}"/></div>` : ''}
+
+                            <h2>Monthly Utilization & Weekday Analysis</h2>
+                            <table>
+                                <thead><tr><th>Month</th><th>Recorded Slots</th><th>Weekdays</th><th>Available Slots</th><th>Utilization Rate</th></tr></thead>
+                                <tbody>${monthlyRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('')}</tbody>
+                            </table>
+                        </div>
                     </body>
                     </html>
                 `;
-                const blob = new Blob([docContent], { type: 'application/msword' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `OT_Utilization_Report_${year}.doc`;
-                a.click();
-            } else if (format === 'pdf') {
-                if (window.jspdf && window.jspdf.jsPDF) {
-                    const doc = new window.jspdf.jsPDF();
-                    doc.setFontSize(14);
-                    doc.text(`MSC 9/F Activity Room OT Utilization Report - ${year}`, 14, 15);
-                    doc.setFontSize(10);
-                    doc.text(`Total Bookings: ${yearApps.length}`, 14, 22);
 
-                    const tableData = yearApps.map(a => [formatDDMMYYYY(a.date), a.timeslot, a.patientNo, a.therapist, a.serviceType]);
-                    doc.autoTable({
-                        startY: 28,
-                        head: [['Date', 'Timeslot', 'Patient No', 'Therapist', 'Service Type']],
-                        body: tableData,
-                    });
-                    doc.save(`OT_Activity_Room_Report_${year}.pdf`);
-                }
-            } else if (format === 'xlsx') {
-                if (window.ExcelJS) {
-                    const workbook = new ExcelJS.Workbook();
-                    const worksheet = workbook.addWorksheet('Utilization Report');
-                    worksheet.columns = [
-                        { header: 'Date', key: 'date', width: 15 },
-                        { header: 'Timeslot', key: 'timeslot', width: 12 },
-                        { header: 'Patient No', key: 'patientNo', width: 18 },
-                        { header: 'Therapist', key: 'therapist', width: 18 },
-                        { header: 'Service Type', key: 'serviceType', width: 22 }
-                    ];
-
-                    yearApps.forEach(a => {
-                        worksheet.addRow({
-                            date: formatDDMMYYYY(a.date),
-                            timeslot: a.timeslot,
-                            patientNo: a.patientNo,
-                            therapist: a.therapist,
-                            serviceType: a.serviceType
-                        });
-                    });
-
-                    workbook.xlsx.writeBuffer().then(buffer => {
-                        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `OT_Activity_Room_Utilization_${year}.xlsx`;
-                        a.click();
-                    });
-                }
+                const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `MSC_9F_Activity_Room_Utilization_Statistics_${selectedYear}.html`;
+                link.click();
             }
         }
     </script>
