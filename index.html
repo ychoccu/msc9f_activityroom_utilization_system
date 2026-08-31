@@ -485,7 +485,6 @@
                                     <select id="avgRatePeriodSelect" onchange="updateStatistics()" class="text-[10px] bg-sage-50 border border-sage-200 rounded px-1.5 py-0.5 text-sage-800 font-semibold">
                                         <option value="annual">Annual Avg</option>
                                         <option value="monthly">Specific Month...</option>
-                                        <option value="custom">Custom Period (Select Months)</option>
                                         <option value="Q1">Q1 (Jan-Mar)</option>
                                         <option value="Q2">Q2 (Apr-Jun)</option>
                                         <option value="Q3">Q3 (Jul-Sep)</option>
@@ -508,39 +507,6 @@
                                         <option value="11">December</option>
                                     </select>
                                 </div> 
-                                <!-- Custom Month Period Selectors Container -->
-                                    <div id="serviceCustomPeriodContainer" class="hidden flex items-center space-x-1 border-l border-sage-300 pl-2">
-                                        <select id="serviceStartMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
-                                            <option value="0" selected>Jan</option>
-                                            <option value="1">Feb</option>
-                                            <option value="2">Mar</option>
-                                            <option value="3">Apr</option>
-                                            <option value="4">May</option>
-                                            <option value="5">Jun</option>
-                                            <option value="6">Jul</option>
-                                            <option value="7">Aug</option>
-                                            <option value="8">Sep</option>
-                                            <option value="9">Oct</option>
-                                            <option value="10">Nov</option>
-                                            <option value="11">Dec</option>
-                                        </select>
-                                        <span class="text-xs font-bold text-sage-700">to</span>
-                                        <select id="serviceEndMonthSelect" onchange="updateStatistics()" class="text-xs bg-white border border-sage-300 rounded-lg px-1.5 py-1 text-charcoal-800 font-semibold">
-                                            <option value="0">Jan</option>
-                                            <option value="1">Feb</option>
-                                            <option value="2">Mar</option>
-                                            <option value="3">Apr</option>
-                                            <option value="4">May</option>
-                                            <option value="5">Jun</option>
-                                            <option value="6">Jul</option>
-                                            <option value="7" selected>Aug</option>
-                                            <option value="8">Sep</option>
-                                            <option value="9">Oct</option>
-                                            <option value="10">Nov</option>
-                                            <option value="11">Dec</option>
-                                        </select>
-                                    </div>
-
                                 <h3 id="statAvgMonthly" class="text-3xl font-bold font-serif text-charcoal-900 mt-1">0%</h3>
                                 <p id="avgRateSubLabel" class="text-xs text-charcoal-700/60 mt-1">Weekday share (Annual)</p>
                             </div>
