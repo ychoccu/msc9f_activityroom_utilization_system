@@ -1021,84 +1021,70 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, doc, collection, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-        // Environment Firebase configuration fallback logic
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ych-ot-msc9f-app';
         const firebaseConfig = {
-                apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
-                authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
-                databaseURL: "https://ot-msc-9f-activity-room-default-rtdb.firebaseio.com",
-                projectId: "ot-msc-9f-activity-room",
-                storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
-                messagingSenderId: "899540598545",
-                appId: "1:899540598545:web:3eb3e296dbed3070ee16b0",
-                measurementId: "G-FZD8X1QSTT"
-            };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        window.firebaseDb = db;
-        window.appId = appId;
-        window.firestoreHelpers = {
-            doc, collection, addDoc, updateDoc, deleteDoc
+            apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
+            authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
+            databaseURL: "https://ot-msc-9f-activity-room-default-rtdb.firebaseio.com",
+            projectId: "ot-msc-9f-activity-room",
+            storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
+            messagingSenderId: "899540598545",
+            appId: "1:899540598545:web:3eb3e296dbed3070ee16b0",
+            measurementId: "G-FZD8X1QSTT"
         };
 
-        // Authenticate before setting up snapshot listeners (RULE 3)
-        async function authenticateAndListen() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
-                const badge = document.getElementById('cloudStatusBadge');
-                const text = document.getElementById('cloudStatusText');
-                if (badge && text) {
-                    badge.classList.remove('hidden', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
-                    badge.classList.add('flex', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
-                    text.innerText = "Cloud Sync Active";
-                }
+        const app = initializeApp(firebaseConfig);
+        const rtdb = getDatabase(app);
 
-                // Strict Path Rule (RULE 1): /artifacts/{appId}/public/data/{collectionName}
-                const apptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'appointments');
-                onSnapshot(apptsCol, (snapshot) => {
-                    let loaded = [];
-                    snapshot.forEach(docSnap => {
-                        loaded.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    window.appointments = loaded;
-                    if (typeof window.renderCalendar === 'function') window.renderCalendar();
-                    if (typeof window.updateStatistics === 'function') window.updateStatistics();
-                }, (err) => {
-                    console.error("Appointments live sync error:", err);
-                });
+        window.firebaseDb = rtdb;
+        window.rtdbHelpers = { ref, push, set, remove, onValue };
 
-                const specialCol = collection(db, 'artifacts', appId, 'public', 'data', 'specialActivities');
-                onSnapshot(specialCol, (snapshot) => {
-                    let loaded = [];
-                    snapshot.forEach(docSnap => {
-                        loaded.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    window.specialActivities = loaded;
-                    if (typeof window.renderCalendar === 'function') window.renderCalendar();
-                    if (typeof window.updateStatistics === 'function') window.updateStatistics();
-                }, (err) => {
-                    console.error("Special activities live sync error:", err);
-                });
-
-            } catch (err) {
-                console.error("Firebase auth/connection error:", err);
-                const text = document.getElementById('cloudStatusText');
-                if (text) text.innerText = "Local Mode Active";
+        function setupRealtimeListeners() {
+            const badge = document.getElementById('cloudStatusBadge');
+            const text = document.getElementById('cloudStatusText');
+            if (badge && text) {
+                badge.classList.remove('hidden', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
+                badge.classList.add('flex', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+                text.innerText = "Cloud Sync Active";
             }
+
+            // Realtime Database listener for Appointments
+            const apptsRef = ref(rtdb, 'appointments');
+            onValue(apptsRef, (snapshot) => {
+                const data = snapshot.val();
+                let loaded = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        loaded.push({ id: key, ...data[key] });
+                    });
+                }
+                window.appointments = loaded;
+                if (typeof window.renderCalendar === 'function') window.renderCalendar();
+                if (typeof window.updateStatistics === 'function') window.updateStatistics();
+            }, (err) => {
+                console.error("Appointments live sync error:", err);
+            });
+
+            // Realtime Database listener for Special Activities
+            const specialRef = ref(rtdb, 'specialActivities');
+            onValue(specialRef, (snapshot) => {
+                const data = snapshot.val();
+                let loaded = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        loaded.push({ id: key, ...data[key] });
+                    });
+                }
+                window.specialActivities = loaded;
+                if (typeof window.renderCalendar === 'function') window.renderCalendar();
+                if (typeof window.updateStatistics === 'function') window.updateStatistics();
+            }, (err) => {
+                console.error("Special activities live sync error:", err);
+            });
         }
 
-        authenticateAndListen();
+        setupRealtimeListeners();
     </script>
 
     <script>
@@ -1324,9 +1310,10 @@
                         createdAt: new Date().toISOString()
                     };
 
-                    if (window.firebaseDb && window.firestoreHelpers) {
-                        const colRef = window.firestoreHelpers.collection(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'appointments');
-                        await window.firestoreHelpers.addDoc(colRef, newApp);
+                    if (window.firebaseDb && window.rtdbHelpers) {
+                        const apptsRef = window.rtdbHelpers.ref(window.firebaseDb, 'appointments');
+                        const newRef = window.rtdbHelpers.push(apptsRef);
+                        await window.rtdbHelpers.set(newRef, newApp);
                     } else {
                         newApp.id = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5);
                         window.appointments.push(newApp);
@@ -1377,9 +1364,10 @@
             };
 
             try {
-                if (window.firebaseDb && window.firestoreHelpers) {
-                    const colRef = window.firestoreHelpers.collection(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'specialActivities');
-                    await window.firestoreHelpers.addDoc(colRef, specialItem);
+                if (window.firebaseDb && window.rtdbHelpers) {
+                    const specialRef = window.rtdbHelpers.ref(window.firebaseDb, 'specialActivities');
+                    const newRef = window.rtdbHelpers.push(specialRef);
+                    await window.rtdbHelpers.set(newRef, specialItem);
                 } else {
                     specialItem.id = Date.now().toString();
                     window.specialActivities.push(specialItem);
@@ -1579,9 +1567,15 @@
                     const timeslot = document.getElementById('editSpecialTimeslot').value.trim();
                     const description = document.getElementById('editSpecialDescription').value.trim();
 
-                    if (window.firebaseDb && window.firestoreHelpers) {
-                        const docRef = window.firestoreHelpers.doc(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'specialActivities', id);
-                        await window.firestoreHelpers.updateDoc(docRef, { date: isoDate, timeslot, description });
+                    if (window.firebaseDb && window.rtdbHelpers) {
+                        const itemRef = window.rtdbHelpers.ref(window.firebaseDb, `specialActivities/${id}`);
+                        await window.rtdbHelpers.set(itemRef, {
+                            date: isoDate,
+                            timeslot,
+                            description,
+                            isSpecial: true,
+                            updatedAt: new Date().toISOString()
+                        });
                     } else {
                         const item = window.specialActivities.find(s => s.id === id);
                         if (item) {
@@ -1608,14 +1602,15 @@
 
                     const timeslot = selectedTimeslots.join(', ') || '11:00';
 
-                    if (window.firebaseDb && window.firestoreHelpers) {
-                        const docRef = window.firestoreHelpers.doc(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'appointments', id);
-                        await window.firestoreHelpers.updateDoc(docRef, {
+                    if (window.firebaseDb && window.rtdbHelpers) {
+                        const itemRef = window.rtdbHelpers.ref(window.firebaseDb, `appointments/${id}`);
+                        await window.rtdbHelpers.set(itemRef, {
                             date: isoDate,
                             patientNo,
                             therapist,
                             serviceType,
-                            timeslot
+                            timeslot,
+                            updatedAt: new Date().toISOString()
                         });
                     } else {
                         const item = window.appointments.find(a => a.id === id);
@@ -1645,16 +1640,16 @@
 
             try {
                 if (isSpecial) {
-                    if (window.firebaseDb && window.firestoreHelpers) {
-                        const docRef = window.firestoreHelpers.doc(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'specialActivities', id);
-                        await window.firestoreHelpers.deleteDoc(docRef);
+                    if (window.firebaseDb && window.rtdbHelpers) {
+                        const itemRef = window.rtdbHelpers.ref(window.firebaseDb, `specialActivities/${id}`);
+                        await window.rtdbHelpers.remove(itemRef);
                     } else {
                         window.specialActivities = window.specialActivities.filter(s => s.id !== id);
                     }
                 } else {
-                    if (window.firebaseDb && window.firestoreHelpers) {
-                        const docRef = window.firestoreHelpers.doc(window.firebaseDb, 'artifacts', window.appId, 'public', 'data', 'appointments', id);
-                        await window.firestoreHelpers.deleteDoc(docRef);
+                    if (window.firebaseDb && window.rtdbHelpers) {
+                        const itemRef = window.rtdbHelpers.ref(window.firebaseDb, `appointments/${id}`);
+                        await window.rtdbHelpers.remove(itemRef);
                     } else {
                         window.appointments = window.appointments.filter(a => a.id !== id);
                     }
@@ -1812,10 +1807,10 @@
                     });
 
                     dayApps.forEach(a => {
-                        html += `<div onclick="openDetailsModal('${a.id}', false)" class="bg-sage-50 border border-sage-200 text-charcoal-800 text-xs p-2 rounded-xl cursor-pointer hover:bg-sage-100 transition-all">
+                        html += `<div onclick="openDetailsModal('${a.id}', false)" class="bg-sage-50 border border-sage-200 text-charcoal-800 text-xs p-2 rounded-xl cursor-pointer hover:bg-sage-100 transition-all font-medium">
                             <p class="font-bold text-sage-800">${a.timeslot}</p>
-                            <p class="font-medium">Pt: ${a.patientNo}</p>
-                            <p class="text-[10px] text-charcoal-700/70 truncate">${a.serviceType} (${a.therapist})</p>
+                            <p class="font-semibold">${a.patientNo}</p>
+                            <p class="text-[10px] text-charcoal-700/80">${a.serviceType} • ${a.therapist}</p>
                         </div>`;
                     });
 
@@ -1827,170 +1822,236 @@
             }
         }
 
+        function countWeekdaysInMonth(year, monthIndex) {
+            let weekdays = 0;
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayOfWeek = new Date(year, monthIndex, day).getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) weekdays++;
+            }
+            return weekdays;
+        }
+
         function updateStatistics() {
-            const yearVal = parseInt(document.getElementById('statsYearSelect').value);
+            const yearStr = document.getElementById('statsYearSelect').value;
+            const year = parseInt(yearStr);
+
             const filteredApps = window.appointments.filter(a => {
                 if (!a.date) return false;
-                const y = parseInt(a.date.split('-')[0]);
-                return y === yearVal;
+                return a.date.startsWith(yearStr);
             });
 
-            // Summary cards
+            // 1. Metric Cards
             document.getElementById('statTotalBookings').innerText = filteredApps.length;
 
             const serviceCounts = {};
             filteredApps.forEach(a => {
-                const s = a.serviceType || 'Unspecified';
-                serviceCounts[s] = (serviceCounts[s] || 0) + 1;
+                const st = a.serviceType || 'Unspecified';
+                serviceCounts[st] = (serviceCounts[st] || 0) + 1;
             });
-
-            let peakSvc = '-';
-            let maxSvcCount = 0;
-            Object.keys(serviceCounts).forEach(s => {
-                if (serviceCounts[s] > maxSvcCount) {
-                    maxSvcCount = serviceCounts[s];
-                    peakSvc = s;
+            let peakService = '-';
+            let maxServiceCount = 0;
+            Object.keys(serviceCounts).forEach(st => {
+                if (serviceCounts[st] > maxServiceCount) {
+                    maxServiceCount = serviceCounts[st];
+                    peakService = st;
                 }
             });
-            document.getElementById('statPeakService').innerText = peakSvc;
+            document.getElementById('statPeakService').innerText = peakService;
 
-            const peakTsObj = getPeakTimeslot(filteredApps);
-            document.getElementById('statPeakTimeslot').innerText = peakTsObj.timeslot;
+            const peakTsInfo = getPeakTimeslot(filteredApps);
+            document.getElementById('statPeakTimeslot').innerText = peakTsInfo.timeslot;
 
-            // Service breakdown table & bars
-            const serviceMonthSel = document.getElementById('serviceMonthSelect').value;
-            let targetAppsForService = filteredApps;
-
-            if (serviceMonthSel !== 'all' && serviceMonthSel !== 'custom') {
-                const targetM = parseInt(serviceMonthSel);
-                targetAppsForService = filteredApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1]) - 1;
-                    return m === targetM;
-                });
-                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: ${monthNamesFull[targetM]} ${yearVal}`;
-            } else if (serviceMonthSel === 'custom') {
-                const startM = parseInt(document.getElementById('serviceStartMonthSelect').value);
-                const endM = parseInt(document.getElementById('serviceEndMonthSelect').value);
-                targetAppsForService = filteredApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1]) - 1;
-                    return m >= Math.min(startM, endM) && m <= Math.max(startM, endM);
-                });
-                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: ${monthNamesShort[Math.min(startM, endM)]} - ${monthNamesShort[Math.max(startM, endM)]} ${yearVal}`;
+            // Avg Utilization Rate Calculation
+            const ratePeriod = document.getElementById('avgRatePeriodSelect').value;
+            const specMonthContainer = document.getElementById('specificMonthSelectContainer');
+            
+            if (ratePeriod === 'monthly') {
+                specMonthContainer.classList.remove('hidden');
             } else {
-                document.getElementById('serviceDistributionFilterBadge').innerText = `Period: All Months ${yearVal}`;
+                specMonthContainer.classList.add('hidden');
             }
 
-            const totalForSvcPeriod = targetAppsForService.length;
-            const periodServiceCounts = {};
-            targetAppsForService.forEach(a => {
-                const s = a.serviceType || 'Unspecified';
-                periodServiceCounts[s] = (periodServiceCounts[s] || 0) + 1;
+            let periodBookings = 0;
+            let periodAvailableSlots = 0;
+
+            if (ratePeriod === 'annual') {
+                for (let m = 0; m < 12; m++) {
+                    const monthStr = String(m + 1).padStart(2, '0');
+                    const monthApps = filteredApps.filter(a => a.date && a.date.substring(5, 7) === monthStr);
+                    const wdays = countWeekdaysInMonth(year, m);
+                    periodBookings += monthApps.length;
+                    periodAvailableSlots += (wdays * TOTAL_TIMESLOTS_PER_DAY);
+                }
+            } else if (ratePeriod === 'monthly') {
+                const mIdx = parseInt(document.getElementById('avgRateSpecificMonth').value);
+                const monthStr = String(mIdx + 1).padStart(2, '0');
+                const monthApps = filteredApps.filter(a => a.date && a.date.substring(5, 7) === monthStr);
+                const wdays = countWeekdaysInMonth(year, mIdx);
+                periodBookings = monthApps.length;
+                periodAvailableSlots = wdays * TOTAL_TIMESLOTS_PER_DAY;
+            } else {
+                let startM = 0, endM = 2;
+                if (ratePeriod === 'Q2') { startM = 3; endM = 5; }
+                else if (ratePeriod === 'Q3') { startM = 6; endM = 8; }
+                else if (ratePeriod === 'Q4') { startM = 9; endM = 11; }
+
+                for (let m = startM; m <= endM; m++) {
+                    const monthStr = String(m + 1).padStart(2, '0');
+                    const monthApps = filteredApps.filter(a => a.date && a.date.substring(5, 7) === monthStr);
+                    const wdays = countWeekdaysInMonth(year, m);
+                    periodBookings += monthApps.length;
+                    periodAvailableSlots += (wdays * TOTAL_TIMESLOTS_PER_DAY);
+                }
+            }
+
+            const avgRate = periodAvailableSlots > 0 ? ((periodBookings / periodAvailableSlots) * 100).toFixed(1) : "0.0";
+            document.getElementById('statAvgMonthly').innerText = `${avgRate}%`;
+
+            // 2. Service Distribution Table & Bars
+            renderServiceDistribution(yearStr);
+
+            // 3. Timeslot Utilization Table & Chart
+            renderTimeslotDistribution(yearStr);
+
+            // 4. Monthly Utilization Grid
+            renderMonthlyGrid(year);
+        }
+
+        function renderServiceDistribution(yearStr) {
+            const monthSelectVal = document.getElementById('serviceMonthSelect').value;
+            const filterBadge = document.getElementById('serviceDistributionFilterBadge');
+            
+            let targetApps = window.appointments.filter(a => a.date && a.date.startsWith(yearStr));
+
+            if (monthSelectVal === 'custom') {
+                const startM = parseInt(document.getElementById('serviceStartMonthSelect').value);
+                const endM = parseInt(document.getElementById('serviceEndMonthSelect').value);
+                filterBadge.innerText = `Period: ${monthNamesShort[startM]} - ${monthNamesShort[endM]} ${yearStr}`;
+                
+                targetApps = targetApps.filter(a => {
+                    const m = parseInt(a.date.substring(5, 7)) - 1;
+                    return m >= startM && m <= endM;
+                });
+            } else if (monthSelectVal !== 'all') {
+                const mIdx = parseInt(monthSelectVal);
+                const monthStr = String(mIdx + 1).padStart(2, '0');
+                filterBadge.innerText = `Period: ${monthNamesFull[mIdx]} ${yearStr}`;
+                targetApps = targetApps.filter(a => a.date && a.date.substring(5, 7) === monthStr);
+            } else {
+                filterBadge.innerText = `Period: All Months ${yearStr}`;
+            }
+
+            const counts = {};
+            baseServiceTypesList.forEach(st => counts[st] = 0);
+            
+            let totalCount = 0;
+            targetApps.forEach(a => {
+                const st = a.serviceType || 'others';
+                counts[st] = (counts[st] || 0) + 1;
+                totalCount++;
             });
 
-            const serviceTbody = document.getElementById('serviceTableBody');
-            const serviceBars = document.getElementById('serviceDistributionBars');
-            serviceTbody.innerHTML = '';
-            serviceBars.innerHTML = '';
+            const tbody = document.getElementById('serviceTableBody');
+            const barsContainer = document.getElementById('serviceDistributionBars');
+            tbody.innerHTML = '';
+            barsContainer.innerHTML = '';
 
-            const allServiceTypes = Array.from(new Set([...baseServiceTypesList, ...Object.keys(periodServiceCounts)]));
+            const keys = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
 
-            allServiceTypes.forEach(st => {
-                const count = periodServiceCounts[st] || 0;
-                const pct = totalForSvcPeriod > 0 ? ((count / totalForSvcPeriod) * 100).toFixed(1) : "0.0";
+            keys.forEach(st => {
+                const cnt = counts[st];
+                const pct = totalCount > 0 ? ((cnt / totalCount) * 100).toFixed(1) : "0.0";
 
-                serviceTbody.innerHTML += `<tr class="hover:bg-cream-50 transition-all">
-                    <td class="py-2.5 px-4 font-medium capitalize">${st}</td>
-                    <td class="py-2.5 px-4 text-center font-bold text-sage-800">${count}</td>
-                    <td class="py-2.5 px-4 text-right font-semibold">${pct}%</td>
+                tbody.innerHTML += `<tr class="hover:bg-sage-50/50 transition-all">
+                    <td class="py-2.5 px-4 font-semibold capitalize">${st}</td>
+                    <td class="py-2.5 px-4 text-center font-bold">${cnt}</td>
+                    <td class="py-2.5 px-4 text-right font-medium text-sage-800">${pct}%</td>
                 </tr>`;
 
-                serviceBars.innerHTML += `<div class="space-y-1">
-                    <div class="flex justify-between text-xs font-semibold text-charcoal-800">
-                        <span class="capitalize">${st}</span>
-                        <span>${count} (${pct}%)</span>
+                barsContainer.innerHTML += `<div class="space-y-1">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="capitalize text-charcoal-800">${st}</span>
+                        <span class="text-sage-800">${cnt} (${pct}%)</span>
                     </div>
-                    <div class="w-full bg-sage-100 rounded-full h-2.5 overflow-hidden">
+                    <div class="w-full bg-cream-200/80 rounded-full h-2.5 overflow-hidden">
                         <div class="bg-sage-600 h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
                     </div>
                 </div>`;
             });
+        }
 
-            // Timeslot analysis & Chart
-            const timeslotMonthSel = document.getElementById('timeslotMonthSelect').value;
-            let targetAppsForTimeslot = filteredApps;
+        function renderTimeslotDistribution(yearStr) {
+            const monthSelectVal = document.getElementById('timeslotMonthSelect').value;
+            const filterBadge = document.getElementById('timeslotFilterBadge');
+            
+            let targetApps = window.appointments.filter(a => a.date && a.date.startsWith(yearStr));
+            let totalDays = 0;
+            const year = parseInt(yearStr);
 
-            if (timeslotMonthSel !== 'all' && timeslotMonthSel !== 'custom') {
-                const targetM = parseInt(timeslotMonthSel);
-                targetAppsForTimeslot = filteredApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1]) - 1;
-                    return m === targetM;
-                });
-                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesFull[targetM]} ${yearVal}`;
-            } else if (timeslotMonthSel === 'custom') {
+            if (monthSelectVal === 'custom') {
                 const startM = parseInt(document.getElementById('timeslotStartMonthSelect').value);
                 const endM = parseInt(document.getElementById('timeslotEndMonthSelect').value);
-                targetAppsForTimeslot = filteredApps.filter(a => {
-                    const m = parseInt(a.date.split('-')[1]) - 1;
-                    return m >= Math.min(startM, endM) && m <= Math.max(startM, endM);
+                filterBadge.innerText = `Period: ${monthNamesShort[startM]} - ${monthNamesShort[endM]} ${yearStr}`;
+                
+                targetApps = targetApps.filter(a => {
+                    const m = parseInt(a.date.substring(5, 7)) - 1;
+                    return m >= startM && m <= endM;
                 });
-                document.getElementById('timeslotFilterBadge').innerText = `Period: ${monthNamesShort[Math.min(startM, endM)]} - ${monthNamesShort[Math.max(startM, endM)]} ${yearVal}`;
+
+                for (let m = startM; m <= endM; m++) {
+                    totalDays += countWeekdaysInMonth(year, m);
+                }
+            } else if (monthSelectVal !== 'all') {
+                const mIdx = parseInt(monthSelectVal);
+                const monthStr = String(mIdx + 1).padStart(2, '0');
+                filterBadge.innerText = `Period: ${monthNamesFull[mIdx]} ${yearStr}`;
+                targetApps = targetApps.filter(a => a.date && a.date.substring(5, 7) === monthStr);
+                totalDays = countWeekdaysInMonth(year, mIdx);
             } else {
-                document.getElementById('timeslotFilterBadge').innerText = `Period: All Months ${yearVal}`;
+                filterBadge.innerText = `Period: All Months ${yearStr}`;
+                for (let m = 0; m < 12; m++) {
+                    totalDays += countWeekdaysInMonth(year, m);
+                }
             }
 
-            const tsPresetList = ["11:00", "11:30", "15:30", "16:00", "Others"];
-            const tsCounts = { "11:00": 0, "11:30": 0, "15:30": 0, "16:00": 0, "Others": 0 };
+            const timeslotsPreset = ["11:00", "11:30", "15:30", "16:00", "Others"];
+            const counts = { "11:00": 0, "11:30": 0, "15:30": 0, "16:00": 0, "Others": 0 };
 
-            targetAppsForTimeslot.forEach(a => {
+            targetApps.forEach(a => {
                 const ts = (a.timeslot || '').trim();
-                if (tsPresetList.includes(ts)) {
-                    tsCounts[ts]++;
-                } else if (ts) {
-                    tsCounts["Others"]++;
+                if (counts.hasOwnProperty(ts)) {
+                    counts[ts]++;
+                } else {
+                    counts["Others"]++;
                 }
             });
 
-            // Calculate weekday available slots for period
-            let totalPeriodWeekdays = 0;
-            for (let m = 0; m < 12; m++) {
-                if (timeslotMonthSel !== 'all' && timeslotMonthSel !== 'custom' && parseInt(timeslotMonthSel) !== m) continue;
-                if (timeslotMonthSel === 'custom') {
-                    const startM = parseInt(document.getElementById('timeslotStartMonthSelect').value);
-                    const endM = parseInt(document.getElementById('timeslotEndMonthSelect').value);
-                    if (m < Math.min(startM, endM) || m > Math.max(startM, endM)) continue;
-                }
-                const daysInM = new Date(yearVal, m + 1, 0).getDate();
-                for (let d = 1; d <= daysInM; d++) {
-                    const dayOfWeek = new Date(yearVal, m, d).getDay();
-                    if (dayOfWeek !== 0 && dayOfWeek !== 6) totalPeriodWeekdays++;
-                }
-            }
-
-            const timeslotTbody = document.getElementById('timeslotTableBody');
-            timeslotTbody.innerHTML = '';
+            const tbody = document.getElementById('timeslotTableBody');
+            tbody.innerHTML = '';
 
             const chartLabels = [];
             const chartDataCounts = [];
             const chartDataRates = [];
 
-            tsPresetList.forEach(ts => {
-                const count = tsCounts[ts];
-                const available = totalPeriodWeekdays;
-                const rate = available > 0 ? ((count / available) * 100).toFixed(1) : "0.0";
-
-                timeslotTbody.innerHTML += `<tr class="hover:bg-cream-50 transition-all">
-                    <td class="py-2.5 px-4 font-semibold text-sage-800">${ts}</td>
-                    <td class="py-2.5 px-4 text-center font-bold">${count}</td>
-                    <td class="py-2.5 px-4 text-center text-charcoal-700/60">${available}</td>
-                    <td class="py-2.5 px-4 text-right font-bold text-sage-700">${rate}%</td>
-                </tr>`;
+            timeslotsPreset.forEach(ts => {
+                const cnt = counts[ts];
+                const avail = totalDays; // Preset 1 slot per weekday for standard slots
+                const rate = avail > 0 ? ((cnt / avail) * 100).toFixed(1) : "0.0";
 
                 chartLabels.push(ts);
-                chartDataCounts.push(count);
+                chartDataCounts.push(cnt);
                 chartDataRates.push(parseFloat(rate));
+
+                tbody.innerHTML += `<tr class="hover:bg-sage-50/50 transition-all">
+                    <td class="py-2.5 px-4 font-semibold">${ts}</td>
+                    <td class="py-2.5 px-4 text-center font-bold">${cnt}</td>
+                    <td class="py-2.5 px-4 text-center text-charcoal-700/70">${avail}</td>
+                    <td class="py-2.5 px-4 text-right font-medium text-sage-800">${rate}%</td>
+                </tr>`;
             });
 
-            // Render Chart.js
+            // Update Chart.js
             const ctx = document.getElementById('timeslotChartCanvas').getContext('2d');
             if (timeslotChartInstance) timeslotChartInstance.destroy();
 
@@ -2003,7 +2064,7 @@
                             label: 'Recorded Count',
                             data: chartDataCounts,
                             backgroundColor: '#5a785a',
-                            borderRadius: 8,
+                            borderRadius: 6,
                             yAxisID: 'y'
                         },
                         {
@@ -2022,114 +2083,162 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: { beginAtZero: true, position: 'left', title: { display: true, text: 'Count' } },
-                        y1: { beginAtZero: true, max: 100, position: 'right', title: { display: true, text: 'Rate (%)' }, grid: { drawOnChartArea: false } }
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Count', font: { size: 10 } }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Rate (%)', font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
                     }
                 }
             });
+        }
 
-            // Monthly grid analysis
-            const monthlyGrid = document.getElementById('monthlyStatsGrid');
-            monthlyGrid.innerHTML = '';
-            let totalAnnualAppsCount = 0;
-            let totalAnnualAvailableSlots = 0;
+        function renderMonthlyGrid(year) {
+            const grid = document.getElementById('monthlyStatsGrid');
+            grid.innerHTML = '';
+
+            let totalAnnualBookings = 0;
+            let totalAnnualSlots = 0;
 
             for (let m = 0; m < 12; m++) {
-                const daysInM = new Date(yearVal, m + 1, 0).getDate();
-                let weekdaysInM = 0;
-                for (let d = 1; d <= daysInM; d++) {
-                    const dayOfWeek = new Date(yearVal, m, d).getDay();
-                    if (dayOfWeek !== 0 && dayOfWeek !== 6) weekdaysInM++;
-                }
+                const monthStr = String(m + 1).padStart(2, '0');
+                const monthApps = window.appointments.filter(a => a.date && a.date.startsWith(`${year}-${monthStr}`));
+                const wdays = countWeekdaysInMonth(year, m);
+                const availSlots = wdays * TOTAL_TIMESLOTS_PER_DAY;
+                const bookings = monthApps.length;
+                const rate = availSlots > 0 ? ((bookings / availSlots) * 100).toFixed(1) : "0.0";
 
-                const mApps = filteredApps.filter(a => {
-                    const monthNum = parseInt(a.date.split('-')[1]) - 1;
-                    return monthNum === m;
-                });
+                totalAnnualBookings += bookings;
+                totalAnnualSlots += availSlots;
 
-                const mCount = mApps.length;
-                const mAvailable = weekdaysInM * TOTAL_TIMESLOTS_PER_DAY;
-                const mRate = mAvailable > 0 ? ((mCount / mAvailable) * 100).toFixed(1) : "0.0";
-
-                totalAnnualAppsCount += mCount;
-                totalAnnualAvailableSlots += mAvailable;
-
-                monthlyGrid.innerHTML += `<div class="bg-cream-50 p-4 rounded-2xl border border-sage-200/80 hover:border-sage-400 transition-all text-center">
-                    <p class="text-xs font-bold uppercase text-sage-800">${monthNamesShort[m]}</p>
-                    <h4 class="text-xl font-bold font-serif text-charcoal-900 mt-1">${mRate}%</h4>
-                    <p class="text-[10px] text-charcoal-700/60 mt-0.5">${mCount} / ${mAvailable} slots</p>
+                grid.innerHTML += `<div class="bg-cream-50 p-4 rounded-2xl border border-sage-200 flex flex-col justify-between hover:shadow-md transition-all">
+                    <div>
+                        <p class="text-xs font-bold text-sage-800 uppercase tracking-wider">${monthNamesShort[m]}</p>
+                        <h4 class="text-xl font-bold font-serif text-charcoal-900 mt-1">${rate}%</h4>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-sage-200/60 text-[10px] text-charcoal-700/80 space-y-0.5">
+                        <div class="flex justify-between"><span>Bookings:</span><span class="font-bold text-charcoal-900">${bookings}</span></div>
+                        <div class="flex justify-between"><span>Weekdays:</span><span>${wdays}</span></div>
+                    </div>
                 </div>`;
             }
 
-            const annualRate = totalAnnualAvailableSlots > 0 ? ((totalAnnualAppsCount / totalAnnualAvailableSlots) * 100).toFixed(1) : "0.0";
+            const annualRate = totalAnnualSlots > 0 ? ((totalAnnualBookings / totalAnnualSlots) * 100).toFixed(1) : "0.0";
             document.getElementById('annualUtilizationRateBadge').innerText = `${annualRate}%`;
-            document.getElementById('annualTotalCount').innerText = totalAnnualAppsCount;
-            document.getElementById('statAvgMonthly').innerText = `${annualRate}%`;
+            document.getElementById('annualTotalCount').innerText = totalAnnualBookings;
+        }
+
+        function syncMonthlyAnalysisYear(val) {
+            document.getElementById('statsYearSelect').value = val;
+            syncGlobalYear(val);
         }
 
         function toggleStatisticsSection() {
             const content = document.getElementById('statisticsContent');
-            const icon = document.getElementById('toggleStatsIcon');
             const text = document.getElementById('toggleStatsText');
+            const icon = document.getElementById('toggleStatsIcon');
 
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
-                icon.className = 'fa-solid fa-eye-slash';
                 text.innerText = 'Hide Section';
+                icon.className = 'fa-solid fa-eye-slash';
             } else {
                 content.classList.add('hidden');
-                icon.className = 'fa-solid fa-eye';
                 text.innerText = 'Show Section';
+                icon.className = 'fa-solid fa-eye';
             }
         }
 
-        function syncMonthlyAnalysisYear(yearVal) {
-            document.getElementById('statsYearSelect').value = yearVal;
-            syncGlobalYear(yearVal);
-        }
-
-        function exportStatisticsData(type) {
+        async function exportStatisticsData(format) {
             toggleExportDropdown();
-            const yearVal = document.getElementById('statsYearSelect').value;
+            const yearStr = document.getElementById('statsYearSelect').value;
+            const year = parseInt(yearStr);
 
-            if (type === 'html') {
-                const htmlContent = `<!DOCTYPE html><html><head><title>YCH OT Activity Room Utilization Statistics ${yearVal}</title><style>body{font-family:sans-serif;padding:20px;}table{border-collapse:collapse;width:100%;margin-top:20px;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}th{background:#f4f7f4;}</style></head><body><h1>YCH Occupational Therapy MSC 9/F Activity Room Statistics (${yearVal})</h1><p>Total Bookings: ${document.getElementById('statTotalBookings').innerText}</p><p>Annual Utilization Rate: ${document.getElementById('annualUtilizationRateBadge').innerText}</p></body></html>`;
-                const blob = new Blob([htmlContent], { type: 'text/html' });
+            const filteredApps = window.appointments.filter(a => a.date && a.date.startsWith(yearStr));
+
+            if (format === 'xlsx') {
+                const workbook = new ExcelJS.Workbook();
+                const sheet = workbook.addWorksheet(`Utilization ${year}`);
+
+                sheet.columns = [
+                    { header: 'Date', key: 'date', width: 15 },
+                    { header: 'Timeslot', key: 'timeslot', width: 15 },
+                    { header: 'Patient No.', key: 'patientNo', width: 18 },
+                    { header: 'Therapist', key: 'therapist', width: 18 },
+                    { header: 'Service Type', key: 'serviceType', width: 22 }
+                ];
+
+                filteredApps.forEach(a => {
+                    sheet.addRow({
+                        date: formatDDMMYYYY(a.date),
+                        timeslot: a.timeslot,
+                        patientNo: a.patientNo,
+                        therapist: a.therapist,
+                        serviceType: a.serviceType
+                    });
+                });
+
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `YCH_OT_Activity_Room_Statistics_${yearVal}.html`;
+                a.href = url;
+                a.download = `YCH_OT_Room_Utilization_${year}.xlsx`;
                 a.click();
-            } else if (type === 'doc') {
-                const docContent = `<html><body><h2>YCH Occupational Therapy MSC 9/F Activity Room Statistics (${yearVal})</h2><p>Total Bookings: ${document.getElementById('statTotalBookings').innerText}</p><p>Peak Service: ${document.getElementById('statPeakService').innerText}</p><p>Annual Utilization Rate: ${document.getElementById('annualUtilizationRateBadge').innerText}</p></body></html>`;
-                const blob = new Blob([docContent], { type: 'application/msword' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `YCH_OT_Activity_Room_Statistics_${yearVal}.doc`;
-                a.click();
-            } else if (type === 'pdf') {
+            } else if (format === 'pdf') {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                doc.setFontSize(16);
-                doc.text(`YCH OT Activity Room Statistics (${yearVal})`, 14, 20);
-                doc.setFontSize(11);
-                doc.text(`Total Bookings: ${document.getElementById('statTotalBookings').innerText}`, 14, 30);
-                doc.text(`Annual Utilization Rate: ${document.getElementById('annualUtilizationRateBadge').innerText}`, 14, 38);
-                doc.save(`YCH_OT_Activity_Room_Statistics_${yearVal}.pdf`);
-            } else if (type === 'xlsx') {
-                const workbook = new ExcelJS.Workbook();
-                const sheet = workbook.addWorksheet('Statistics');
-                sheet.addRow(['YCH OT Activity Room Statistics', yearVal]);
-                sheet.addRow(['Total Bookings', document.getElementById('statTotalBookings').innerText]);
-                sheet.addRow(['Peak Service', document.getElementById('statPeakService').innerText]);
-                sheet.addRow(['Annual Utilization Rate', document.getElementById('annualUtilizationRateBadge').innerText]);
 
-                workbook.xlsx.writeBuffer().then(buffer => {
-                    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `YCH_OT_Activity_Room_Statistics_${yearVal}.xlsx`;
-                    a.click();
+                doc.setFontSize(16);
+                doc.text(`YCH OT Activity Room Utilization Report (${year})`, 14, 20);
+
+                const tableData = filteredApps.map(a => [
+                    formatDDMMYYYY(a.date),
+                    a.timeslot,
+                    a.patientNo,
+                    a.therapist,
+                    a.serviceType
+                ]);
+
+                doc.autoTable({
+                    startY: 30,
+                    head: [['Date', 'Timeslot', 'Patient No.', 'Therapist', 'Service Type']],
+                    body: tableData,
                 });
+
+                doc.save(`YCH_OT_Room_Utilization_${year}.pdf`);
+            } else if (format === 'doc' || format === 'html') {
+                let htmlContent = `<html><head><title>Utilization Report ${year}</title><style>table{border-collapse:collapse;width:100%;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}</style></head><body>`;
+                htmlContent += `<h2>YCH OT Activity Room Utilization Report - ${year}</h2>`;
+                htmlContent += `<table><thead><tr><th>Date</th><th>Timeslot</th><th>Patient No.</th><th>Therapist</th><th>Service Type</th></tr></thead><tbody>`;
+
+                filteredApps.forEach(a => {
+                    htmlContent += `<tr><td>${formatDDMMYYYY(a.date)}</td><td>${a.timeslot}</td><td>${a.patientNo}</td><td>${a.therapist}</td><td>${a.serviceType}</td></tr>`;
+                });
+
+                htmlContent += `</tbody></table></body></html>`;
+
+                const mimeType = format === 'doc' ? 'application/msword' : 'text/html';
+                const ext = format === 'doc' ? 'doc' : 'html';
+                const blob = new Blob([htmlContent], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `YCH_OT_Room_Utilization_${year}.${ext}`;
+                a.click();
             }
         }
     </script>
