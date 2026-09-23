@@ -1019,86 +1019,79 @@
     <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 
- <script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // Environment Firebase configuration fallback logic
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ych-ot-msc9f-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
-                apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
-                authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
-                projectId: "ot-msc-9f-activity-room",
-                storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
-                messagingSenderId: "899540598545",
-                appId: "1:899540598545:web:3eb3e296dbed3070ee16b0"
-            };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
+            authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
+            databaseURL: "https://ot-msc-9f-activity-room-default-rtdb.firebaseio.com",
+            projectId: "ot-msc-9f-activity-room",
+            storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
+            messagingSenderId: "899540598545",
+            appId: "1:899540598545:web:3eb3e296dbed3070ee16b0",
+            measurementId: "G-FZD8X1QSTT"
+        };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
         const auth = getAuth(app);
 
         window.firebaseDb = db;
-        window.appId = appId;
-        window.firestoreHelpers = {
-            doc, collection, addDoc, updateDoc, deleteDoc
+        window.dbRefs = {
+            appointments: ref(db, 'appointments'),
+            specialActivities: ref(db, 'specialActivities')
         };
+        window.dbActions = { set, push, remove, update, ref };
 
-        // Authenticate before setting up snapshot listeners (RULE 3)
-        async function authenticateAndListen() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
-                const badge = document.getElementById('cloudStatusBadge');
-                const text = document.getElementById('cloudStatusText');
-                if (badge && text) {
-                    badge.classList.remove('hidden', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
-                    badge.classList.add('flex', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
-                    text.innerText = "Cloud Sync Active";
-                }
-
-                // Strict Path Rule (RULE 1): /artifacts/{appId}/public/data/{collectionName}
-                const apptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'appointments');
-                onSnapshot(apptsCol, (snapshot) => {
-                    let loaded = [];
-                    snapshot.forEach(docSnap => {
-                        loaded.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    window.appointments = loaded;
-                    if (typeof window.renderCalendar === 'function') window.renderCalendar();
-                    if (typeof window.updateStatistics === 'function') window.updateStatistics();
-                }, (err) => {
-                    console.error("Appointments live sync error:", err);
-                });
-
-                const specialCol = collection(db, 'artifacts', appId, 'public', 'data', 'specialActivities');
-                onSnapshot(specialCol, (snapshot) => {
-                    let loaded = [];
-                    snapshot.forEach(docSnap => {
-                        loaded.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    window.specialActivities = loaded;
-                    if (typeof window.renderCalendar === 'function') window.renderCalendar();
-                    if (typeof window.updateStatistics === 'function') window.updateStatistics();
-                }, (err) => {
-                    console.error("Special activities live sync error:", err);
-                });
-
-            } catch (err) {
-                console.error("Firebase auth/connection error:", err);
-                const text = document.getElementById('cloudStatusText');
-                if (text) text.innerText = "Local Mode Active";
+        signInAnonymously(auth).then(() => {
+            console.log("Firebase Cloud Auth: Connected Anonymously");
+            const badge = document.getElementById('cloudStatusBadge');
+            const text = document.getElementById('cloudStatusText');
+            if (badge && text) {
+                badge.classList.remove('bg-amber-50', 'text-amber-800', 'border-amber-200');
+                badge.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+                text.innerText = "Cloud Sync Active";
             }
-        }
+        }).catch((error) => {
+            console.warn("Firebase Auth Note:", error);
+            const text = document.getElementById('cloudStatusText');
+            if (text) text.innerText = "Cloud Active (Public)";
+        });
 
-        authenticateAndListen();
+        onValue(ref(db, 'appointments'), (snapshot) => {
+            const data = snapshot.val();
+            let loaded = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    loaded.push({ id: key, ...data[key] });
+                });
+            }
+            window.appointments = loaded;
+            
+            if (typeof window.renderCalendar === 'function') window.renderCalendar();
+            if (typeof window.updateStatistics === 'function') window.updateStatistics();
+        }, (error) => {
+            console.error("Realtime appointments read error:", error);
+        });
+
+        onValue(ref(db, 'specialActivities'), (snapshot) => {
+            const data = snapshot.val();
+            let loaded = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    loaded.push({ id: key, ...data[key] });
+                });
+            }
+            window.specialActivities = loaded;
+
+            if (typeof window.renderCalendar === 'function') window.renderCalendar();
+            if (typeof window.updateStatistics === 'function') window.updateStatistics();
+        }, (error) => {
+            console.error("Realtime special activities read error:", error);
+        });
     </script>
 
     <script>
