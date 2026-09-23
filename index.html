@@ -1020,25 +1020,26 @@
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, collection, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Environment Firebase configuration fallback logic
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'ych-ot-msc9f-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
+        const firebaseConfig = {
                 apiKey: "AIzaSyCRkkIic1fBIBLcOKg-H066j6t3p3SYXGo",
                 authDomain: "ot-msc-9f-activity-room.firebaseapp.com",
+                databaseURL: "https://ot-msc-9f-activity-room-default-rtdb.firebaseio.com",
                 projectId: "ot-msc-9f-activity-room",
                 storageBucket: "ot-msc-9f-activity-room.firebasestorage.app",
                 messagingSenderId: "899540598545",
-                appId: "1:899540598545:web:3eb3e296dbed3070ee16b0"
+                appId: "1:899540598545:web:3eb3e296dbed3070ee16b0",
+                measurementId: "G-FZD8X1QSTT"
             };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-</script>
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
         window.firebaseDb = db;
         window.appId = appId;
